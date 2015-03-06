@@ -19,7 +19,6 @@ using namespace std;
 template < class T >
 class Chebyshev_Polynomial{
 public:
-	//empty interval
 	Chebyshev_Polynomial(int vars, int order);
 
 	//deconstructor
@@ -47,7 +46,7 @@ public:
 	Chebyshev_Polynomial<T>& operator*=(const T& other);
 	Chebyshev_Polynomial<T>& operator/=(const T& other);
 
-	//interval comparison (certainly) i.e. the comparison is true for every pair of element of the two intervals
+	//polynomial comparison (certainly) i.e. the comparison is true for every coefficient in the polynomial
 	bool operator==(const Chebyshev_Polynomial<T> &other) const;
 	bool operator!=(const Chebyshev_Polynomial<T> &other) const;
 	bool operator<(const Chebyshev_Polynomial<T> &other) const;
@@ -55,28 +54,36 @@ public:
 	bool operator>(const Chebyshev_Polynomial<T> &other) const;
 	bool operator>=(const Chebyshev_Polynomial<T> &other) const;
 
-	friend ostream &operator<<(ostream &os, const Chebyshev_Polynomial<T> &i) {
-		std::vector<T> coeffs = i.get_coeffs();
-		int n = i.get_ncoeffs();
-		int nvar = i.get_nvar();
+	friend ostream &operator<<(ostream &os, const Chebyshev_Polynomial<T> &poly) {
+		std::vector<T> coeffs = poly.get_coeffs();
+		int nvar = poly.get_nvar();
+		int idx=0;
 
-		os << "\t ";
+		os << "\t";
 		for(int i=0; i<nvar; i++)
 		    os << "x"<<i<<"\t";
 		os << "\n";
-		for(int i=0; i<n; i++){
-		    os<<coeffs[i]<<"\n";
+		for(int deg=0; deg<=poly.get_degree(); deg++){
+		    for(int i=0; i<poly.get_J()[poly.get_nvar()][deg]; i++){
+			os << coeffs[idx] << "\t";
+			std::vector<int> row = poly.get_row(i,deg);
+			for(int j=0; j<row.size(); j++)
+			    os<<row[j]<<"\t";
+			os<<"\n";
+			idx++;
+		    }
 		}
 		return os;
 	}
 
 public:
-	std::vector<T>& get_coeffs(){return m_coeffs;}
+	std::vector<T> get_coeffs() const {return m_coeffs;}
 	void set_coeffs(std::vector<T> &coeffs){m_coeffs=coeffs;}
-	int get_degree(){return m_degree;}
-	int get_nvar(){return m_nvar;}
+	int get_degree() const {return m_degree;}
+	int get_nvar() const {return m_nvar;}
+	std::vector<std::vector<int> > get_J() const {return m_J;}
 
-	int get_ncoeffs(){return m_coeffs.size();}
+	int get_ncoeffs() const {return m_coeffs.size();}
 
 private:
 	//BEGIN A&V
@@ -86,10 +93,20 @@ private:
 	Chebyshev_Polynomial<T> mult(const Chebyshev_Polynomial<T> &A, const Chebyshev_Polynomial<T> &B) const;
 	//END
 
+public:
+	//polynomial representation variables
+	void initialize_J();
+	void initialize_N();
+	std::vector<int> get_row(const int &idx, const int &deg) const;
+	int get_idx(const std::vector<int> &k, const int &deg) const;
+
 private:
 	std::vector<T> m_coeffs;
-	const int m_degree;
-	const int m_nvar;
+	int m_degree;
+	int m_nvar;
+
+public:
+	std::vector<std::vector<int> > m_J, m_N;
 };
 
 template < class T>
