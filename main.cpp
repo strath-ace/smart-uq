@@ -3,7 +3,13 @@
 
 #include "chebyshev_polynomial.h"
 
+
+#include <iterator>
+#include <algorithm>
+
+
 using namespace std;
+
 
 int main()
 {

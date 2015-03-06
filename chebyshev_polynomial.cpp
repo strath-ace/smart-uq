@@ -20,13 +20,17 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(int nvar, int order): m_coeffs(0),
 
     m_J.resize(nvar+1);
     m_N.resize(nvar+1);
+    m_t.resize(pow(2,nvar));
     for(int i=0; i<=nvar; i++){
         m_J[i].resize(order+1);
         m_N[i].resize(order+1);
+        if(i<nvar)
+            m_t[i].resize(2);
     }
 
     initialize_J();
     initialize_N();
+    initialize_t();
 
 }
 
@@ -82,7 +86,50 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
+    if(m_nvar!=other.get_nvar()){
+        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(m_degree!=other.get_degree()){
+        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
+    Chebyshev_Polynomial<T> res(m_nvar,m_degree);
+    std::vector<T> res_coeffs(m_coeffs.size());
+    double nvariations = pow(2,m_nvar);
+
+    std::vector<T> other_coeffs = other.get_coeffs();
+    for(int i=0; i<m_degree; i++){//loop over subset degree i of poly1
+        for(int j=0; j<other.get_degree(); j++){//loop over subset degree j of poly2
+              if((i+j)<=m_degree){
+                  for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
+                      for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
+                          std::vector<int> v1 = get_row(idx1,i);
+                          std::vector<int> v2 = get_row(idx2,j);
+                          std::vector<int> v3(m_nvar);
+                          for(int iter=0; iter<nvariations; iter++){
+                              for(int k=0; k<m_nvar; k++){
+                                  v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
+                              }
+                              int pos = get_idx(v3);
+                              int deg3 = std::accumulate(v3.begin(),v3.end(),0);
+                              int sub_idx1=0, sub_idx2=0, sub_idx3=0;
+                              if(deg3>0) sub_idx1=deg3-1;
+                              if(i>0) sub_idx2=i-1;
+                              if(j>0) sub_idx3=j-1;
+
+                              res_coeffs[m_N[m_nvar][sub_idx1] + pos] +=
+                                      (1.0/nvariations)*(m_coeffs[m_N[m_nvar][sub_idx2]+idx1]*other_coeffs[m_N[m_nvar][sub_idx3]+idx2]);
+                          }
+                      }
+                  }
+              }
+        }
+    }
+
+    res.set_coeffs(res_coeffs);
+    return res;
 }
 
 template <class T>
@@ -174,14 +221,18 @@ void Chebyshev_Polynomial<T>::initialize_N()
 
 }
 
-//template <class T>
-//void Chebyshev_Polynomial<T>::initialize_t(){
-//    const unsigned int n = std::pow( 2.0, m_nvar);
+template <class T>
+void Chebyshev_Polynomial<T>::initialize_t(){
+    std::vector<int> values(2);
+    values[0] = -1;
+    values[1] = 1;
 
-//}
+    variations(values,m_nvar, m_t);
+
+}
 
 template <class T>
-int Chebyshev_Polynomial<T>::get_idx(const std::vector<int> &k, const int &deg) const
+int Chebyshev_Polynomial<T>::get_idx(const std::vector<int> &k) const
 {
     int i, j, l;
 

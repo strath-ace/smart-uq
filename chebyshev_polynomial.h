@@ -11,7 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <cstdlib>
-
+#include <numeric>
 #include "utils.h"
 
 using namespace std;
@@ -97,8 +97,9 @@ public:
 	//polynomial representation variables
 	void initialize_J();
 	void initialize_N();
+	void initialize_t();
 	std::vector<int> get_row(const int &idx, const int &deg) const;
-	int get_idx(const std::vector<int> &k, const int &deg) const;
+	int get_idx(const std::vector<int> &k) const;
 
 private:
 	std::vector<T> m_coeffs;
@@ -106,7 +107,7 @@ private:
 	int m_nvar;
 
 public:
-	std::vector<std::vector<int> > m_J, m_N;
+	std::vector<std::vector<int> > m_J, m_N, m_t;
 };
 
 template < class T>
