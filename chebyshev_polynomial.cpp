@@ -100,8 +100,8 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     double nvariations = pow(2,m_nvar);
 
     std::vector<T> other_coeffs = other.get_coeffs();
-    for(int i=0; i<m_degree; i++){//loop over subset degree i of poly1
-        for(int j=0; j<other.get_degree(); j++){//loop over subset degree j of poly2
+    for(int i=0; i<=m_degree; i++){//loop over subset degree i of poly1
+        for(int j=0; j<=other.get_degree(); j++){//loop over subset degree j of poly2
               if((i+j)<=m_degree){
                   for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
                       for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
@@ -115,12 +115,12 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
                               int pos = get_idx(v3);
                               int deg3 = std::accumulate(v3.begin(),v3.end(),0);
                               int sub_idx1=0, sub_idx2=0, sub_idx3=0;
-                              if(deg3>0) sub_idx1=deg3-1;
-                              if(i>0) sub_idx2=i-1;
-                              if(j>0) sub_idx3=j-1;
+                              if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
+                              if(i>0) sub_idx2=m_N[m_nvar][i-1];
+                              if(j>0) sub_idx3=m_N[m_nvar][j-1];
 
-                              res_coeffs[m_N[m_nvar][sub_idx1] + pos] +=
-                                      (1.0/nvariations)*(m_coeffs[m_N[m_nvar][sub_idx2]+idx1]*other_coeffs[m_N[m_nvar][sub_idx3]+idx2]);
+                              res_coeffs[sub_idx1 + pos] +=
+                                      (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
                           }
                       }
                   }
