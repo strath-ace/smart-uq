@@ -19,7 +19,11 @@ using namespace std;
 template < class T >
 class Chebyshev_Polynomial{
 public:
-	Chebyshev_Polynomial(int vars, int order);
+	Chebyshev_Polynomial(const int &vars, const int &order);
+	//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
+	Chebyshev_Polynomial(const int &vars, const int &order, const int &i);
+	//initialize a chebyshev polynomial with only the constant term
+	Chebyshev_Polynomial(const int &vars, const int &order, const T &value);
 
 	//deconstructor
 	~Chebyshev_Polynomial(){}
@@ -49,10 +53,6 @@ public:
 	//polynomial comparison (certainly) i.e. the comparison is true for every coefficient in the polynomial
 	bool operator==(const Chebyshev_Polynomial<T> &other) const;
 	bool operator!=(const Chebyshev_Polynomial<T> &other) const;
-	bool operator<(const Chebyshev_Polynomial<T> &other) const;
-	bool operator<=(const Chebyshev_Polynomial<T> &other) const;
-	bool operator>(const Chebyshev_Polynomial<T> &other) const;
-	bool operator>=(const Chebyshev_Polynomial<T> &other) const;
 
 	friend ostream &operator<<(ostream &os, const Chebyshev_Polynomial<T> &poly) {
 		std::vector<T> coeffs = poly.get_coeffs();
@@ -93,7 +93,7 @@ private:
 	Chebyshev_Polynomial<T> mult(const Chebyshev_Polynomial<T> &A, const Chebyshev_Polynomial<T> &B) const;
 	//END
 
-public:
+private:
 	//polynomial representation variables
 	void initialize_J();
 	void initialize_N();
@@ -105,49 +105,47 @@ private:
 	std::vector<T> m_coeffs;
 	int m_degree;
 	int m_nvar;
-
-public:
 	std::vector<std::vector<int> > m_J, m_N, m_t;
 };
 
 template < class T>
 static Chebyshev_Polynomial<T> operator-(const T left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)-right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)-right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator-(const int left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)-right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)-right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator+(const T left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)+right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)+right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator+(const int left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)+right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)+right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator*(const T left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)*right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)*right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator*(const int left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)*right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)*right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator/(const T left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)/right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)/right;
 }
 
 template < class T>
 static Chebyshev_Polynomial<T> operator/(const int left, const Chebyshev_Polynomial<T> right){
-	return Chebyshev_Polynomial<T>(left)/-right;
+	return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)/-right;
 }
 
 

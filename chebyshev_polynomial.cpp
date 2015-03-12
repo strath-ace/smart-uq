@@ -8,7 +8,7 @@
 #include "chebyshev_polynomial.h"
 
 template <class T>
-Chebyshev_Polynomial<T>::Chebyshev_Polynomial(int nvar, int order): m_coeffs(0), m_degree(0), m_nvar(0){
+Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order): m_coeffs(0), m_degree(0), m_nvar(0){
     //allocate memory for coefficients vector
 
     int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
@@ -33,6 +33,73 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(int nvar, int order): m_coeffs(0),
     initialize_t();
 
 }
+
+template <class T>
+Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const int &i): m_coeffs(0), m_degree(0), m_nvar(0){
+
+    //save some info
+    m_degree = order;
+    m_nvar = nvar;
+
+    if(i>=m_nvar){
+        std::cout<<"base elements index are from [0,nvar-1]";
+        exit(EXIT_FAILURE);
+    }
+    else{
+        //allocate memory for coefficients vector
+
+        int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
+        m_coeffs.resize(n);
+        m_coeffs[i+1] = 1.0;
+
+        m_J.resize(nvar+1);
+        m_N.resize(nvar+1);
+        m_t.resize(pow(2,nvar));
+        for(int i=0; i<=nvar; i++){
+            m_J[i].resize(order+1);
+            m_N[i].resize(order+1);
+            if(i<nvar)
+                m_t[i].resize(2);
+        }
+
+        initialize_J();
+        initialize_N();
+        initialize_t();
+
+    }
+
+}
+
+template <class T>
+Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const T &value): m_coeffs(0), m_degree(0), m_nvar(0){
+
+    //save some info
+    m_degree = order;
+    m_nvar = nvar;
+
+        //allocate memory for coefficients vector
+
+        int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
+        m_coeffs.resize(n);
+        m_coeffs[0] = value;
+
+        m_J.resize(nvar+1);
+        m_N.resize(nvar+1);
+        m_t.resize(pow(2,nvar));
+        for(int i=0; i<=nvar; i++){
+            m_J[i].resize(order+1);
+            m_N[i].resize(order+1);
+            if(i<nvar)
+                m_t[i].resize(2);
+        }
+
+        initialize_J();
+        initialize_N();
+        initialize_t();
+
+
+}
+
 
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator+(const Chebyshev_Polynomial<T> &other) const{
@@ -140,7 +207,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const Chebyshev_Polyn
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator+(const T& other) const{
 
-    std::vector<T> coeffs(get_ncoeffs());
+    std::vector<T> coeffs=this->get_coeffs();
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
 
     coeffs[0] += other;
@@ -152,10 +219,10 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator+(const T& other) const
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const T& other) const{
 
-    std::vector<T> coeffs(get_ncoeffs());
+    std::vector<T> coeffs=this->get_coeffs();
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
 
-    coeffs[0] += other;
+    coeffs[0] -= other;
 
     res.set_coeffs(coeffs);
     return res;
@@ -164,12 +231,10 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const T& other) const
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const T& other) const{
 
-    int n = get_ncoeffs();
-
-    std::vector<T> coeffs(n);
+    std::vector<T> coeffs=this->get_coeffs();
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
 
-    for(int i=0; i<n; i++)
+    for(int i=0; i<coeffs.size(); i++)
         coeffs[i] *= other;
 
     res.set_coeffs(coeffs);
@@ -179,12 +244,10 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const T& other) const
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const T& other) const{
 
-    int n = get_ncoeffs();
-
-    std::vector<T> coeffs(n);
+    std::vector<T> coeffs=this->get_coeffs();
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
 
-    for(int i=0; i<n; i++)
+    for(int i=0; i<coeffs.size(); i++)
         coeffs[i] /= other;
 
     res.set_coeffs(coeffs);
@@ -279,6 +342,7 @@ std::vector<int> Chebyshev_Polynomial<T>::get_row(const int &idx, const int &deg
 
     return k;
 }
+
 
 template class Chebyshev_Polynomial<double>;
 template class Chebyshev_Polynomial<float>;
