@@ -77,13 +77,15 @@ public:
 	}
 
 public:
+        //getter and setters
 	std::vector<T> get_coeffs() const {return m_coeffs;}
 	void set_coeffs(std::vector<T> &coeffs){m_coeffs=coeffs;}
 	int get_degree() const {return m_degree;}
 	int get_nvar() const {return m_nvar;}
-	std::vector<std::vector<int> > get_J() const {return m_J;}
-
 	int get_ncoeffs() const {return m_coeffs.size();}
+
+        //evaluation functions (composition and point evaluation)
+        Chebyshev_Polynomial<T> eval(const Chebyshev_Polynomial<T> &arg);
 
 private:
 	//BEGIN A&V
@@ -100,6 +102,7 @@ private:
 	void initialize_t();
 	std::vector<int> get_row(const int &idx, const int &deg) const;
 	int get_idx(const std::vector<int> &k) const;
+	std::vector<std::vector<int> > get_J() const {return m_J;}
 
 private:
 	std::vector<T> m_coeffs;

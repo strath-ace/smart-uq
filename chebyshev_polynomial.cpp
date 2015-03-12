@@ -255,6 +255,113 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const T& other) const
 }
 
 template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator=(const Chebyshev_Polynomial<T> &other){
+    if(m_nvar!=other.get_nvar()){
+        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(m_degree!=other.get_degree()){
+        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    m_coeffs = other.get_coeffs();
+    return *this; 
+}
+
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator=(const T &other){
+
+    std::vector<T> coeffs(m_coeffs.size());
+    coeffs[0] = other;
+
+    m_coeffs = coeffs;
+    return *this;
+}
+
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator+=(const Chebyshev_Polynomial<T> &other){
+	*this = Chebyshev_Polynomial<T>::operator+(other);
+	return *this;
+}
+
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator-=(const Chebyshev_Polynomial<T> &other){
+	*this = Chebyshev_Polynomial<T>::operator-(other);
+	return *this;
+}
+
+template <class T>	
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator*=(const Chebyshev_Polynomial<T> &other){
+	*this = Chebyshev_Polynomial<T>::operator*(other);
+	return *this;
+}
+
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator/=(const Chebyshev_Polynomial<T> &other){
+	*this = Chebyshev_Polynomial<T>::operator/(other);
+	return *this;
+}
+
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator+=(const T& other){
+	*this = Chebyshev_Polynomial<T>::operator+(other);
+	return *this;
+}
+
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator-=(const T& other){
+	*this = Chebyshev_Polynomial<T>::operator-(other);
+	return *this;
+}
+	
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator*=(const T& other){
+	*this = Chebyshev_Polynomial<T>::operator*(other);
+	return *this;
+}
+	
+template <class T>
+Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator/=(const T& other){
+	*this = Chebyshev_Polynomial<T>::operator/(other);
+	return *this;
+}
+
+template <class T>
+bool Chebyshev_Polynomial<T>::operator==(const Chebyshev_Polynomial<T> &other) const{
+    if(m_nvar!=other.get_nvar()){
+        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(m_degree!=other.get_degree()){
+        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if(m_coeffs==other.get_coeffs())
+         return true;
+    return false;
+}
+
+template <class T>	
+bool Chebyshev_Polynomial<T>::operator!=(const Chebyshev_Polynomial<T> &other) const{
+    if(m_nvar!=other.get_nvar()){
+        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(m_degree!=other.get_degree()){
+        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if(Chebyshev_Polynomial<T>::operator==(other)) return false;
+    else return true;
+
+}
+
+
+//not part of the algebra, private routines
+template <class T>
 void Chebyshev_Polynomial<T>::initialize_J()
 {
     int i,j;
@@ -341,6 +448,11 @@ std::vector<int> Chebyshev_Polynomial<T>::get_row(const int &idx, const int &deg
     }
 
     return k;
+}
+
+template <class T>
+Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::eval(const Chebyshev_Polynomial<T> &arg){
+	
 }
 
 
