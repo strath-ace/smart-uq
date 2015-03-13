@@ -19,6 +19,8 @@ using namespace std;
 template < class T >
 class Chebyshev_Polynomial{
 public:
+        static const int MAX_DEGREE = 20;
+
 	Chebyshev_Polynomial(const int &vars, const int &order);
 	//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
 	Chebyshev_Polynomial(const int &vars, const int &order, const int &i);
@@ -79,21 +81,19 @@ public:
 public:
         //getter and setters
 	std::vector<T> get_coeffs() const {return m_coeffs;}
-	void set_coeffs(std::vector<T> &coeffs){m_coeffs=coeffs;}
+	void set_coeffs(std::vector<T> &coeffs){
+	    if(m_coeffs.size()!=coeffs.size()){
+		std::cout<<"Coefficients vectors don't have the same lenght"<<std::endl;
+		exit(EXIT_FAILURE);
+	    }
+	    m_coeffs=coeffs;
+	}
+	void set_coeffs(const int &idx, const T &value){m_coeffs[idx]=value;}
 	int get_degree() const {return m_degree;}
 	int get_nvar() const {return m_nvar;}
-	int get_ncoeffs() const {return m_coeffs.size();}
 
-        //evaluation functions (composition and point evaluation)
-        Chebyshev_Polynomial<T> eval(const Chebyshev_Polynomial<T> &arg);
-
-private:
-	//BEGIN A&V
-	Chebyshev_Polynomial(const T& l, const T& r,const bool& b);
-	Chebyshev_Polynomial<T> add(const Chebyshev_Polynomial<T> &A,const Chebyshev_Polynomial<T> &B) const;
-	Chebyshev_Polynomial<T> sub(const Chebyshev_Polynomial<T> &A,const Chebyshev_Polynomial<T> &B) const;
-	Chebyshev_Polynomial<T> mult(const Chebyshev_Polynomial<T> &A, const Chebyshev_Polynomial<T> &B) const;
-	//END
+        //evaluation a chebyshev polynomial in a chebyshev polynomial (composition of chebyshev polynomial)
+        Chebyshev_Polynomial<T> f_composition(const Chebyshev_Polynomial<T> &arg);
 
 private:
 	//polynomial representation variables

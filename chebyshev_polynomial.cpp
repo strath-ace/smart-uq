@@ -11,6 +11,11 @@ template <class T>
 Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order): m_coeffs(0), m_degree(0), m_nvar(0){
     //allocate memory for coefficients vector
 
+    if(order > MAX_DEGREE){
+        std::cout<<"Maximum allowed polynomial degree is 20";
+        exit(EXIT_FAILURE);
+    }
+
     int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
     m_coeffs.resize(n);
 
@@ -36,6 +41,11 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order)
 
 template <class T>
 Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const int &i): m_coeffs(0), m_degree(0), m_nvar(0){
+
+    if(order > MAX_DEGREE){
+        std::cout<<"Maximum allowed polynomial degree is 20";
+        exit(EXIT_FAILURE);
+    }
 
     //save some info
     m_degree = order;
@@ -72,6 +82,11 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order,
 
 template <class T>
 Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const T &value): m_coeffs(0), m_degree(0), m_nvar(0){
+
+    if(order > MAX_DEGREE){
+        std::cout<<"Maximum allowed polynomial degree is 20";
+        exit(EXIT_FAILURE);
+    }
 
     //save some info
     m_degree = order;
@@ -451,9 +466,42 @@ std::vector<int> Chebyshev_Polynomial<T>::get_row(const int &idx, const int &deg
 }
 
 template <class T>
-Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::eval(const Chebyshev_Polynomial<T> &arg){
-	
+Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::f_composition(const Chebyshev_Polynomial<T> &other){
+    if(m_nvar!=other.get_nvar()){
+        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(m_degree!=other.get_degree()){
+        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    std::vector<Chebyshev_Polynomial<T> > v;
+    Chebyshev_Polynomial<T> res(m_nvar, m_degree);
+
+    for(int i=0; i<=m_degree; i++){
+        v.push_back(Chebyshev_Polynomial<T>(m_nvar,m_degree));
+    }
+
+    v[0] = 1.0;
+    v[1] = other;
+
+    for (int i=2; i<=m_degree; i++){
+        v[i] = 2.0 * other * v[i-1] - v[i-2];
+    }
+
+    for (int i=0; i<=m_degree; i++){
+        T value;
+        if(i==0)
+            value = m_coeffs[0];
+        else
+            value = m_coeffs[m_N[m_nvar][i-1]];
+        res += v[i]*value;
+    }
+
+    return res;
 }
+
 
 
 template class Chebyshev_Polynomial<double>;

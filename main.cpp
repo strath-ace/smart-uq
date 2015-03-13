@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "chebyshev_polynomial.h"
+#include "elementary_functions.h"
 
 
 #include <iterator>
@@ -9,7 +10,6 @@
 
 
 using namespace std;
-
 
 int main()
 {
@@ -28,13 +28,18 @@ int main()
 
 //    Chebyshev_Polynomial<double> res = poly1*poly2;
 
-      Chebyshev_Polynomial<double> x(2,5,0);
-      Chebyshev_Polynomial<double> y(2,5,1);
+      Chebyshev_Polynomial<double> x(2,10,0);
+      Chebyshev_Polynomial<double> y(2,10,1);
 
       //NB: use double constants!!!
-      Chebyshev_Polynomial<double> f = 2.0*x*x - 1.0;
+      Chebyshev_Polynomial<double> f = 1.0+x+x*x;
 
+      std::cout<<"f"<<std::endl;
       std::cout<<f<<std::endl;
+
+      Chebyshev_Polynomial<double> g = exp(f);
+
+      std::cout<<g<<std::endl;
 
     return 0;
 }
