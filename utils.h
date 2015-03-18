@@ -2,10 +2,26 @@
 #define UTILS_H
 
 #include <vector>
+#include <cmath>
 
 inline int factorial(int n)
 {
     return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
+}
+
+inline int combination(int n, int k)
+{
+    int max = std::max(n,k);
+    int min = std::min(n,k);
+    int res = 1;
+    int j = 1;
+
+    while(j<=min){
+        res *= max+j;
+        j++;
+    }
+
+    return res/factorial(min);
 }
 
 

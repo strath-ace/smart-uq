@@ -8,6 +8,12 @@
 
 using namespace std;
 
+//COMPOSITION OF CHEBYSHEV POLYNOMIALS
+//evaluation of a univariate chebyshev polynomial in a chebyshev polynomial
+template <class T>
+Chebyshev_Polynomial<T> composition(const Chebyshev_Polynomial<T> &arg);
+
+
 //TRIGONOMETRIC FUNCTIONS
 template <class T>
 Chebyshev_Polynomial<T> sin(const Chebyshev_Polynomial<T> &other);
@@ -55,5 +61,6 @@ Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const double &
 
 template <class T>
 Chebyshev_Polynomial<T> inv(const Chebyshev_Polynomial<T> &other);
+
 
 #endif // ELEMENTARY_FUNCTIONS_H

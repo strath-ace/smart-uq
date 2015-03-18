@@ -16,7 +16,7 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order)
         exit(EXIT_FAILURE);
     }
 
-    int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
+    int n = combination(nvar,order);
     m_coeffs.resize(n);
 
     //save some info
@@ -58,7 +58,7 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order,
     else{
         //allocate memory for coefficients vector
 
-        int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
+        int n = combination(nvar,order);
         m_coeffs.resize(n);
         m_coeffs[i+1] = 1.0;
 
@@ -94,7 +94,7 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order,
 
         //allocate memory for coefficients vector
 
-        int n = factorial(nvar+order)/(factorial(nvar)*factorial(order));
+        int n = combination(nvar,order);
         m_coeffs.resize(n);
         m_coeffs[0] = value;
 
@@ -216,7 +216,54 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
 
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const Chebyshev_Polynomial<T> &other) const{
+    if(m_nvar!=other.get_nvar()){
+        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(m_degree!=other.get_degree()){
+        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
+    Chebyshev_Polynomial<T> res(m_nvar,m_degree);
+
+    std::vector<T> coeffs = other.get_coeffs();
+    int size = coeffs.size();
+    Eigen::MatrixXd B(size,size);
+    Eigen::VectorXd b(size);
+    b[0] = 2.0;
+
+    for(int i=0; i<size; i++){
+        for(int j=0; j<=i; j++){
+            if(j==0){//first row and first diagonal
+                B(i,0) = coeffs[i];
+                B(j,i) =  B(i,j);
+            }
+            else if (i==j){//diagonal
+                if(2*i < size)
+                    B(i,i) = 2.0*coeffs[0]+coeffs[2*i];
+                else
+                    B(i,i) = 2.0*coeffs[0];
+            }
+            else{//lower diagonal
+                if((i+j)<size)
+                    B(i,j) = coeffs[fabs(i-j)]+coeffs[i+j];
+                else
+                    B(i,j) = coeffs[fabs(i-j)];
+                B(j,i) =  B(i,j);
+            }
+        }
+    }
+
+    Eigen::VectorXd a = B.colPivHouseholderQr().solve(b);
+
+    std::vector<T> res_coeffs(size);
+    for(int i=0; i<size; i++)
+        res_coeffs[i] = a[i];
+    res_coeffs[0] /= 2.0;
+    res.set_coeffs(res_coeffs);
+
+    return res*(*this);
 }
 
 template <class T>
@@ -463,43 +510,6 @@ std::vector<int> Chebyshev_Polynomial<T>::get_row(const int &idx, const int &deg
     }
 
     return k;
-}
-
-template <class T>
-Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::f_composition(const Chebyshev_Polynomial<T> &other){
-    if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
-    if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    std::vector<Chebyshev_Polynomial<T> > v;
-    Chebyshev_Polynomial<T> res(m_nvar, m_degree);
-
-    for(int i=0; i<=m_degree; i++){
-        v.push_back(Chebyshev_Polynomial<T>(m_nvar,m_degree));
-    }
-
-    v[0] = 1.0;
-    v[1] = other;
-
-    for (int i=2; i<=m_degree; i++){
-        v[i] = 2.0 * other * v[i-1] - v[i-2];
-    }
-
-    for (int i=0; i<=m_degree; i++){
-        T value;
-        if(i==0)
-            value = m_coeffs[0];
-        else
-            value = m_coeffs[m_N[m_nvar][i-1]];
-        res += v[i]*value;
-    }
-
-    return res;
 }
 
 

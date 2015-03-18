@@ -12,7 +12,10 @@
 #include <cmath>
 #include <cstdlib>
 #include <numeric>
+#include <iomanip>
+#include <Eigen/Dense>
 #include "utils.h"
+
 
 using namespace std;
 
@@ -61,13 +64,13 @@ public:
 		int nvar = poly.get_nvar();
 		int idx=0;
 
-		os << "\t";
+		os <<std::setfill(' ')<<setw(16);
 		for(int i=0; i<nvar; i++)
-		    os << "x"<<i<<"\t";
+		    os << "T(x"<<i<<")\t";
 		os << "\n";
 		for(int deg=0; deg<=poly.get_degree(); deg++){
 		    for(int i=0; i<poly.get_J()[poly.get_nvar()][deg]; i++){
-			os << coeffs[idx] << "\t";
+			os <<left<<setw(16)<<coeffs[idx];
 			std::vector<int> row = poly.get_row(i,deg);
 			for(int j=0; j<row.size(); j++)
 			    os<<row[j]<<"\t";
@@ -91,9 +94,6 @@ public:
 	void set_coeffs(const int &idx, const T &value){m_coeffs[idx]=value;}
 	int get_degree() const {return m_degree;}
 	int get_nvar() const {return m_nvar;}
-
-        //evaluation a chebyshev polynomial in a chebyshev polynomial (composition of chebyshev polynomial)
-        Chebyshev_Polynomial<T> f_composition(const Chebyshev_Polynomial<T> &arg);
 
 private:
 	//polynomial representation variables
