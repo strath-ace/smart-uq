@@ -13,16 +13,23 @@
 #include <cstdlib>
 #include <numeric>
 #include <iomanip>
-#include <Eigen/Dense>
 #include "utils.h"
 
 
 using namespace std;
 
+//call to LAPACK
+extern "C" {
+     void dgesv_(int *n, int *nrhs,  double *a,  int  *lda,
+           int *ipivot, double *b, int *ldb, int *info) ;
+}
+
+
 template < class T >
 class Chebyshev_Polynomial{
 public:
         static const int MAX_DEGREE = 20;
+        static const double ZERO = 1e-15;
 
 	Chebyshev_Polynomial(const int &vars, const int &order);
 	//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]

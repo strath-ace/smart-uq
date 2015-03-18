@@ -17,13 +17,15 @@ std::vector<Chebyshev_Polynomial<T> > f(std::vector<Chebyshev_Polynomial<T> > x)
 	    deriv.push_back(Chebyshev_Polynomial<T>(nvar,degree));
 	}
 
-	deriv[0] = x[1];
-	deriv[1] = -9.81/2.0*sin(x[0]);
+// pendolo
+//	deriv[0] = x[1];
+//	deriv[1] = -9.81/2.0*sin(x[0]);
 
-//	deriv[0] = x[1];			   //r         --> x[0]
-//	deriv[1] = x[0]*x[3]*x[3]-9.81/(x[0]*x[0]);//r_dot     --> x[1]
-//	deriv[2] = x[3];			   //theta     --> x[2]
-//	deriv[3] = -2.0*x[1]*x[3]/x[0];		   //theta_dot --> x[3]
+//2 body problems
+	deriv[0] = x[1];			   //r         --> x[0]
+	deriv[1] = x[0]*x[3]*x[3]-9.81/(x[0]*x[0]);//r_dot     --> x[1]
+	deriv[2] = x[3];			   //theta     --> x[2]
+	deriv[3] = -2.0*x[1]*x[3]/x[0];		   //theta_dot --> x[3]
 
 	return deriv;
 }

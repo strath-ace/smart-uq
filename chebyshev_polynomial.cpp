@@ -184,29 +184,31 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     std::vector<T> other_coeffs = other.get_coeffs();
     for(int i=0; i<=m_degree; i++){//loop over subset degree i of poly1
         for(int j=0; j<=other.get_degree(); j++){//loop over subset degree j of poly2
-              if((i+j)<=m_degree){
-                  for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
-                      for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
-                          std::vector<int> v1 = get_row(idx1,i);
-                          std::vector<int> v2 = get_row(idx2,j);
-                          std::vector<int> v3(m_nvar);
-                          for(int iter=0; iter<nvariations; iter++){
-                              for(int k=0; k<m_nvar; k++){
-                                  v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
-                              }
-                              int pos = get_idx(v3);
-                              int deg3 = std::accumulate(v3.begin(),v3.end(),0);
-                              int sub_idx1=0, sub_idx2=0, sub_idx3=0;
-                              if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
-                              if(i>0) sub_idx2=m_N[m_nvar][i-1];
-                              if(j>0) sub_idx3=m_N[m_nvar][j-1];
+            if((i+j)<=m_degree){
+                for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
+                    for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
+                        int sub_idx1=0, sub_idx2=0, sub_idx3=0;
+                        if(i>0) sub_idx2=m_N[m_nvar][i-1];
+                        if(j>0) sub_idx3=m_N[m_nvar][j-1];
+                        if(fabs(m_coeffs[sub_idx2+idx1])>ZERO && fabs(other_coeffs[sub_idx3+idx2])>ZERO){
+                            std::vector<int> v1 = get_row(idx1,i);
+                            std::vector<int> v2 = get_row(idx2,j);
+                            std::vector<int> v3(m_nvar);
+                            for(int iter=0; iter<nvariations; iter++){
+                                for(int k=0; k<m_nvar; k++){
+                                    v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
+                                }
+                                int pos = get_idx(v3);
+                                int deg3 = std::accumulate(v3.begin(),v3.end(),0);
+                                if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
 
-                              res_coeffs[sub_idx1 + pos] +=
-                                      (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
-                          }
-                      }
-                  }
-              }
+                                res_coeffs[sub_idx1 + pos] +=
+                                        (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -228,40 +230,58 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const Chebyshev_Polyn
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
 
     std::vector<T> coeffs = other.get_coeffs();
-    int size = coeffs.size();
-    Eigen::MatrixXd B(size,size);
-    Eigen::VectorXd b(size);
-    b[0] = 2.0;
 
-    for(int i=0; i<size; i++){
+    int n = coeffs.size();
+    int nrhs = 1;
+    double B[n][n];
+    double b[1][n];
+    int lda = n;
+    int ldb = n;
+    int ipiv[n];
+    int info;
+
+    for(int i=0; i<n; i++){
+        b[0][i] = 0.0;
         for(int j=0; j<=i; j++){
             if(j==0){//first row and first diagonal
-                B(i,0) = coeffs[i];
-                B(j,i) =  B(i,j);
+                B[i][0] = coeffs[i];
+                B[j][i] =  B[i][j];
             }
             else if (i==j){//diagonal
-                if(2*i < size)
-                    B(i,i) = 2.0*coeffs[0]+coeffs[2*i];
+                if(2*i < n)
+                    B[i][i] = 2.0*coeffs[0]+coeffs[2*i];
                 else
-                    B(i,i) = 2.0*coeffs[0];
+                    B[i][i] = 2.0*coeffs[0];
             }
             else{//lower diagonal
-                if((i+j)<size)
-                    B(i,j) = coeffs[fabs(i-j)]+coeffs[i+j];
+                if((i+j)<n)
+                    B[i][j] = coeffs[fabs(i-j)]+coeffs[i+j];
                 else
-                    B(i,j) = coeffs[fabs(i-j)];
-                B(j,i) =  B(i,j);
+                    B[i][j] = coeffs[fabs(i-j)];
+                B[j][i] =  B[i][j];
             }
         }
     }
 
-    Eigen::VectorXd a = B.colPivHouseholderQr().solve(b);
+    b[0][0] = 2.0;
 
-    std::vector<T> res_coeffs(size);
-    for(int i=0; i<size; i++)
-        res_coeffs[i] = a[i];
-    res_coeffs[0] /= 2.0;
-    res.set_coeffs(res_coeffs);
+    dgesv_(&n, &nrhs, &B[0][0], &lda, ipiv, &b[0][0], &ldb, &info);
+
+    // Check for success
+    if(info == 0)
+    {
+       std::vector<T> res_coeffs(n);
+       for(int i=0; i<n; i++)
+           res_coeffs[i] = b[0][i];
+       res_coeffs[0] /= 2.0;
+       res.set_coeffs(res_coeffs);
+    }
+    else
+    {
+       // Write an error message
+       std::cout << "LAPACK dgesv returned error " << info << "\n";
+       exit(EXIT_FAILURE);
+    }
 
     return res*(*this);
 }

@@ -54,7 +54,7 @@ template <class T>
 Chebyshev_Polynomial<T> log10(const Chebyshev_Polynomial<T> &other);
 
 template <class T>
-Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const int exponent);
+Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const int &exponent);
 
 template <class T>
 Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const double &exponent);

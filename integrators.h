@@ -29,7 +29,7 @@ std::vector<Chebyshev_Polynomial<T> > rk2(std::vector<Chebyshev_Polynomial<T> > 
         }
 
         for(int i=0; i<N; i++){
-
+            std::cout<<"iter "<<i<<std::endl;
             //* Evaluate k1 = f(x).
             k1 = (*f)(x);
 

@@ -26,6 +26,9 @@ Chebyshev_Polynomial<T> composition(const std::vector<T> &coeffs, const Chebyshe
     return res;
 }
 
+/************************************************/
+/*                  SIN                         */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> sin(const Chebyshev_Polynomial<T> &other){
     int nvar =  other.get_nvar();
@@ -60,6 +63,10 @@ sin(const Chebyshev_Polynomial<float> &);
 template class Chebyshev_Polynomial<long double>
 sin(const Chebyshev_Polynomial<long double> &);
 
+
+/************************************************/
+/*                  COS                         */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> cos(const Chebyshev_Polynomial<T> &other){
     int nvar =  other.get_nvar();
@@ -95,6 +102,9 @@ cos(const Chebyshev_Polynomial<float> &);
 template class Chebyshev_Polynomial<long double>
 cos(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  TAN                         */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> tan(const Chebyshev_Polynomial<T> &other){
     int nvar =  other.get_nvar();
@@ -152,21 +162,54 @@ tan(const Chebyshev_Polynomial<float> &);
 template class Chebyshev_Polynomial<long double>
 tan(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  COT                         */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> cot(const Chebyshev_Polynomial<T> &other){
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
 }
+template class Chebyshev_Polynomial<double>
+cot(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+cot(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+cot(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  ASIN                        */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> asin(const Chebyshev_Polynomial<T> &other){
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
 }
+template class Chebyshev_Polynomial<double>
+asin(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+asin(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+asin(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  ACOS                        */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> acos(const Chebyshev_Polynomial<T> &other){
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
 }
+template class Chebyshev_Polynomial<double>
+acos(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+acos(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+acos(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  ATAN                        */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> atan(const Chebyshev_Polynomial<T> &other){
     int nvar =  other.get_nvar();
@@ -224,15 +267,29 @@ atan(const Chebyshev_Polynomial<float> &);
 template class Chebyshev_Polynomial<long double>
 atan(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  ACOT                        */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> acot(const Chebyshev_Polynomial<T> &other){
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
 }
+template class Chebyshev_Polynomial<double>
+acot(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+acot(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+acot(const Chebyshev_Polynomial<long double> &);
+
 
 
 // OTHERS
 //EXPONENTIAL FUNCTION
 template <class T>
+/************************************************/
+/*                  EXP                         */
+/************************************************/
 Chebyshev_Polynomial<T> exp(const Chebyshev_Polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
@@ -268,58 +325,28 @@ template class Chebyshev_Polynomial<long double>
 exp(const Chebyshev_Polynomial<long double> &);
 
 
+/************************************************/
+/*                  SQRT                        */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> sqrt(const Chebyshev_Polynomial<T> &other){
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
 }
+template class Chebyshev_Polynomial<double>
+sqrt(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+sqrt(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+sqrt(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  LOG                         */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> log(const Chebyshev_Polynomial<T> &other){
-//    int nvar =  other.get_nvar();
-//    int degree = other.get_degree();
-//    Chebyshev_Polynomial<T> res(nvar,degree);
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
-//    //chebyshev expansion of exp in [1,3]
-//    std::vector<T> cheb_log(Chebyshev_Polynomial<T>::MAX_DEGREE+1);
-//    cheb_log[0] = 0.623810716364871;
-//    cheb_log[1] = 0.535898384862245;
-//    cheb_log[2] = -0.071796769724491;
-//    cheb_log[3] = 0.012825257644560;
-//    cheb_log[4] = -0.002577388071436;
-//    cheb_log[5] = 0.000552487241858;
-//    cheb_log[6] = -0.000123365425237;
-//    cheb_log[7] = 0.000028333428057;
-//    cheb_log[8] = -0.000006642929271;
-//    cheb_log[9] = 0.000001582193363;
-//    cheb_log[10] = -0.000000381552691;
-//    cheb_log[11] = 0.000000092942487;
-//    cheb_log[12] = -0.000000022828542;
-//    cheb_log[13] = 0.000000005646359;
-//    cheb_log[14] = -0.000000001404871;
-//    cheb_log[15] = 0.000000000351338;
-//    cheb_log[16] = -0.000000000088257;
-//    cheb_log[17] = 0.000000000022257;
-//    cheb_log[18] = -0.000000000005632;
-//    cheb_log[19] = 0.000000000001430;
-//    cheb_log[20] = -0.000000000000364;
-
-////    cheb_log[0] = 0.000000000000093;
-////    cheb_log[0] = -0.000000000000024;
-////    cheb_log[0] = 0.000000000000006;
-////    cheb_log[0] = -0.000000000000002;
-////    cheb_log[0] = 0.000000000000000;
-////    cheb_log[0] = -0.000000000000000;
-
-//    //mapping []
-//    Chebyshev_Polynomial<T> map(nvar,degree);
-//    std::vector<T> coeffs = map.get_coeffs();
-//    coeffs[0] = 2.0;
-//    coeffs[1] = 1.0;
-//    map.set_coeffs(coeffs);
-
-//    res = composition(cheb_log, composition(other, map));
-
-//    return res;
 }
 template class Chebyshev_Polynomial<double>
 log(const Chebyshev_Polynomial<double> &);
@@ -328,16 +355,25 @@ log(const Chebyshev_Polynomial<float> &);
 template class Chebyshev_Polynomial<long double>
 log(const Chebyshev_Polynomial<long double> &);
 
-
-
-
+/************************************************/
+/*                  LOG10                       */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> log10(const Chebyshev_Polynomial<T> &other){
 
 }
+template class Chebyshev_Polynomial<double>
+log10(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+log10(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+log10(const Chebyshev_Polynomial<long double> &);
 
+/************************************************/
+/*                  POW                         */
+/************************************************/
 template <class T>
-Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const int exponent){
+Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const int &exponent){
     if(exponent<=1){
         std::cout<<"pow function with integer exponent, integer must be > 1"<<std::endl;
         exit(EXIT_FAILURE);
@@ -352,13 +388,74 @@ Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const int expo
 
     return res;
 }
+template class Chebyshev_Polynomial<double>
+pow(const Chebyshev_Polynomial<double> &, const int &);
+template class Chebyshev_Polynomial<float>
+pow(const Chebyshev_Polynomial<float> &, const int &);
+template class Chebyshev_Polynomial<long double>
+pow(const Chebyshev_Polynomial<long double> &, const int &);
+
+
 
 template <class T>
 Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const double &exponent){
+std::cout<<"NOT IMPLEMENTED"<<std::endl;
 
 }
+template class Chebyshev_Polynomial<double>
+pow(const Chebyshev_Polynomial<double> &, const double &);
+template class Chebyshev_Polynomial<float>
+pow(const Chebyshev_Polynomial<float> &, const double &);
+template class Chebyshev_Polynomial<long double>
+pow(const Chebyshev_Polynomial<long double> &, const double &);
 
+
+/************************************************/
+/*                  INV                         */
+/************************************************/
 template <class T>
 Chebyshev_Polynomial<T> inv(const Chebyshev_Polynomial<T> &other){
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+    Chebyshev_Polynomial<T> res(nvar,degree);
 
+    //chebyshev expansion of 1/x in [1,3]
+    std::vector<T> cheb_inv(Chebyshev_Polynomial<T>::MAX_DEGREE+1);
+    cheb_inv[0] = 0.577350269189626;
+    cheb_inv[1] = -0.309401076758503;
+    cheb_inv[2] = 0.082903768654761;
+    cheb_inv[3] = -0.022213997860540;
+    cheb_inv[4] = 0.005952222787398;
+    cheb_inv[5] = -0.001594893289054;
+    cheb_inv[6] = 0.000427350368816;
+    cheb_inv[7] = -0.000114508186209;
+    cheb_inv[8] = 0.000030682376022;
+    cheb_inv[9] = -0.000008221317877;
+    cheb_inv[10] = 0.000002202895486;
+    cheb_inv[11] = -0.000000590264066;
+    cheb_inv[12] = 0.000000158160780;
+    cheb_inv[13] = -0.000000042379053;
+    cheb_inv[14] = 0.000000011355433;
+    cheb_inv[15] = -0.000000003042679;
+    cheb_inv[16] = 0.000000000815283;
+    cheb_inv[17] = -0.000000000218455;
+    cheb_inv[18] = 0.000000000058535;
+    cheb_inv[19] = -0.000000000015684;
+    cheb_inv[20] = 0.000000000004203;
+//    cheb_inv[21] = -0.000000000001126;
+//    cheb_inv[22] = 0.000000000000302;
+//    cheb_inv[23] = -0.000000000000081;
+//    cheb_inv[24] = 0.000000000000022;
+//    cheb_inv[25] = -0.000000000000006;
+//    cheb_inv[26] = 0.000000000000002;
+
+    res = composition(cheb_inv, other);
+
+    return res;
 }
+template class Chebyshev_Polynomial<double>
+inv(const Chebyshev_Polynomial<double> &);
+template class Chebyshev_Polynomial<float>
+inv(const Chebyshev_Polynomial<float> &);
+template class Chebyshev_Polynomial<long double>
+inv(const Chebyshev_Polynomial<long double> &);
