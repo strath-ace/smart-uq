@@ -32,48 +32,56 @@ int main()
 
 //    Chebyshev_Polynomial<double> res = poly1*poly2;
 
-//      Chebyshev_Polynomial<double> x(1,20,0);
+      //Chebyshev_Polynomial<double> x(1,50,0);
 
-//      //NB: use double constants!!!
-//      Chebyshev_Polynomial<double> f = (4.0-x)*(4.0-x)*(5.0+x);
+      //NB: use double constants!!!
+      //Chebyshev_Polynomial<double> f = x+7.0;//(4.0-x)*(4.0-x)*(5.0+x);
+      //Chebyshev_Polynomial<double> f = x;
 
-//      std::cout<<"f"<<std::endl;
-//      std::cout<<f<<std::endl;
+      //std::cout<<"f"<<std::endl;
+      //std::cout<<f<<std::endl;
 
-//      Chebyshev_Polynomial<double> g = 1.0/f;
+      //Chebyshev_Polynomial<double> g1 = 1.0/f;
+      //Chebyshev_Polynomial<double> g2 = inv(f);
+      //Chebyshev_Polynomial<double> g2 = sin(f);
 
-//      std::cout<<g<<std::endl;
+
+      //std::cout<<g1<<std::endl;
+      //std::cout<<g2<<std::endl;
 
     std::ofstream file;
     file.open ("results.out");
 
     std::vector<Chebyshev_Polynomial<double> > x0;
-    x0.push_back(Chebyshev_Polynomial<double>(4,10));
-    x0.push_back(Chebyshev_Polynomial<double>(4,10));
-    x0.push_back(Chebyshev_Polynomial<double>(4,10));
-    x0.push_back(Chebyshev_Polynomial<double>(4,10));
+    x0.push_back(Chebyshev_Polynomial<double>(2,10));
+    x0.push_back(Chebyshev_Polynomial<double>(2,10));
+//    x0.push_back(Chebyshev_Polynomial<double>(4,10));
+//    x0.push_back(Chebyshev_Polynomial<double>(4,10));
+
+    std::cout<<x0[0]<<std::endl;
 
     x0[0].set_coeffs(1,1);
     x0[1].set_coeffs(2,1);
-    x0[2].set_coeffs(3,1);
-    x0[3].set_coeffs(4,1);
+//    x0[2].set_coeffs(3,1);
+//    x0[3].set_coeffs(4,1);
 
     std::vector<Chebyshev_Polynomial<double> > res;
-    res.push_back(Chebyshev_Polynomial<double>(4,10));
-    res.push_back(Chebyshev_Polynomial<double>(4,10));
-    res.push_back(Chebyshev_Polynomial<double>(4,10));
-    res.push_back(Chebyshev_Polynomial<double>(4,10));
+    res.push_back(Chebyshev_Polynomial<double>(2,10));
+    res.push_back(Chebyshev_Polynomial<double>(2,10));
+//    res.push_back(Chebyshev_Polynomial<double>(4,10));
+//    res.push_back(Chebyshev_Polynomial<double>(4,10));
 
-    //translation [a,b] --> [-1,1]
-    double a = 2.0;
-    double b = 4.0;
-    x0[0] = (2.0*x0[0] - (a+b))/(b-a);
+//    //translation [a,b] --> [-1,1]
+//    double a = 10.0;
+//    double b = 13.0;
+//    x0[0] = (2.0*x0[0] - (a+b))/(b-a);
 
-    res = rk2<double>(f,x0,0.01,100);
+    res = rk4<double>(f,x0,0.001,500);
 
     std::cout<<res[0];
     for(int i=0; i<res[0].get_coeffs().size(); i++){
-        file<<left<<setw(16)<<res[0].get_coeffs()[i] <<left<<setw(16)<< res[1].get_coeffs()[i]<<left<<setw(16)<<res[2].get_coeffs()[i] <<left<<setw(16)<< res[3].get_coeffs()[i]<<"\n";
+        file<<left<<setw(16)<<res[0].get_coeffs()[i] <<left<<setw(16)<< res[1].get_coeffs()[i]<<"\n";
+        //<<left<<setw(16)<<res[2].get_coeffs()[i] <<left<<setw(16)<< res[3].get_coeffs()[i]<<"\n";
     }
     file.close();
 

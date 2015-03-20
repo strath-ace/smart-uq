@@ -22,10 +22,19 @@ std::vector<Chebyshev_Polynomial<T> > f(std::vector<Chebyshev_Polynomial<T> > x)
 //	deriv[1] = -9.81/2.0*sin(x[0]);
 
 //2 body problems
-	deriv[0] = x[1];			   //r         --> x[0]
-	deriv[1] = x[0]*x[3]*x[3]-9.81/(x[0]*x[0]);//r_dot     --> x[1]
-	deriv[2] = x[3];			   //theta     --> x[2]
-	deriv[3] = -2.0*x[1]*x[3]/x[0];		   //theta_dot --> x[3]
+//	deriv[0] = x[2];			   //r         --> x[0]
+//	deriv[1] = x[3];			   //theta     --> x[1]
+//	deriv[2] = x[0]*x[3]*x[3]-1.0/(x[0]*x[0]); //r_dot     --> x[2]
+//	deriv[3] = -2.0*x[2]*x[3]/x[0];		   //theta_dot --> x[3]
+
+
+//van der pol
+//	deriv[0] = x[1];
+//	deriv[1] = 0.5*(1.0-x[0]*x[0])*x[1]-x[0];
+
+//logistic mp
+	deriv[0] = x[0]*(1.0-x[0]);
+	deriv[1] = 0.0;
 
 	return deriv;
 }

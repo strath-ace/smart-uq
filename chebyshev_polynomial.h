@@ -28,7 +28,7 @@ extern "C" {
 template < class T >
 class Chebyshev_Polynomial{
 public:
-        static const int MAX_DEGREE = 20;
+        static const int MAX_DEGREE = 50;
         static const double ZERO = 1e-15;
 
 	Chebyshev_Polynomial(const int &vars, const int &order);
