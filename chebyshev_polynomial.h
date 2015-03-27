@@ -28,7 +28,7 @@ extern "C" {
 template < class T >
 class Chebyshev_Polynomial{
 public:
-        static const int MAX_DEGREE = 50;
+        static const int MAX_DEGREE = 100;
         static const double ZERO = 1e-15;
 
 	Chebyshev_Polynomial(const int &vars, const int &order);
@@ -66,6 +66,12 @@ public:
 	bool operator==(const Chebyshev_Polynomial<T> &other) const;
 	bool operator!=(const Chebyshev_Polynomial<T> &other) const;
 
+	Chebyshev_Polynomial<T> inv(const Chebyshev_Polynomial<T> &other) const;
+	Chebyshev_Polynomial<T> composition(const std::vector<Chebyshev_Polynomial<T> > &other) const;
+
+	static std::vector<Chebyshev_Polynomial<T> > evaluate_base(const Chebyshev_Polynomial<T> &other, const T &a, const T &b);
+	static std::vector<T> cheb_approximation(T (*f)(T x), const T a, const T b);
+
 	friend ostream &operator<<(ostream &os, const Chebyshev_Polynomial<T> &poly) {
 		std::vector<T> coeffs = poly.get_coeffs();
 		int nvar = poly.get_nvar();
@@ -101,6 +107,13 @@ public:
 	void set_coeffs(const int &idx, const T &value){m_coeffs[idx]=value;}
 	int get_degree() const {return m_degree;}
 	int get_nvar() const {return m_nvar;}
+
+	T get_range() const{
+	    T range = 0.0;
+	    for(int i=0; i<m_coeffs.size(); i++)
+		range += fabs(m_coeffs[i]);
+	    return range;
+	}
 
 private:
 	//polynomial representation variables
