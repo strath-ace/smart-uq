@@ -28,8 +28,7 @@ extern "C" {
 template < class T >
 class Chebyshev_Polynomial{
 public:
-        static const int MAX_DEGREE = 100;
-        static const double ZERO = 1e-15;
+	static const int MAX_DEGREE = 100;
 
 	Chebyshev_Polynomial(const int &vars, const int &order);
 	//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]

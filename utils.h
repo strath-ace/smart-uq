@@ -4,9 +4,14 @@
 #include <vector>
 #include <cmath>
 
+const double ZERO = 1e-15;
 
 template <class T>
 T inverse(T x){
+    if(fabs(x)<=ZERO){
+        std::cout<<"ERROR: Division by zero."<<std::endl;
+        exit(EXIT_FAILURE);
+    }
     return 1.0/x;
 }
 
