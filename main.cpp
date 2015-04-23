@@ -45,7 +45,7 @@ void main_collision_avoidance(){
 //    x[3] = 1.0;
 
     unc[0] = 0.01;
-    unc[1] = 0.01;
+    unc[1] = 0.5;
     unc[2] = 0.01;
     unc[3] = 0.01;
 
@@ -85,10 +85,56 @@ void main_collision_avoidance(){
         res[i] = x0[i];
     }
 
+    double lb = ranges[3][0], ub = ranges[3][1];
+
+    std::vector<Chebyshev_Polynomial<double> > f_composed;
+    f_composed = f(x0);
+
     //perform integration
     for(int i=0; i<tend/step; i++){
         std::cout<<"iteration "<<i<<std::endl;
-        res = rk4<double>(f,res,step);
+        std::vector<Chebyshev_Polynomial<double> > tmp_res;
+        for(int j=0; j<nvar; j++){
+            tmp_res.push_back(res[j]);
+        }
+//        std::vector<Chebyshev_Polynomial<double> > xstart;
+//        for(int i=0; i<nvar; i++){
+//            xstart.push_back(Chebyshev_Polynomial<double>(nvar,degree));
+//            xstart[i].set_coeffs(i+1,1);
+//        }
+//        //translation  [-1,1] ----> [a,b]
+//        for(int i=0; i<nvar; i++){
+//            xstart[i] = (ranges[i][1]-ranges[i][0])/2.0*xstart[i] + (ranges[i][1]+ranges[i][0])/2.0;
+//        }
+
+        //res = euler<double>(f,res,step);
+        //////////////////////////////////////
+        for(int j=0;j<nvar;j++)
+            res[j] = tmp_res[j] + step*f_composed[j].composition(tmp_res);
+        //////////////////////////////////////
+
+
+//        bool scale_range = false;
+//        double delta = 0.0;
+//        for(int j=0; j<nvar; j++){
+//            double r = tmp_res[j].get_range();
+//            if(r > ub && (j==6)){
+//                scale_range = true;
+//                delta = r - ub;
+//                ub = ub + delta;
+//                lb = lb - delta;
+//                xstart[j] = Chebyshev_Polynomial<double>(nvar,degree);
+//                xstart[j].set_coeffs(j+1,1);
+//                xstart[j] = (ub-lb)/2.0*xstart[j] + (ub+lb)/2.0;
+//            }
+//        }
+//        if(scale_range){
+//            std::vector<Chebyshev_Polynomial<double> > f_scaled;
+//            f_scaled = f(xstart);
+
+//            for(int j=0;j<nvar;j++)
+//                res[j] = tmp_res[j] + step*f_scaled[j].composition(tmp_res);
+//        }
 
         for(int j=0; j<nvar; j++){
             std::vector<double> coeffs = res[j].get_coeffs();
@@ -177,7 +223,7 @@ void main_vanderpol()
     file.open ("results.out");
 
     //algebra params
-    int degree = 30;
+    int degree = 10;
     int nvar = 2;
     //integration params
     double step = 0.01;
@@ -216,7 +262,31 @@ void main_vanderpol()
     //perform integration
     for(int i=0; i<tend/step; i++){
         std::cout<<"iteration "<<i<<std::endl;
-        res = rk4<double>(f,res,step);
+        std::vector<Chebyshev_Polynomial<double> > tmp_res;
+        for(int j=0; j<nvar; j++){
+            tmp_res.push_back(res[j]);
+        }
+
+        res = euler<double>(f,res,step);
+
+        bool scale_range = false;
+        for(int j=0; j<nvar; j++){
+            double r = res[j].get_range();
+            if(r > ranges[j][1]){
+                scale_range = true;
+                x0[j] = Chebyshev_Polynomial<double>(nvar,degree);
+                x0[j].set_coeffs(j+1,1);
+                x0[j] = r*x0[j];
+            }
+        }
+        if(scale_range){
+            std::vector<Chebyshev_Polynomial<double> > f_scaled;
+            f_scaled = f(x0);
+
+            for(int j=0;j<nvar;j++)
+                res[j] = tmp_res[j] + step*f_scaled[j].composition(tmp_res);
+        }
+
 
         for(int j=0; j<nvar; j++){
             std::vector<double> coeffs = res[j].get_coeffs();
@@ -228,6 +298,32 @@ void main_vanderpol()
 
     }
     file.close();
+}
+
+int main_orbit_determination(){
+    Chebyshev_Polynomial<double> x(1,10);
+    x.set_coeffs(1,1);
+    Chebyshev_Polynomial<double> y1 = (4.0-x)*(4.0-x)*(5.0+x);
+    Chebyshev_Polynomial<double> y2 = x*x-1.0;
+
+    Chebyshev_Polynomial<double> z = y1*y1+y2*y2-1;
+
+    std::cout<<z;
+
+}
+
+int main_test_composition(){
+    Chebyshev_Polynomial<double> x(1,10), y(1,10);
+    x.set_coeffs(1,1);
+    y.set_coeffs(1,1);
+    Chebyshev_Polynomial<double> f = x*x + 1.0;
+    Chebyshev_Polynomial<double> g = 2.0*y - 3.0;
+    std::vector<Chebyshev_Polynomial<double> > gg;
+    gg.push_back(g);
+
+    Chebyshev_Polynomial<double> res = 4.0*y*y - 12.0*y + 10.0;
+    std::cout << f.composition(gg);
+    std::cout << res;
 }
 
 int main()
@@ -243,8 +339,10 @@ int main()
 
 
     //main_2BP();
-    main_collision_avoidance();
+    //main_collision_avoidance();
     //main_vanderpol();
+    //main_orbit_determination();
+    main_test_composition();
 
     return 0;
 }
