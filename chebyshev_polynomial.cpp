@@ -92,25 +92,25 @@ Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order,
     m_degree = order;
     m_nvar = nvar;
 
-        //allocate memory for coefficients vector
+    //allocate memory for coefficients vector
 
-        int n = combination(nvar,order);
-        m_coeffs.resize(n);
-        m_coeffs[0] = value;
+    int n = combination(nvar,order);
+    m_coeffs.resize(n);
+    m_coeffs[0] = value;
 
-        m_J.resize(nvar+1);
-        m_N.resize(nvar+1);
-        m_t.resize(pow(2,nvar));
-        for(int i=0; i<=nvar; i++){
-            m_J[i].resize(order+1);
-            m_N[i].resize(order+1);
-            if(i<nvar)
-                m_t[i].resize(2);
-        }
+    m_J.resize(nvar+1);
+    m_N.resize(nvar+1);
+    m_t.resize(pow(2,nvar));
+    for(int i=0; i<=nvar; i++){
+        m_J[i].resize(order+1);
+        m_N[i].resize(order+1);
+        if(i<nvar)
+            m_t[i].resize(2);
+    }
 
-        initialize_J();
-        initialize_N();
-        initialize_t();
+    initialize_J();
+    initialize_N();
+    initialize_t();
 
 
 }
@@ -178,13 +178,12 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     }
 
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
-    std::vector<T> res_coeffs(m_coeffs.size());
+    std::vector<T> res_coeffs(combination(m_nvar,m_degree));
     double nvariations = pow(2,m_nvar);
-
     std::vector<T> other_coeffs = other.get_coeffs();
     for(int i=0; i<=m_degree; i++){//loop over subset degree i of poly1
         for(int j=0; j<=other.get_degree(); j++){//loop over subset degree j of poly2
-            if((i+j)<=m_degree){
+            //if((i+j)<=m_degree){
                 for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
                     for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
                         int sub_idx1=0, sub_idx2=0, sub_idx3=0;
@@ -198,17 +197,18 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
                                 for(int k=0; k<m_nvar; k++){
                                     v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
                                 }
-                                int pos = get_idx(v3);
                                 int deg3 = std::accumulate(v3.begin(),v3.end(),0);
-                                if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
-
-                                res_coeffs[sub_idx1 + pos] +=
+                                if(deg3<=m_degree){
+                                    int pos = res.get_idx(v3);
+                                    if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
+                                    res_coeffs[sub_idx1 + pos] +=
                                         (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
+                                }
                             }
                         }
                     }
                 }
-            }
+            //}
         }
     }
 
@@ -223,45 +223,46 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::inv(const Chebyshev_Polynomial<
     Chebyshev_Polynomial<T> res(nvar,degree);
 
     //chebyshev expansion of sin in [a,b]
-    std::vector<T> coeffs = other.get_coeffs();
-    double range = 0.0;
-    for(int i=0; i<coeffs.size(); i++)
-        range += fabs(coeffs[i]);
-    double a, b;
+    //    std::vector<T> coeffs = other.get_coeffs();
+    std::vector<T> range = other.get_range();
+    T a, b;
 
-    //computing value of other in zero
-    T value = 0.0;
-    int count = 0;
-    for(int deg=0; deg<=degree; deg++){
-        for(int i=0; i<m_J[nvar][deg]; i++){
-            std::vector<int> row = get_row(i,deg); //get for example vector (1 0 0) = x, (0 1 0) = y...
-            int prod = 1;
-            for(int j=0;j<m_nvar; j++){
-                if(row[j]%2 == 0){
-                    if(row[j]%4 != 0)
-                        prod*= -1.0;
-                }
-                else prod *= 0.0;
-            }
-            value += coeffs[count]*prod;
-            count++;
-        }
-    }
+    //    //computing value of other in zero
+    //    T value = 0.0;
+    //    int count = 0;
+    //    for(int deg=0; deg<=degree; deg++){
+    //        for(int i=0; i<m_J[nvar][deg]; i++){
+    //            std::vector<int> row = get_row(i,deg); //get for example vector (1 0 0) = x, (0 1 0) = y...
+    //            int prod = 1;
+    //            for(int j=0;j<m_nvar; j++){
+    //                if(row[j]%2 == 0){
+    //                    if(row[j]%4 != 0)
+    //                        prod*= -1.0;
+    //                }
+    //                else prod *= 0.0;
+    //            }
+    //            value += coeffs[count]*prod;
+    //            count++;
+    //        }
+    //    }
 
-    if(value>0){
-        a = min(1.0,range);
-        b = max(1.0,range);
-    }
-    else if(value<0){
-        a = -max(1.0,range);
-        b = -min(1.0,range);
-    }
-    else{
-        std::cout<<"Inverting a function with a zero in the interval [-1,1]."<<std::endl;
-        exit(EXIT_FAILURE);
-    }
+    //    T one = 1.0;
+    //    if(value>0){
+    //        a = min(one,range[1]);
+    //        b = max(one,range[1]);
+    //    }
+    //    else if(value<0){
+    //        a = max(-one,range[0]);
+    //        b = min(-one,range[0]);
+    //    }
+    //    else{
+    //        std::cout<<"Inverting a function with a zero in the interval [-1,1]."<<std::endl;
+    //        exit(EXIT_FAILURE);
+    //    }
 
-    std::vector<T> cheb_inv = cheb_approximation(inverse,(T)a,(T)b);
+    a = range[0];
+    b = range[1];
+    std::vector<T> cheb_inv = cheb_approximation(inverse,a,b);
     //univariate composition
     std::vector<Chebyshev_Polynomial<T> > base = evaluate_base(other, a,b);
     for (int i=0; i<=degree; i++){
@@ -350,7 +351,7 @@ Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator=(const Chebyshev_Poly
     }
 
     m_coeffs = other.get_coeffs();
-    return *this; 
+    return *this;
 }
 
 template <class T>
@@ -365,50 +366,50 @@ Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator=(const T &other){
 
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator+=(const Chebyshev_Polynomial<T> &other){
-	*this = Chebyshev_Polynomial<T>::operator+(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator+(other);
+    return *this;
 }
 
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator-=(const Chebyshev_Polynomial<T> &other){
-	*this = Chebyshev_Polynomial<T>::operator-(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator-(other);
+    return *this;
 }
 
 template <class T>	
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator*=(const Chebyshev_Polynomial<T> &other){
-	*this = Chebyshev_Polynomial<T>::operator*(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator*(other);
+    return *this;
 }
 
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator/=(const Chebyshev_Polynomial<T> &other){
-	*this = Chebyshev_Polynomial<T>::operator/(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator/(other);
+    return *this;
 }
 
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator+=(const T& other){
-	*this = Chebyshev_Polynomial<T>::operator+(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator+(other);
+    return *this;
 }
 
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator-=(const T& other){
-	*this = Chebyshev_Polynomial<T>::operator-(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator-(other);
+    return *this;
 }
-	
+
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator*=(const T& other){
-	*this = Chebyshev_Polynomial<T>::operator*(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator*(other);
+    return *this;
 }
-	
+
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator/=(const T& other){
-	*this = Chebyshev_Polynomial<T>::operator/(other);
-	return *this;
+    *this = Chebyshev_Polynomial<T>::operator/(other);
+    return *this;
 }
 
 template <class T>
@@ -423,7 +424,7 @@ bool Chebyshev_Polynomial<T>::operator==(const Chebyshev_Polynomial<T> &other) c
     }
 
     if(m_coeffs==other.get_coeffs())
-         return true;
+        return true;
     return false;
 }
 
@@ -503,8 +504,8 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::composition(const std::vector<C
 
     //evaluate all basis
     for(int j=0; j<m_nvar; j++){
-        T range = other[j].get_range();
-        std::vector<Chebyshev_Polynomial<T> > v = evaluate_base(other[j],-range,range);
+        //T range = other[j].get_range();
+        std::vector<Chebyshev_Polynomial<T> > v = evaluate_base(other[j],-1.0,1.0);
         for(int i=0; i<=m_degree; i++)
             base[j][i] = v[i];
     }
@@ -540,21 +541,21 @@ std::vector<T> Chebyshev_Polynomial<T>::cheb_approximation(T (*f)(T x), const T 
 
     for (int k = 0; k <= n; k++)
     {
-      t = cos(pi*(k+0.5)/(n+1)); //zeros Ti
-      y = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
-      d[k] = f(y); //evaluate function
+        t = cos(pi*(k+0.5)/(n+1)); //zeros Ti
+        y = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
+        d[k] = f(y); //evaluate function
     }
 
     fac = 2.0/(n+1);
 
     for (int j = 0; j <= n; j++)
     {
-      total = 0.0;
-      for (int k = 0; k <= n; k++)
-      {
-        total = total+d[k]*cos( (pi*j)*( (k+ 0.5)/(n+1) ) );
-      }
-      res[j] = fac*total;
+        total = 0.0;
+        for (int k = 0; k <= n; k++)
+        {
+            total = total+d[k]*cos( (pi*j)*( (k+ 0.5)/(n+1) ) );
+        }
+        res[j] = fac*total;
     }
 
     res[0] = res[0]/2.0;

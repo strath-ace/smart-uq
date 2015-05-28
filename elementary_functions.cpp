@@ -11,15 +11,12 @@ Chebyshev_Polynomial<T> sin(const Chebyshev_Polynomial<T> &other){
     Chebyshev_Polynomial<T> res(nvar,degree);
 
     //chebyshev expansion of sin in [a,b]
-    std::vector<T> coeffs = other.get_coeffs();
-    T range = 0.0;
-    for(int i=0; i<coeffs.size(); i++)
-        range += fabs(coeffs[i]);
+    std::vector<T> range = other.get_range();
 
     //approximate sin [-range,range]
-    std::vector<T> cheb_sin = Chebyshev_Polynomial<T>::cheb_approximation(sin,-range,range);
+    std::vector<T> cheb_sin = Chebyshev_Polynomial<T>::cheb_approximation(sin,range[0],range[1]);
     //univariate composition
-    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,-range,range);
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_sin[i];
     }
@@ -44,15 +41,12 @@ Chebyshev_Polynomial<T> cos(const Chebyshev_Polynomial<T> &other){
     Chebyshev_Polynomial<T> res(nvar,degree);
 
     //chebyshev expansion of cos in [a,b]
-    std::vector<T> coeffs = other.get_coeffs();
-    T range = 0.0;
-    for(int i=0; i<coeffs.size(); i++)
-        range += fabs(coeffs[i]);
+    std::vector<T> range = other.get_range();
 
     //approximate cos [-range,range]
-    std::vector<T> cheb_cos = Chebyshev_Polynomial<T>::cheb_approximation(cos,-range,range);
+    std::vector<T> cheb_cos = Chebyshev_Polynomial<T>::cheb_approximation(cos,range[0],range[1]);
     //univariate composition
-    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,-range,range);
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_cos[i];
     }
@@ -76,15 +70,12 @@ Chebyshev_Polynomial<T> tan(const Chebyshev_Polynomial<T> &other){
     Chebyshev_Polynomial<T> res(nvar,degree);
 
     //chebyshev expansion of tan in [a,b]
-    std::vector<T> coeffs = other.get_coeffs();
-    T range = 0.0;
-    for(int i=0; i<coeffs.size(); i++)
-        range += fabs(coeffs[i]);
+    std::vector<T> range = other.get_range();
 
     //approximate tan [-range,range]
-    std::vector<T> cheb_tan = Chebyshev_Polynomial<T>::cheb_approximation(tan,-range,range);
+    std::vector<T> cheb_tan = Chebyshev_Polynomial<T>::cheb_approximation(tan,range[0],range[1]);
     //univariate composition
-    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,-range,range);
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_tan[i];
     }
@@ -153,15 +144,12 @@ Chebyshev_Polynomial<T> atan(const Chebyshev_Polynomial<T> &other){
     Chebyshev_Polynomial<T> res(nvar,degree);
 
     //chebyshev expansion of atan in [a,b]
-    std::vector<T> coeffs = other.get_coeffs();
-    T range = 0.0;
-    for(int i=0; i<coeffs.size(); i++)
-        range += fabs(coeffs[i]);
+    std::vector<T> range = other.get_range();
 
     //approximate atan [-range,range]
-    std::vector<T> cheb_atan = Chebyshev_Polynomial<T>::cheb_approximation(atan,-range,range);
+    std::vector<T> cheb_atan = Chebyshev_Polynomial<T>::cheb_approximation(atan,range[0],range[1]);
     //univariate composition
-    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,-range,range);
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_atan[i];
     }
@@ -204,15 +192,12 @@ Chebyshev_Polynomial<T> exp(const Chebyshev_Polynomial<T> &other){
     Chebyshev_Polynomial<T> res(nvar,degree);
 
     //chebyshev expansion of exp in [a,b]
-    std::vector<T> coeffs = other.get_coeffs();
-    T range = 0.0;
-    for(int i=0; i<coeffs.size(); i++)
-        range += fabs(coeffs[i]);
+    std::vector<T> range = other.get_range();
 
     //approximate exp [-range,range]
-    std::vector<T> cheb_exp = Chebyshev_Polynomial<T>::cheb_approximation(exp,-range,range);
+    std::vector<T> cheb_exp = Chebyshev_Polynomial<T>::cheb_approximation(exp,range[0],range[1]);
     //univariate composition
-    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,-range,range);
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_exp[i];
     }

@@ -107,10 +107,13 @@ public:
 	int get_degree() const {return m_degree;}
 	int get_nvar() const {return m_nvar;}
 
-	T get_range() const{
-	    T range = 0.0;
-	    for(int i=0; i<m_coeffs.size(); i++)
-		range += fabs(m_coeffs[i]);
+	std::vector<T> get_range() const{
+	    std::vector<T> range(2,0);
+	    T constant = m_coeffs[0];
+	    for(int i=1; i<m_coeffs.size(); i++)
+		range[1] += fabs(m_coeffs[i]);
+	    range[0] = -range[1]+constant;
+	    range[1] += constant;
 	    return range;
 	}
 
