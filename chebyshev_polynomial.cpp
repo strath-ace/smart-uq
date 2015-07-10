@@ -200,6 +200,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
                                 int deg3 = std::accumulate(v3.begin(),v3.end(),0);
                                 if(deg3<=m_degree){
                                     int pos = res.get_idx(v3);
+                                    sub_idx1 = 0;
                                     if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
                                     res_coeffs[sub_idx1 + pos] +=
                                         (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);

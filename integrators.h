@@ -11,7 +11,7 @@
 //   h          fixed step size
 
 template <class T>
-std::vector<Chebyshev_Polynomial<T> > euler(std::vector<Chebyshev_Polynomial<T> > (*f)(std::vector<Chebyshev_Polynomial<T> > x), std::vector<Chebyshev_Polynomial<T> > x, T h) {
+std::vector<Chebyshev_Polynomial<T> > euler(std::vector<Chebyshev_Polynomial<T> > (*f)(const std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param),std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param, const T &h) {
 
         int n = x.size();
         int degree = x[0].get_degree();
@@ -23,7 +23,7 @@ std::vector<Chebyshev_Polynomial<T> > euler(std::vector<Chebyshev_Polynomial<T> 
         }
 
         //* Evaluate k1 = f(x).
-        k1 = (*f)(x);
+        k1 = (*f)(x,param);
 
         for(int i=0; i<n; i++)
             x[i] += h*k1[i];
@@ -32,7 +32,7 @@ std::vector<Chebyshev_Polynomial<T> > euler(std::vector<Chebyshev_Polynomial<T> 
 }
 
 template <class T>
-std::vector<Chebyshev_Polynomial<T> > discrete_method(std::vector<Chebyshev_Polynomial<T> > (*f)(std::vector<Chebyshev_Polynomial<T> > x), std::vector<Chebyshev_Polynomial<T> > x, T h) {
+std::vector<Chebyshev_Polynomial<T> > discrete_method(std::vector<Chebyshev_Polynomial<T> > (*f)(const std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param), std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param, const T &h) {
 
         int n = x.size();
         int degree = x[0].get_degree();
@@ -44,7 +44,7 @@ std::vector<Chebyshev_Polynomial<T> > discrete_method(std::vector<Chebyshev_Poly
         }
 
         //* Evaluate k1 = f(x).
-        k1 = (*f)(x);
+        k1 = (*f)(x,param);
 
         for(int i=0; i<n; i++)
             x[i] = k1[i];
@@ -62,7 +62,7 @@ std::vector<Chebyshev_Polynomial<T> > discrete_method(std::vector<Chebyshev_Poly
 //   param      parameters
 
 template <class T>
-std::vector<Chebyshev_Polynomial<T> > rk2(std::vector<Chebyshev_Polynomial<T> > (*f)(std::vector<Chebyshev_Polynomial<T> > x), std::vector<Chebyshev_Polynomial<T> > x, T h) {
+std::vector<Chebyshev_Polynomial<T> > rk2(std::vector<Chebyshev_Polynomial<T> > (*f)(const std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param), std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param, const T &h) {
 
         int n = x.size();
         int degree = x[0].get_degree();
@@ -79,12 +79,12 @@ std::vector<Chebyshev_Polynomial<T> > rk2(std::vector<Chebyshev_Polynomial<T> > 
         }
 
         //* Evaluate k1 = f(x).
-        k1 = (*f)(x);
+        k1 = (*f)(x,param);
 
 	//* Evaluate k2 = f(x+h*k1),
 	for(int i=0; i<n; i++)
 	    xtemp[i] = x[i]+k1[i]*h;
-	k2 = (*f)(xtemp);
+	k2 = (*f)(xtemp,param);
 
         //* Return x(t+h) computed from second-order Runge Kutta.
         for(int i=0; i<n; i++)
@@ -102,7 +102,7 @@ std::vector<Chebyshev_Polynomial<T> > rk2(std::vector<Chebyshev_Polynomial<T> > 
 //   h          fixed step size
 
 template <class T>
-std::vector<Chebyshev_Polynomial<T> > rk4(std::vector<Chebyshev_Polynomial<T> > (*f)(std::vector<Chebyshev_Polynomial<T> > x), std::vector<Chebyshev_Polynomial<T> > x, T h) {
+std::vector<Chebyshev_Polynomial<T> > rk4(std::vector<Chebyshev_Polynomial<T> > (*f)(const std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param), std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param, const T &h) {
     int n = x.size();
     int degree = x[0].get_degree();
     int nvar = x[0].get_nvar();
@@ -122,22 +122,22 @@ std::vector<Chebyshev_Polynomial<T> > rk4(std::vector<Chebyshev_Polynomial<T> > 
     }
 
     //* Evaluate k1 = f(x).
-    k1 = (*f)(x);
+    k1 = (*f)(x,param);
 
     //* Evaluate k2 = f(x+h/2*k1),
     for(int i=0; i<n; i++)
         xtemp[i] = x[i]+k1[i]*h/2.0;
-    k2 = (*f)(xtemp);
+    k2 = (*f)(xtemp,param);
 
     //* Evaluate k3 = f(x+h/2*k2),
     for(int i=0; i<n; i++)
         xtemp[i] = x[i]+k2[i]*h/2.0;
-    k3 = (*f)(xtemp);
+    k3 = (*f)(xtemp,param);
 
     //* Evaluate k4 = f(x+h*k3),
     for(int i=0; i<n; i++)
         xtemp[i] = x[i]+k3[i]*h;
-    k4 = (*f)(xtemp);
+    k4 = (*f)(xtemp,param);
 
     //* Return x(t+h) computed from second-order Runge Kutta.
     for(int i=0; i<n; i++)

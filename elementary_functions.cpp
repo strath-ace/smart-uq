@@ -217,8 +217,22 @@ exp(const Chebyshev_Polynomial<long double> &);
 /************************************************/
 template <class T>
 Chebyshev_Polynomial<T> sqrt(const Chebyshev_Polynomial<T> &other){
-    std::cout<<"NOT IMPLEMENTED"<<std::endl;
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+    Chebyshev_Polynomial<T> res(nvar,degree);
 
+    //chebyshev expansion of exp in [a,b]
+    std::vector<T> range = other.get_range();
+
+    //approximate exp [-range,range]
+    std::vector<T> cheb_sqrt = Chebyshev_Polynomial<T>::cheb_approximation(sqrt,range[0],range[1]);
+    //univariate composition
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
+    for (int i=0; i<=degree; i++){
+        res += base[i]*cheb_sqrt[i];
+    }
+
+    return res;
 }
 template class Chebyshev_Polynomial<double>
 sqrt(const Chebyshev_Polynomial<double> &);
@@ -232,8 +246,22 @@ sqrt(const Chebyshev_Polynomial<long double> &);
 /************************************************/
 template <class T>
 Chebyshev_Polynomial<T> log(const Chebyshev_Polynomial<T> &other){
-    std::cout<<"NOT IMPLEMENTED"<<std::endl;
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+    Chebyshev_Polynomial<T> res(nvar,degree);
 
+    //chebyshev expansion of exp in [a,b]
+    std::vector<T> range = other.get_range();
+
+    //approximate exp [-range,range]
+    std::vector<T> cheb_log = Chebyshev_Polynomial<T>::cheb_approximation(log,range[0],range[1]);
+    //univariate composition
+    std::vector<Chebyshev_Polynomial<T> > base = Chebyshev_Polynomial<T>::evaluate_base(other,range[0],range[1]);
+    for (int i=0; i<=degree; i++){
+        res += base[i]*cheb_log[i];
+    }
+
+    return res;
 }
 template class Chebyshev_Polynomial<double>
 log(const Chebyshev_Polynomial<double> &);

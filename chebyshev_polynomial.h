@@ -18,12 +18,6 @@
 
 using namespace std;
 
-//call to LAPACK
-extern "C" {
-     void dgesv_(int *n, int *nrhs,  double *a,  int  *lda,
-           int *ipivot, double *b, int *ldb, int *info) ;
-}
-
 
 template < class T >
 class Chebyshev_Polynomial{
