@@ -1,8 +1,8 @@
 #include "main_list.h"
 
-void main_AKP(){
+void main_multiphase(){
     std::ofstream file;
-    file.open ("intrusive_case8.out");
+    file.open ("intrusive_case2_multiphase.out");
 
     //algebra params
     int degree = 4;
@@ -10,53 +10,39 @@ void main_AKP(){
     int nparam = 1;
     //integration params
     double step = 0.01;
-    double sma = 2;
+    double sma = 1;
     double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
-    double e = 0.5;
+    double e = 0.0;
 
     std::vector<std::vector<double> > ranges_x, ranges_p;
     for(int i=0; i<nvar; i++){
         ranges_x.push_back(std::vector<double>(2));
-        ranges_x[i][0] = -1.0; ranges_x[i][1] = 1.0;
     }
     for(int i=0; i<nparam; i++){
         ranges_p.push_back(std::vector<double>(2));
-        ranges_p[i][0] = -1.0; ranges_p[i][1] = 1.0;
     }
 
-    std::vector<double> x(nvar), param(nparam), unc_x(nvar), unc_p(nparam);
+    std::vector<double> x(nvar), param(nparam);
 
     x[0] = 1.0;
     x[1] = 0.0;
     x[2] = 0.0;
     x[3] = sqrt(1+e);
 
-    param[0] = 0.01;
-
-    unc_x[0] = 0.001;
-    unc_x[1] = 0.001;
-    unc_x[2] = 0.0001;
-    unc_x[3] = 0.0001;
-
-    unc_p[0] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
+    unc_x[0] = 0.01;
+    unc_x[1] = 0.01;
+    unc_x[2] = 0.005;
+    unc_x[3] = 0.005;
 
     for(int i=0; i<nvar; i++){
         ranges_x[i][0] = x[i]-unc_x[i];
         ranges_x[i][1] = x[i]+unc_x[i];
     }
-    for(int i=0; i<nparam; i++){
-        ranges_p[i][0] = param[i]-unc_p[i];
-        ranges_p[i][1] = param[i]+unc_p[i];
-    }
 
-    std::vector<Chebyshev_Polynomial<double> > x0, param0;
+    std::vector<Chebyshev_Polynomial<double> > x0;
     for(int i=0; i<nvar; i++){
         x0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
         x0[i].set_coeffs(i+1,1);
-    }
-    for(int i=0; i<nparam; i++){
-        param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
-        param0[i].set_coeffs(i+1+nvar,1);
     }
 
     std::vector<Chebyshev_Polynomial<double> > res;
@@ -124,4 +110,5 @@ void main_AKP(){
     file.close();
 
 }
+
 
