@@ -2,17 +2,17 @@
 
 void main_AKP(){
     std::ofstream file;
-    file.open ("intrusive_case8.out");
+    file.open ("intrusive_case4.txt");
 
     //algebra params
     int degree = 4;
     int nvar = 4;
-    int nparam = 1;
+    int nparam = 1; //*********
     //integration params
     double step = 0.01;
-    double sma = 2;
+    double sma = 2; //*********
     double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
-    double e = 0.5;
+    double e = 0.5; //*********
 
     std::vector<std::vector<double> > ranges_x, ranges_p;
     for(int i=0; i<nvar; i++){
@@ -31,14 +31,16 @@ void main_AKP(){
     x[2] = 0.0;
     x[3] = sqrt(1+e);
 
-    param[0] = 0.01;
+    if(nparam>0)
+        param[0] = 0.01;
 
-    unc_x[0] = 0.001;
-    unc_x[1] = 0.001;
+    unc_x[0] = 0.01;
+    unc_x[1] = 0.01;
     unc_x[2] = 0.0001;
     unc_x[3] = 0.0001;
 
-    unc_p[0] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
+    if(nparam>0)
+        unc_p[0] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
 
     for(int i=0; i<nvar; i++){
         ranges_x[i][0] = x[i]-unc_x[i];
@@ -99,7 +101,7 @@ void main_AKP(){
             for(int kk=0; kk<coeffs_all[k].size(); kk++)
                 file << setprecision(16) << coeffs_all[k][kk] << " ";
             file << "\n";
-            if((k+1)%nvar == 0){
+            if((k+1)%nvar == 0  && nparam>0){
                 std::vector<double> param_coeff = param0[0].get_coeffs();
                 for(int kk=0; kk<param_coeff.size(); kk++)
                     file << setprecision(16) << param_coeff[kk] << " ";
@@ -114,7 +116,7 @@ void main_AKP(){
         for(int kk=0; kk<coeffs_all[k].size(); kk++)
             file << setprecision(16) << coeffs_all[k][kk] << " ";
         file << "\n";
-        if((k+1)%nvar == 0){
+        if((k+1)%nvar == 0 && nparam>0){
             std::vector<double> param_coeff = param0[0].get_coeffs();
             for(int kk=0; kk<param_coeff.size(); kk++)
                 file << setprecision(16) << param_coeff[kk] << " ";

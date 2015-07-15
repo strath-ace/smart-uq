@@ -22,7 +22,7 @@ void main_multiphase(){
         ranges_p.push_back(std::vector<double>(2));
     }
 
-    std::vector<double> x(nvar), param(nparam);
+    std::vector<double> x(nvar), param(nparam), unc_x(nvar);
 
     x[0] = 1.0;
     x[1] = 0.0;
@@ -39,10 +39,14 @@ void main_multiphase(){
         ranges_x[i][1] = x[i]+unc_x[i];
     }
 
-    std::vector<Chebyshev_Polynomial<double> > x0;
+    std::vector<Chebyshev_Polynomial<double> > x0, param0;
     for(int i=0; i<nvar; i++){
         x0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
         x0[i].set_coeffs(i+1,1);
+    }
+    for(int i=0; i<nparam; i++){
+        param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        param0[i].set_coeffs(i+1+nvar,1);
     }
 
     std::vector<Chebyshev_Polynomial<double> > res;
