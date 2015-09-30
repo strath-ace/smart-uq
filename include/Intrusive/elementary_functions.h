@@ -7,6 +7,8 @@
 #include "chebyshev_polynomial.h"
 
 using namespace std;
+using namespace smart;
+using namespace intrusive;
 
 //TRIGONOMETRIC FUNCTIONS
 template <class T>

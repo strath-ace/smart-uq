@@ -8,6 +8,9 @@ void main_multiphase(){
     int degree = 4;
     int nvar = 4;
     int nparam = 1;
+    int nphases = 3; // number of manoeauvres
+    double ttransfer = 2; //time in between manoeuvres
+
     //integration params
     double step = 0.01;
     double sma = 1;
@@ -22,21 +25,30 @@ void main_multiphase(){
         ranges_p.push_back(std::vector<double>(2));
     }
 
-    std::vector<double> x(nvar), param(nparam), unc_x(nvar);
+    std::vector<double> x(nvar), param(nparam);
+    std::vector<double> unc_x(nvar), unc_p(nparam);
 
     x[0] = 1.0;
     x[1] = 0.0;
     x[2] = 0.0;
     x[3] = sqrt(1+e);
 
+    param[0] = 0.5; // deflection of 0.5 rad
+
     unc_x[0] = 0.01;
     unc_x[1] = 0.01;
     unc_x[2] = 0.005;
     unc_x[3] = 0.005;
 
+    unc_p[0] = param[0]*1.0/10.0;
+
     for(int i=0; i<nvar; i++){
         ranges_x[i][0] = x[i]-unc_x[i];
         ranges_x[i][1] = x[i]+unc_x[i];
+    }
+    for(int i=0; i<nparam; i++){
+        ranges_p[i][0] = x[i]-unc_p[i];
+        ranges_p[i][1] = x[i]+unc_p[i];
     }
 
     std::vector<Chebyshev_Polynomial<double> > x0, param0;
@@ -44,10 +56,9 @@ void main_multiphase(){
         x0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
         x0[i].set_coeffs(i+1,1);
     }
-    for(int i=0; i<nparam; i++){
-        param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
-        param0[i].set_coeffs(i+1+nvar,1);
-    }
+
+    param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+    param0[0].set_coeffs(nvar+1,1);
 
     std::vector<Chebyshev_Polynomial<double> > res;
     for(int i=0; i<nvar; i++){
@@ -75,6 +86,12 @@ void main_multiphase(){
 
             res = rk4<double>(f,res,param0,step);
 
+            //perform manoeuvre
+            if((i+1)%ttransfer/step == 0){
+
+            }
+
+            //save values to be printed
             if((i+1)%100 == 0){
                 for(int j=0; j<nvar; j++){
                     std::vector<double> coeffs = res[j].get_coeffs();

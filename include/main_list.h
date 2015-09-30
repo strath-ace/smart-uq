@@ -5,8 +5,8 @@
 #include <string>
 #include <math.h>
 
-#include "chebyshev_polynomial.h"
-#include "elementary_functions.h"
+#include "Intrusive/chebyshev_polynomial.h"
+#include "Intrusive/elementary_functions.h"
 #include "integrators.h"
 #include "f.h"
 

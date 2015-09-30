@@ -2,9 +2,9 @@
 
 int main()
 {
-    cout << "Welcome to Chebyshev Algebra!" << endl;
+    cout << "Welcome to SMART-UQ!" << endl;
 
-    main_AKP();
+    //main_AKP();
     //main_collision_avoidance();
     //main_vanderpol();
     //main_test_multivariate();

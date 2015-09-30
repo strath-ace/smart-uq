@@ -1,5 +1,7 @@
-#include "elementary_functions.h"
+#include "Intrusive/elementary_functions.h"
 
+using namespace smart;
+using namespace intrusive;
 
 /************************************************/
 /*                  SIN                         */

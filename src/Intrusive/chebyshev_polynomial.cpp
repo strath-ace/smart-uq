@@ -5,7 +5,10 @@
 */
 
 
-#include "chebyshev_polynomial.h"
+#include "Intrusive/chebyshev_polynomial.h"
+
+using namespace smart;
+using namespace intrusive;
 
 template <class T>
 Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order): m_coeffs(0), m_degree(0), m_nvar(0){

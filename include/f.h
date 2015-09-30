@@ -2,7 +2,7 @@
 #define F_H
 
 #include <vector>
-#include "chebyshev_polynomial.h"
+#include "Intrusive/chebyshev_polynomial.h"
 
 //autonomous ODE system definition
 template <class T>
