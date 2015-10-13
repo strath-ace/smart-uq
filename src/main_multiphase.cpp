@@ -86,11 +86,6 @@ void main_multiphase(){
 
             res = rk4<double>(f,res,param0,step);
 
-            //perform manoeuvre
-            if((i+1)%ttransfer/step == 0){
-
-            }
-
             //save values to be printed
             if((i+1)%100 == 0){
                 for(int j=0; j<nvar; j++){
