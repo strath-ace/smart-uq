@@ -1,8 +1,3 @@
-
-README
-
-==================================
-
 ## Usage
 
 To obtain the coefficients using a least-square method:
@@ -24,17 +19,30 @@ where
 
 ## Example of *makefile*.
 
-CPPFLAGS=-g -Wall -I../include/eigen/ -I../suit/alcor
+FC=g++
+
+CC=gcc
+
+CPP=g++
+
+RM=rm -f
+
+CPPFLAGS=-g -Wall -I../include/eigen/
 
 %.o: %.cpp
+
         $(CPP) $(CPPFLAGS) -c $<
 
 all: main.x
 
 main.x: utils.o sparse_grid_index.o sparse_grid_cc_dataset.o \
+
         chebyshev_polynomial.o multivariate_polynomials.o main.o
-        $(CPP) $(CPPFLAGS) utils.o sparse_grid_index.o sparse_grid_cc_dataset.o \
-        chebyshev_polynomial.o multivariate_polynomials.o main.o -o main.x
+
+        $(CPP) $(CPPFLAGS) utils.o sparse_grid_index.o \
+	sparse_grid_cc_dataset.o chebyshev_polynomial.o \
+	multivariate_polynomials.o main.o -o main.x
 
 clean:
+
         $(RM) *~ *.o *.txt *.x \#*\#;
