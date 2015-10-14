@@ -35,13 +35,9 @@ CPPFLAGS=-g -Wall -I../include/eigen/
 
 all: main.x
 
-main.x: utils.o sparse_grid_index.o sparse_grid_cc_dataset.o \
+main.x: utils.o sparse_grid_index.o sparse_grid_cc_dataset.o chebyshev_polynomial.o multivariate_polynomials.o main.o
 
-        chebyshev_polynomial.o multivariate_polynomials.o main.o
-
-        $(CPP) $(CPPFLAGS) utils.o sparse_grid_index.o \
-	sparse_grid_cc_dataset.o chebyshev_polynomial.o \
-	multivariate_polynomials.o main.o -o main.x
+        $(CPP) $(CPPFLAGS) utils.o sparse_grid_index.o sparse_grid_cc_dataset.o chebyshev_polynomial.o multivariate_polynomials.o main.o -o main.x
 
 clean:
 
