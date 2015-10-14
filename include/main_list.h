@@ -28,6 +28,7 @@ namespace patch
 }
 
 
+void main_multiphase();
 void main_accuracy();
 void main_AKP();
 void main_collision_avoidance();

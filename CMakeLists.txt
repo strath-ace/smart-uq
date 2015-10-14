@@ -47,6 +47,7 @@ file(GLOB SRC
   "${SRC_PATH}/main_collision.cpp"
   "${SRC_PATH}/main_multiphase.cpp"
   "${SRC_PATH}/main_vanderpool.cpp"
+  "${SRC_PATH}/main_intersect.cpp"
 )
 
 set(MAIN_SRC

@@ -4,6 +4,7 @@ int main()
 {
     cout << "Welcome to SMART-UQ!" << endl;
 
+    main_multiphase();
     //main_AKP();
     //main_collision_avoidance();
     //main_vanderpol();
