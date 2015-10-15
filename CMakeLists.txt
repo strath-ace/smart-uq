@@ -46,6 +46,13 @@ file(GLOB SRC
   "${SRC_PATH}/Sampling/*.cpp"
   "${SRC_PATH}/Non-intrusive/*.cpp"
   "${SRC_PATH}/Intrusive/*.cpp"
+  "${SRC_PATH}/main_accuracy.cpp"
+  "${SRC_PATH}/main_AKP.cpp"
+  "${SRC_PATH}/main_collision.cpp"
+  "${SRC_PATH}/main_multiphase.cpp"
+  "${SRC_PATH}/main_vanderpool.cpp"
+  "${SRC_PATH}/main_intersect.cpp"
+  "${SRC_PATH}/main_dct_test.cpp"
 )
 
 set(MAIN_SRC
