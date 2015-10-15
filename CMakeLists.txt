@@ -37,6 +37,10 @@ option(BUILD_MAIN                              "Build main function"            
 option(BUILD_DOCS                              "Build docs"                     OFF)
 option(BUILD_TESTS                             "Build tests"                    OFF)
 
+find_library(FFTW_LIBRARY NAMES fftw3)
+find_library(FFTWF_LIBRARY NAMES fftw3f)
+find_library(FFTWL_LIBRARY NAMES fftw3l)
+set(FFTW_LIBRARIES "${FFTW_LIBRARY}" "${FFTWF_LIBRARY}" "${FFTWL_LIBRARY}")
 
 file(GLOB SRC
   "${SRC_PATH}/Sampling/*.cpp"
@@ -104,7 +108,7 @@ add_library(${LIB_NAME} ${SRC})
 if(BUILD_MAIN)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_PATH})
   add_executable(${MAIN_NAME} ${MAIN_SRC})
-  target_link_libraries(${MAIN_NAME} ${LIB_NAME})
+  target_link_libraries(${MAIN_NAME} ${LIB_NAME} ${FFTW_LIBRARIES})
 endif(BUILD_MAIN)
 
 if(BUILD_DOCS)

@@ -19,6 +19,7 @@
 #include <numeric>
 #include <iomanip>
 #include "utils.h"
+#include <fftw3.h>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ namespace intrusive{
 	template < class T >
 	class Chebyshev_Polynomial{
 	public:
-		static const int MAX_DEGREE = 20;
+		static const int MAX_DEGREE = 100;
 
 		Chebyshev_Polynomial(const int &vars, const int &order);
 		//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
@@ -80,14 +81,14 @@ namespace intrusive{
 		    		os << "T(x"<<i<<")\t";
 			os << "\n";
 			for(int deg=0; deg<=poly.get_degree(); deg++){
-		    		for(int i=0; i<poly.get_J()[poly.get_nvar()][deg]; i++){
+	    		for(int i=0; i<poly.get_J()[poly.get_nvar()][deg]; i++){
 					os <<left<<setw(16)<<coeffs[idx];
 					std::vector<int> row = poly.get_row(i,deg);
 					for(int j=0; j<row.size(); j++)
-				    		os<<row[j]<<"\t";
+			    		os<<row[j]<<"\t";
 					os<<"\n";
 					idx++;
-		    		}
+	    		}
 			}
 			return os;
 		}
@@ -105,6 +106,11 @@ namespace intrusive{
 		void set_coeffs(const int &idx, const T &value){m_coeffs[idx]=value;}
 		int get_degree() const {return m_degree;}
 		int get_nvar() const {return m_nvar;}
+		std::vector<std::vector<int> > get_J() const {return m_J;}
+		std::vector<std::vector<int> > get_N() const {return m_N;}
+		std::vector<int> get_row(const int &idx, const int &deg) const;
+		std::vector<std::vector<int> > get_t() const {return m_t;}
+		int get_idx(const std::vector<int> &k) const;
 
 		std::vector<T> get_range() const{
 	    		std::vector<T> range(2,0);
@@ -121,9 +127,7 @@ namespace intrusive{
 		void initialize_J();
 		void initialize_N();
 		void initialize_t();
-		std::vector<int> get_row(const int &idx, const int &deg) const;
-		int get_idx(const std::vector<int> &k) const;
-		std::vector<std::vector<int> > get_J() const {return m_J;}
+
 
 	private:
 		std::vector<T> m_coeffs;
