@@ -741,7 +741,6 @@ std::vector<int> Chebyshev_Polynomial<T>::get_row(const int &idx, const int &deg
     return k;
 }
 
-
 template class Chebyshev_Polynomial<double>;
 template class Chebyshev_Polynomial<float>;
 template class Chebyshev_Polynomial<long double>;

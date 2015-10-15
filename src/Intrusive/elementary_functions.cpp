@@ -381,7 +381,6 @@ pow(const Chebyshev_Polynomial<long double> &, const int &);
 template <class T>
 Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const double &exponent){
 std::cout<<"NOT IMPLEMENTED"<<std::endl;
-
 }
 template class Chebyshev_Polynomial<double>
 pow(const Chebyshev_Polynomial<double> &, const double &);
@@ -389,4 +388,3 @@ template class Chebyshev_Polynomial<float>
 pow(const Chebyshev_Polynomial<float> &, const double &);
 template class Chebyshev_Polynomial<long double>
 pow(const Chebyshev_Polynomial<long double> &, const double &);
-

@@ -39,7 +39,6 @@ Chebyshev_Polynomial<T> atan(const Chebyshev_Polynomial<T> &other);
 template <class T>
 Chebyshev_Polynomial<T> acot(const Chebyshev_Polynomial<T> &other);
 
-
 // OTHERS
 template <class T>
 Chebyshev_Polynomial<T> exp(const Chebyshev_Polynomial<T> &other);
@@ -58,7 +57,6 @@ Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const int &exp
 
 template <class T>
 Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const double &exponent);
-
 
 
 

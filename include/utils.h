@@ -140,7 +140,6 @@ void dct_do(int nvar, int* dct_degree, T*& dct) {
     dct_do_impl<T,sizeof(T)>()(nvar,dct_degree,dct);
 }
 
-
 //LAPACK METHOD
 //    std::vector<T> coeffs = other.get_coeffs();
 //    int n = coeffs.size();
@@ -194,6 +193,7 @@ void dct_do(int nvar, int* dct_degree, T*& dct) {
 //       std::cout << "LAPACK dgesv returned error " << info << "\n";
 //       exit(EXIT_FAILURE);
 //    }
+
 
 
 #endif // UTILS_H
