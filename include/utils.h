@@ -65,15 +65,30 @@ template <class T, size_t n>
 struct dct_malloc_impl;
 template <class T>
 struct dct_malloc_impl<T,sizeof(float)>{
-    void operator()(T*& pointer, int length) const { pointer = (T*) fftwf_malloc( sizeof(T) * length);}
+    void operator()(T*& pointer, int length) const { 
+        pointer = (T*) fftwf_malloc( sizeof(T) * length);
+        for (int i=0;i<length;i++){
+            pointer[i]=0;
+        }
+    }
 };
 template <class T>
 struct dct_malloc_impl<T,sizeof(double)>{
-    void operator()(T*& pointer, int length) const { pointer = (T*) fftw_malloc( sizeof(T) * length);}
+    void operator()(T*& pointer, int length) const { 
+        pointer = (T*) fftw_malloc( sizeof(T) * length);
+        for (int i=0;i<length;i++){
+            pointer[i]=0;
+        }
+    }
 };
 template <class T>
 struct dct_malloc_impl<T,sizeof(long double)>{
-    void operator()(T*& pointer, int length) const { pointer = (T*) fftwl_malloc( sizeof(T) * length);}
+    void operator()(T*& pointer, int length) const { 
+        pointer = (T*) fftwl_malloc( sizeof(T) * length);
+        for (int i=0;i<length;i++){
+            pointer[i]=0;
+        }
+    }
 };
 template <class T>
 void dct_malloc(T*& pointer, int length) {dct_malloc_impl<T,sizeof(T)>()(pointer, length);}

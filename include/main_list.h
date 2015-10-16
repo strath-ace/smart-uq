@@ -30,8 +30,9 @@ namespace patch
 
 
 void main_multiphase();
-void main_accuracy();
+void main_test_accuracy();
 void main_AKP();
 void main_collision_avoidance();
 void main_vanderpol();
 void main_test_dct();
+void main_tests();

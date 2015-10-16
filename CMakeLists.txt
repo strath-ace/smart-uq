@@ -53,6 +53,7 @@ file(GLOB SRC
   "${SRC_PATH}/main_vanderpool.cpp"
   "${SRC_PATH}/main_intersect.cpp"
   "${SRC_PATH}/main_test_dct.cpp"
+  "${SRC_PATH}/main_tests.cpp"
 )
 
 set(MAIN_SRC

@@ -67,6 +67,7 @@ direct_multiplication(const Chebyshev_Polynomial<float> &, const Chebyshev_Polyn
 template class Chebyshev_Polynomial<long double>
 direct_multiplication(const Chebyshev_Polynomial<long double> &, const Chebyshev_Polynomial<long double> &);
 
+
 /************************************************/
 /*                  SIN                         */
 /************************************************/

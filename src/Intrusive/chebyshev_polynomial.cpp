@@ -259,9 +259,9 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
         for (int i=0;i<max_i;i++){
             std::vector<int> row = res.get_row(i,deg);
             int term_idx=0;
-            T term_scale=1;
+            T term_scale=1.0;
             for (int var=0;var<m_nvar;var++){
-                if (row[var]==0) term_scale*=2;
+                if (row[var]==0) term_scale*=2.0;
                 term_idx+=row[var]*pow((dct_degree_aux+1),var);
             }
             idx.push_back(term_idx);
@@ -279,7 +279,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
 
     // component-wise multiplication DCT(x0):DCT(x1)
     // scale already to avoid coefficients growing too much in large algebras
-    T scale_intermediate=pow(4*dct_degree_aux,m_nvar);
+    T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
     for(int i=0;i<pointers_length;i++){
         dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
     }

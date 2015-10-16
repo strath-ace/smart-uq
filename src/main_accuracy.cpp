@@ -1,6 +1,6 @@
 #include "main_list.h"
 
-int main_test_accuracy(){
+void main_test_accuracy(){
 
 //    //TEST FUNCTIONS UNIVARIATE
 //    int nvar = 1;
