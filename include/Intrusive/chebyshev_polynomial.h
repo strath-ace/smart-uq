@@ -143,7 +143,7 @@ namespace intrusive{
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator-(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)-right;
+		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)-right;
 	}
 
 	template < class T>
@@ -153,7 +153,7 @@ namespace intrusive{
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator+(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)+right;
+		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)+right;
 	}
 
 	template < class T>
@@ -163,7 +163,7 @@ namespace intrusive{
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator*(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)*right;
+		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)*right;
 	}
 
 	template < class T>
@@ -173,7 +173,7 @@ namespace intrusive{
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator/(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)/-right;
+		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)/right;
 	}
 }
 }
