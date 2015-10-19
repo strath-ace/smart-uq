@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <limits>
-#include "chebyshev_polynomial.h"
+#include "chebyshev.h"
 
 using namespace std;
 using namespace smart;

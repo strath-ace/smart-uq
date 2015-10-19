@@ -2,7 +2,7 @@
 #define INTEGRATORS_H
 
 #include <vector>
-#include "Intrusive/chebyshev_polynomial.h"
+#include "Intrusive/chebyshev.h"
 
 // Euler forward integrator step
 // Inputs
