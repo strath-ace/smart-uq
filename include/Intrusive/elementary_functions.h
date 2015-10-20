@@ -10,9 +10,9 @@ using namespace std;
 using namespace smart;
 using namespace intrusive;
 
-//DIRECT MULTIPLICATION
-template <class T>
-Chebyshev_Polynomial<T> direct_multiplication(const Chebyshev_Polynomial<T> &x0, const Chebyshev_Polynomial<T> &x1);
+// //DIRECT MULTIPLICATION
+// template <class T>
+// Chebyshev_Polynomial<T> direct_multiplication(const Chebyshev_Polynomial<T> &x0, const Chebyshev_Polynomial<T> &x1);
 
 //TRIGONOMETRIC FUNCTIONS
 template <class T>

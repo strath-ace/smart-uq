@@ -3,71 +3,71 @@
 using namespace smart;
 using namespace intrusive;
 
-/************************************************/
-/*           DIRECT MULTIPLICATION              */
-/************************************************/
-// Does it belong here?
+// /************************************************/
+// /*           DIRECT MULTIPLICATION              */
+// /************************************************/
+// // Does it belong here?
 
-template <class T>
-Chebyshev_Polynomial<T> direct_multiplication(const Chebyshev_Polynomial<T> &x0, const Chebyshev_Polynomial<T> &x1) {
-    if(x0.get_nvar()!=x1.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
-    if(x0.get_degree()!=x1.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
+// template <class T>
+// Chebyshev_Polynomial<T> direct_multiplication(const Chebyshev_Polynomial<T> &x0, const Chebyshev_Polynomial<T> &x1) {
+//     if(x0.get_nvar()!=x1.get_nvar()){
+//         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+//         exit(EXIT_FAILURE);
+//     }
+//     if(x0.get_degree()!=x1.get_degree()){
+//         std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+//         exit(EXIT_FAILURE);
+//     }
 
-    Chebyshev_Polynomial<T> res(x0.get_nvar(),x0.get_degree());
-    std::vector<T> res_coeffs(combination(x0.get_nvar(),x0.get_degree()));
-    double nvariations = pow(2,x0.get_nvar());
-    std::vector<T> x0_coeffs = x0.get_coeffs();
-    std::vector<T> x1_coeffs = x1.get_coeffs();
-    std::vector<std::vector<int> > x0_J=x0.get_J();
-    std::vector<std::vector<int> > x0_N=x0.get_N();
-    std::vector<std::vector<int> > x0_t=x0.get_t();
-    for(int i=0; i<=x0.get_degree(); i++){//loop over subset degree i of poly1
-        for(int j=0; j<=x1.get_degree(); j++){//loop over subset degree j of poly2
-            //if((i+j)<=m_degree){
-                for(int idx1=0; idx1<x0_J[x0.get_nvar()][i]; idx1++){//index over elements with degree i in poly1
-                    for(int idx2=0; idx2<x0_J[x0.get_nvar()][j]; idx2++){//index over elements with degree j in poly2
-                        int sub_idx1=0, sub_idx2=0, sub_idx3=0;
-                        if(i>0) sub_idx2=x0_N[x0.get_nvar()][i-1];
-                        if(j>0) sub_idx3=x0_N[x0.get_nvar()][j-1];
-                        if(fabs(x0_coeffs[sub_idx2+idx1])>ZERO && fabs(x1_coeffs[sub_idx3+idx2])>ZERO){
-                            std::vector<int> v1 = x0.get_row(idx1,i);
-                            std::vector<int> v2 = x0.get_row(idx2,j);
-                            std::vector<int> v3(x0.get_nvar());
-                            for(int iter=0; iter<nvariations; iter++){
-                                for(int k=0; k<x0.get_nvar(); k++){
-                                    v3[k] = std::fabs(v1[k]+x0_t[iter][k]*v2[k]);
-                                }
-                                int deg3 = std::accumulate(v3.begin(),v3.end(),0);
-                                if(deg3<=x0.get_degree()){
-                                    int pos = res.get_idx(v3);
-                                    sub_idx1 = 0;
-                                    if(deg3>0) sub_idx1=x0_N[x0.get_nvar()][deg3-1];
-                                    res_coeffs[sub_idx1 + pos] +=
-                                        (1.0/nvariations)*(x0_coeffs[sub_idx2+idx1]*x1_coeffs[sub_idx3+idx2]);
-                                }
-                            }
-                        }
-                    }
-                }
-            //}
-        }
-    }
+//     Chebyshev_Polynomial<T> res(x0.get_nvar(),x0.get_degree());
+//     std::vector<T> res_coeffs(combination(x0.get_nvar(),x0.get_degree()));
+//     double nvariations = pow(2,x0.get_nvar());
+//     std::vector<T> x0_coeffs = x0.get_coeffs();
+//     std::vector<T> x1_coeffs = x1.get_coeffs();
+//     std::vector<std::vector<int> > x0_J=x0.get_J();
+//     std::vector<std::vector<int> > x0_N=x0.get_N();
+//     std::vector<std::vector<int> > x0_t=x0.get_t();
+//     for(int i=0; i<=x0.get_degree(); i++){//loop over subset degree i of poly1
+//         for(int j=0; j<=x1.get_degree(); j++){//loop over subset degree j of poly2
+//             //if((i+j)<=m_degree){
+//                 for(int idx1=0; idx1<x0_J[x0.get_nvar()][i]; idx1++){//index over elements with degree i in poly1
+//                     for(int idx2=0; idx2<x0_J[x0.get_nvar()][j]; idx2++){//index over elements with degree j in poly2
+//                         int sub_idx1=0, sub_idx2=0, sub_idx3=0;
+//                         if(i>0) sub_idx2=x0_N[x0.get_nvar()][i-1];
+//                         if(j>0) sub_idx3=x0_N[x0.get_nvar()][j-1];
+//                         if(fabs(x0_coeffs[sub_idx2+idx1])>ZERO && fabs(x1_coeffs[sub_idx3+idx2])>ZERO){
+//                             std::vector<int> v1 = x0.get_row(idx1,i);
+//                             std::vector<int> v2 = x0.get_row(idx2,j);
+//                             std::vector<int> v3(x0.get_nvar());
+//                             for(int iter=0; iter<nvariations; iter++){
+//                                 for(int k=0; k<x0.get_nvar(); k++){
+//                                     v3[k] = std::fabs(v1[k]+x0_t[iter][k]*v2[k]);
+//                                 }
+//                                 int deg3 = std::accumulate(v3.begin(),v3.end(),0);
+//                                 if(deg3<=x0.get_degree()){
+//                                     int pos = res.get_idx(v3);
+//                                     sub_idx1 = 0;
+//                                     if(deg3>0) sub_idx1=x0_N[x0.get_nvar()][deg3-1];
+//                                     res_coeffs[sub_idx1 + pos] +=
+//                                         (1.0/nvariations)*(x0_coeffs[sub_idx2+idx1]*x1_coeffs[sub_idx3+idx2]);
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             //}
+//         }
+//     }
 
-    res.set_coeffs(res_coeffs);
-    return res;
-}
-template class Chebyshev_Polynomial<double>
-direct_multiplication(const Chebyshev_Polynomial<double> &, const Chebyshev_Polynomial<double> &);
-template class Chebyshev_Polynomial<float>
-direct_multiplication(const Chebyshev_Polynomial<float> &, const Chebyshev_Polynomial<float> &);
-template class Chebyshev_Polynomial<long double>
-direct_multiplication(const Chebyshev_Polynomial<long double> &, const Chebyshev_Polynomial<long double> &);
+//     res.set_coeffs(res_coeffs);
+//     return res;
+// }
+// template class Chebyshev_Polynomial<double>
+// direct_multiplication(const Chebyshev_Polynomial<double> &, const Chebyshev_Polynomial<double> &);
+// template class Chebyshev_Polynomial<float>
+// direct_multiplication(const Chebyshev_Polynomial<float> &, const Chebyshev_Polynomial<float> &);
+// template class Chebyshev_Polynomial<long double>
+// direct_multiplication(const Chebyshev_Polynomial<long double> &, const Chebyshev_Polynomial<long double> &);
 
 
 /************************************************/

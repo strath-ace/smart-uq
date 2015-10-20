@@ -70,6 +70,7 @@ namespace intrusive{
 		Chebyshev_Polynomial<T> inv(const Chebyshev_Polynomial<T> &other) const;
 		Chebyshev_Polynomial<T> composition(const std::vector<Chebyshev_Polynomial<T> > &other) const;
 
+		static Chebyshev_Polynomial<T> direct_multiplication(const Chebyshev_Polynomial<T> &x0, const Chebyshev_Polynomial<T> &x1);
 
 		static std::vector<Chebyshev_Polynomial<T> > evaluate_base(const Chebyshev_Polynomial<T> &other, const T &a, const T &b);
 		static std::vector<T> cheb_approximation(T (*f)(T x), const T a, const T b);

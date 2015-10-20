@@ -10,9 +10,9 @@ void main_test_dct(){
     
     // cout << endl << endl << "degree = 4-6   nvar = 1-9" << endl;
 
-    for (int degree=10; degree <=10; degree+=1){
+    for (int degree=3; degree <=3; degree+=1){
         cout << "[" << endl;
-        for (int nvar=4; nvar<=4; nvar++){
+        for (int nvar=8; nvar<=8; nvar++){
             //TIME
             clock_t direct0, directf, dct0, dctf;
             double direct_t, dct_t, t_rel;
@@ -74,7 +74,7 @@ void main_test_dct(){
             //TIME
             dct0=clock();
 
-            Chebyshev_Polynomial<double> x0x1 = direct_multiplication(x[0],x[1]);
+            Chebyshev_Polynomial<double> x0x1 = Chebyshev_Polynomial<double>::direct_multiplication(x[0],x[1]);
 
             // TIME
             dctf=clock();
