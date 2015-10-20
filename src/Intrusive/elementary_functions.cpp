@@ -6,6 +6,8 @@ using namespace intrusive;
 /************************************************/
 /*           DIRECT MULTIPLICATION              */
 /************************************************/
+// Does it belong here?
+
 template <class T>
 Chebyshev_Polynomial<T> direct_multiplication(const Chebyshev_Polynomial<T> &x0, const Chebyshev_Polynomial<T> &x1) {
     if(x0.get_nvar()!=x1.get_nvar()){
