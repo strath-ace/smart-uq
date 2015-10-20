@@ -67,7 +67,7 @@ namespace intrusive{
 		}
 
 	public:
-       		//getter and setters
+       	//getter and setters
 		std::vector<T> get_coeffs() const {return m_coeffs;}
 		void set_coeffs(std::vector<T> &coeffs){
 	    		if(m_coeffs.size()!=coeffs.size()){
@@ -80,7 +80,6 @@ namespace intrusive{
 		int get_degree() const {return m_degree;}
 		int get_nvar() const {return m_nvar;}
 		int get_idx(const std::vector<int> &k) const;
-
 		std::vector<T> get_range() const{
 	    		std::vector<T> range(2,0);
 	    		T constant = m_coeffs[0];
@@ -91,10 +90,19 @@ namespace intrusive{
 	    		return range;
 		}
 
+		virtual T evaluate(const std::vector<T> &x)=0;
+		virtual T evaluate(const T &x)=0;
+		virtual std::vector<T> evaluate (const std::vector< std:: vector <T> > &x)=0;
+
 	private:
 		//polynomial representation variables
 		void initialize_J();
 		void initialize_N();
+
+	protected:
+		std::vector<std::vector<int> > get_J() const {return m_J;}
+		std::vector<std::vector<int> > get_N() const {return m_N;}
+		std::vector<int> get_row(const int &idx, const int &deg) const;
 
 	protected:
 		std::vector<T> m_coeffs;
@@ -102,11 +110,6 @@ namespace intrusive{
 		int m_nvar;
 		std::vector<std::vector<int> > m_J, m_N;
 
-
-	public: //these are public because direct_multiplication is an elementary function. make protected if that changes
-		std::vector<std::vector<int> > get_J() const {return m_J;}
-		std::vector<std::vector<int> > get_N() const {return m_N;}
-		std::vector<int> get_row(const int &idx, const int &deg) const;
 	};
 }
 }

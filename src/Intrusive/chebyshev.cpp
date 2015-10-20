@@ -189,6 +189,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
         exit(EXIT_FAILURE);
     }
 
+    #ifdef CHEBYSHEV_DCT_MULTIPLICATION
     int ncoeffs = combination(m_nvar,m_degree);
     std::vector<T> other_coeffs = other.get_coeffs();
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
@@ -258,6 +259,12 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     // deallocate and return
     dct_free(dct01);
     return res;
+
+    #else
+    
+    return direct_multiplication(*this,other);
+
+    #endif
 }
 
 

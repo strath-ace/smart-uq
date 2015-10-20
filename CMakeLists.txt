@@ -37,10 +37,16 @@ option(BUILD_MAIN                              "Build main function"            
 option(BUILD_DOCS                              "Build docs"                     OFF)
 option(BUILD_TESTS                             "Build tests"                    OFF)
 
-find_library(FFTW_LIBRARY NAMES fftw3)
-find_library(FFTWF_LIBRARY NAMES fftw3f)
-find_library(FFTWL_LIBRARY NAMES fftw3l)
-set(FFTW_LIBRARIES "${FFTW_LIBRARY}" "${FFTWF_LIBRARY}" "${FFTWL_LIBRARY}")
+find_library(FFTW_LIBRARY fftw3)
+find_library(FFTWF_LIBRARY fftw3f)
+find_library(FFTWL_LIBRARY fftw3l)
+if (FFTW_LIBRARY AND (FFTWF_LIBRARY AND FFTWL_LIBRARY))
+  set(FFTW_LIBRARIES "${FFTW_LIBRARY}" "${FFTWF_LIBRARY}" "${FFTWL_LIBRARY}")
+  set(CHEBYSHEV_DCT_MULTIPLICATION ON)
+else (FFTW_LIBRARY AND (FFTWF_LIBRARY AND FFTWL_LIBRARY))
+  set(CHEBYSHEV_DCT_MULTIPLICATION OFF)
+  message(STATUS "WARNING: fftw3 libraries not found; always using direct multiplication for Chebyshev Polynomials.")
+endif(FFTW_LIBRARY AND (FFTWF_LIBRARY AND FFTWL_LIBRARY))
 
 file(GLOB SRC
   "${SRC_PATH}/Sampling/*.cpp"
@@ -106,6 +112,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
     set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
+configure_file (
+  "${SRC_PATH}/config.h.in"
+  "${INCLUDE_PATH}/config.h"
+  )
 
 include_directories(${INCLUDE_PATH} ${EIGEN_INCLUDE_PATH})
 

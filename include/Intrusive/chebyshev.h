@@ -13,7 +13,11 @@
 #define CHEBYSHEV_POLYNOMIAL_H_
 
 #include "polynomial.h"
+#include "config.h"
+
+#ifdef CHEBYSHEV_DCT_MULTIPLICATION
 #include <fftw3.h>
+#endif
 
 using namespace std;
 
@@ -78,11 +82,15 @@ namespace intrusive{
 		std::string get_basis_name() const;
 		std::string get_name() const;
 
+		T evaluate(const std::vector<T> &x){std::cout<<"NOT IMPLEMENTED"<<std::endl;};
+		T evaluate(const T &x){std::cout<<"NOT IMPLEMENTED"<<std::endl;};
+		std::vector<T> evaluate(const std::vector< std:: vector <T> > &x){std::cout<<"NOT IMPLEMENTED"<<std::endl;};
+	
 	private:
 		void initialize_t();
 		std::vector<std::vector<int> > m_t;
 
-	public://these is public because direct_multiplication is an elementary function. make private if that changes
+	private:
 		std::vector<std::vector<int> > get_t() const {return m_t;}
 
 	};

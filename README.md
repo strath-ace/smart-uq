@@ -38,8 +38,11 @@ To install this project, please ensure that you have installed the following (in
 `SMART-UQ` does not depend on any libraries, at the stage. The following library is optional (see `Build options`):
 
   - [CATCH](https://www.github.com/philsquared/Catch) (unit testing library necessary for `BUILD_TESTS` build option)
-
 This dependency will be downloaded and configured automagically if not already present locally (requires an internet connection).
+  - [FFTW3](https://github.com/FFTW/fftw3) (This library is necessary for DCT-based multiplication of polynomials in Chebyshev basis.
+DCT-based multiplication is the default behaviour of operator * for Chebyshev_Polynomial in smart-uq, since it is generally faster than direct multiplication (which is also available as a function).
+For DCT-based multiplication to work, the library needs to be installed three times: regularly (for double precision), compiled with the --enable-float flag and compiled with the --enable-long-double flag.
+If any of these installs is missing, operator * between Chebyshev_Polynomial objects will perform direct multiplication.
 
 Installation
 ------

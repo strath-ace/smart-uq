@@ -12,7 +12,7 @@ int main(){
     //main_vanderpol();
     main_test_dct();
     //main_test_multivariate();
-    //main_test_accuracy();
+    // main_test_accuracy();
     // main_tests();
     return 0;
 }

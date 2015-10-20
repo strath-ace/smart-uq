@@ -3,7 +3,11 @@
 
 #include <vector>
 #include <cmath>
+#include "config.h"
+
+#ifdef CHEBYSHEV_DCT_MULTIPLICATION
 #include <fftw3.h>
+#endif
 
 const double ZERO = 1e-15;
 
@@ -60,6 +64,7 @@ inline void variations(const std::vector<int> values, const int k, std::vector<s
 }
 
 // RELATED TO THE DCT-BASED MULTIPLICATION
+#ifdef CHEBYSHEV_DCT_MULTIPLICATION
 // kinda wrap fftw_malloc functions with vanilla template specialization
 template <class T, size_t n>
 struct dct_malloc_impl;
@@ -154,7 +159,7 @@ template <class T>
 void dct_do(int nvar, int* dct_degree, T*& dct) {
     dct_do_impl<T,sizeof(T)>()(nvar,dct_degree,dct);
 }
-
+#endif //CHEBYSHEV_DCT_MULTIPLICATION
 //LAPACK METHOD
 //    std::vector<T> coeffs = other.get_coeffs();
 //    int n = coeffs.size();
