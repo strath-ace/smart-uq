@@ -38,10 +38,11 @@ namespace intrusive{
 		Polynomial(const int &vars, const int &order, const T &value);
 
 		//deconstructor
-		~Polynomial(){}
+		virtual ~Polynomial(){} //make accessible if the class is made non-abstract
 
-		//virtual getter for name of the basis has to be overridden
-		virtual std::string get_basis() const = 0;
+		//virtual getters
+		virtual std::string get_basis_name() const = 0; //basis identifier like "T" for Chebyshev
+		virtual std::string get_name() const = 0; //name of the derived class like "Chebyshev_Polynomial"
 
 		friend ostream &operator<<(ostream &os, const Polynomial<T> &poly) {
 			std::vector<T> coeffs = poly.get_coeffs();
@@ -50,7 +51,7 @@ namespace intrusive{
 
 			os <<std::setfill(' ')<<setw(16);
 			for(int i=0; i<nvar; i++)
-		    		os << poly.get_basis() << "(x"<<i<<")\t";
+		    		os << poly.get_basis_name() << "(x"<<i<<")\t";
 			os << "\n";
 			for(int deg=0; deg<=poly.get_degree(); deg++){
 	    		for(int i=0; i<poly.get_J()[poly.get_nvar()][deg]; i++){
@@ -78,10 +79,6 @@ namespace intrusive{
 		void set_coeffs(const int &idx, const T &value){m_coeffs[idx]=value;}
 		int get_degree() const {return m_degree;}
 		int get_nvar() const {return m_nvar;}
-		std::vector<std::vector<int> > get_J() const {return m_J;}
-		std::vector<std::vector<int> > get_N() const {return m_N;}
-		std::vector<int> get_row(const int &idx, const int &deg) const;
-		std::vector<std::vector<int> > get_t() const {return m_t;}
 		int get_idx(const std::vector<int> &k) const;
 
 		std::vector<T> get_range() const{
@@ -98,15 +95,18 @@ namespace intrusive{
 		//polynomial representation variables
 		void initialize_J();
 		void initialize_N();
-		void initialize_t();
 
-
-	public:
+	protected:
 		std::vector<T> m_coeffs;
 		int m_degree;
 		int m_nvar;
-		std::vector<std::vector<int> > m_J, m_N, m_t;
-	
+		std::vector<std::vector<int> > m_J, m_N;
+
+
+	public: //these are public because direct_multiplication is an elementary function. make protected if that changes
+		std::vector<std::vector<int> > get_J() const {return m_J;}
+		std::vector<std::vector<int> > get_N() const {return m_N;}
+		std::vector<int> get_row(const int &idx, const int &deg) const;
 	};
 }
 }

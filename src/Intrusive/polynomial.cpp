@@ -27,17 +27,13 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order): m_coeffs(0), m_deg
 
     m_J.resize(nvar+1);
     m_N.resize(nvar+1);
-    m_t.resize(pow(2,nvar));
     for(int i=0; i<=nvar; i++){
         m_J[i].resize(order+1);
         m_N[i].resize(order+1);
-        if(i<nvar)
-            m_t[i].resize(2);
     }
 
     initialize_J();
     initialize_N();
-    initialize_t();
 
 }
 
@@ -66,17 +62,14 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const int &i): m_co
 
         m_J.resize(nvar+1);
         m_N.resize(nvar+1);
-        m_t.resize(pow(2,nvar));
         for(int i=0; i<=nvar; i++){
             m_J[i].resize(order+1);
             m_N[i].resize(order+1);
-            if(i<nvar)
-                m_t[i].resize(2);
+
         }
 
         initialize_J();
         initialize_N();
-        initialize_t();
 
     }
 
@@ -102,18 +95,14 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const T &value): m_
 
     m_J.resize(nvar+1);
     m_N.resize(nvar+1);
-    m_t.resize(pow(2,nvar));
     for(int i=0; i<=nvar; i++){
         m_J[i].resize(order+1);
         m_N[i].resize(order+1);
-        if(i<nvar)
-            m_t[i].resize(2);
+
     }
 
     initialize_J();
     initialize_N();
-    initialize_t();
-
 
 }
 
@@ -145,16 +134,6 @@ void Polynomial<T>::initialize_N()
         for(j = 1; j <= m_degree; ++j)
             m_N[i][j] = m_N[i][j-1]+m_J[i][j];
     }
-
-}
-
-template <class T>
-void Polynomial<T>::initialize_t(){
-    std::vector<int> values(2);
-    values[0] = -1;
-    values[1] = 1;
-
-    variations(values,m_nvar, m_t);
 
 }
 

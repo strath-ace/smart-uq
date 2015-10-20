@@ -12,7 +12,45 @@ using namespace smart;
 using namespace intrusive;
 
 template < class T >
-std::string Chebyshev_Polynomial<T>::get_basis() const
+Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order) : Polynomial<T>::Polynomial(nvar,order){
+    
+    m_t.resize(pow(2,nvar));
+    for(int i=0; i<nvar; i++){
+        m_t[i].resize(2);
+    }
+
+    initialize_t();
+}
+
+template <class T>
+Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const int &i) : Polynomial<T>::Polynomial(nvar,order,i){
+        
+    m_t.resize(pow(2,nvar));
+    for(int i=0; i<nvar; i++){
+        m_t[i].resize(2);
+    }
+
+    initialize_t();
+}
+
+template <class T>
+Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const T &value) : Polynomial<T>::Polynomial(nvar,order,value){
+        
+    m_t.resize(pow(2,nvar));
+    for(int i=0; i<nvar; i++){
+        m_t[i].resize(2);
+    }
+    initialize_t();
+}
+
+template < class T >
+std::string Chebyshev_Polynomial<T>::get_name() const
+{
+    return "Chebyshev Polynomial";
+}
+
+template < class T >
+std::string Chebyshev_Polynomial<T>::get_basis_name() const
 {
     return "T";
 }
@@ -20,10 +58,16 @@ std::string Chebyshev_Polynomial<T>::get_basis() const
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator+(const Chebyshev_Polynomial<T> &other) const{
 
+    if(get_name()!=other.get_name()){
+        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
     }
+
     if(m_degree!=other.get_degree()){
         std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -44,6 +88,11 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator+(const Chebyshev_Polyn
 
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polynomial<T> &other) const{
+    
+    if(get_name()!=other.get_name()){
+        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
@@ -70,6 +119,11 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 // //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
 // template <class T>
 // Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
+//     
+//     if(get_name()!=other.get_name()){
+//         std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+//         exit(EXIT_FAILURE);
+//     }
 //     if(m_nvar!=other.get_nvar()){
 //         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
 //         exit(EXIT_FAILURE);
@@ -122,7 +176,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 //OPERATOR* OVERLOADING FOR DCT-BASED MULTIPLICATION
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
-    if(get_basis()!=other.get_basis()){
+    if(get_name()!=other.get_name()){
         std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
     }
@@ -265,7 +319,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::inv(const Chebyshev_Polynomial<
 
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const Chebyshev_Polynomial<T> &other) const{
-    if(get_basis()!=other.get_basis()){
+    if(get_name()!=other.get_name()){
         std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
     }
@@ -336,10 +390,17 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const T& other) const
 
 template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator=(const Chebyshev_Polynomial<T> &other){
+ 
+    if(get_name()!=other.get_name()){
+        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
     }
+
     if(m_degree!=other.get_degree()){
         std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -409,6 +470,11 @@ Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator/=(const T& other){
 
 template <class T>
 bool Chebyshev_Polynomial<T>::operator==(const Chebyshev_Polynomial<T> &other) const{
+    if(get_name()!=other.get_name()){
+        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -425,6 +491,10 @@ bool Chebyshev_Polynomial<T>::operator==(const Chebyshev_Polynomial<T> &other) c
 
 template <class T>	
 bool Chebyshev_Polynomial<T>::operator!=(const Chebyshev_Polynomial<T> &other) const{
+    if(get_name()!=other.get_name()){
+        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -476,7 +546,12 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::composition(const std::vector<C
         std::cout<<"Composition is with a vector of polynomial of the same size of nvar"<<std::endl;
         exit(EXIT_FAILURE);
     }
+
     for(int i=0; i<m_nvar; i++){
+        if(get_name()!=other[i].get_name()){
+            std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
+            exit(EXIT_FAILURE);
+        }
         if(m_nvar!=other[i].get_nvar()){
             std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
             exit(EXIT_FAILURE);
@@ -556,6 +631,17 @@ std::vector<T> Chebyshev_Polynomial<T>::cheb_approximation(T (*f)(T x), const T 
     res[0] = res[0]/2.0;
 
     return res;
+}
+
+// private routine for direct multiplication
+template <class T>
+void Chebyshev_Polynomial<T>::initialize_t(){
+    std::vector<int> values(2);
+    values[0] = -1;
+    values[1] = 1;
+
+    variations(values,m_nvar, m_t);
+
 }
 
 template class Chebyshev_Polynomial<double>;
