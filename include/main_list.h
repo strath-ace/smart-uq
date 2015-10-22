@@ -6,8 +6,8 @@
 #include <math.h>
 #include <fftw3.h>
 
-#include "Intrusive/chebyshev.h"
-#include "Intrusive/elementary_functions.h"
+#include "Polynomial/chebyshev.h"
+#include "Polynomial/elementary_functions.h"
 #include "integrators.h"
 #include "f.h"
 

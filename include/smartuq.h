@@ -6,7 +6,7 @@
 #ifndef SMART_SMARTUQ_H
 #define SMART_SMARTUQ_H
 
-#include "Intrusive/polynomial_algebras.h"
+#include "Polynomial/polynomial_algebras.h"
 #include "integrator.h"
 #include "utils.h"
 

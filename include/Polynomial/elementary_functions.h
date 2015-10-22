@@ -8,7 +8,7 @@
 
 using namespace std;
 using namespace smart;
-using namespace intrusive;
+using namespace polynomial;
 
 //TRIGONOMETRIC FUNCTIONS
 template <class T>

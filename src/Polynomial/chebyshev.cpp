@@ -5,11 +5,11 @@
 */
 
 
-#include "Intrusive/chebyshev.h"
+#include "Polynomial/chebyshev.h"
 
 
 using namespace smart;
-using namespace intrusive;
+using namespace polynomial;
 
 template < class T >
 Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order) : Polynomial<T>::Polynomial(nvar,order){

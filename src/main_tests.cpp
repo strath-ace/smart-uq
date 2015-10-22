@@ -11,6 +11,6 @@ void main_tests(){
     std::vector<double> point;
     point.push_back(.6);
 
-    cout << p << endl << endl;
+    // cout << p << endl << endl;
     cout << p.evaluate(point) << endl;
 }

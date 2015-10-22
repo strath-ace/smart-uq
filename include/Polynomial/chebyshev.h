@@ -22,7 +22,7 @@
 using namespace std;
 
 namespace smart{
-namespace intrusive{
+namespace polynomial{
 	template < class T >
 	class Chebyshev_Polynomial: public Polynomial <T> {
 	

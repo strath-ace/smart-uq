@@ -1,7 +1,7 @@
-#include "Intrusive/elementary_functions.h"
+#include "Polynomial/elementary_functions.h"
 
 using namespace smart;
-using namespace intrusive;
+using namespace polynomial;
 
 /************************************************/
 /*                  SIN                         */

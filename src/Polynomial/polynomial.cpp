@@ -5,10 +5,10 @@
 */
 
 
-#include "Intrusive/polynomial.h"
+#include "Polynomial/polynomial.h"
 
 using namespace smart;
-using namespace intrusive;
+using namespace polynomial;
 
 template <class T>
 Polynomial<T>::Polynomial(const int &nvar, const int &order): m_coeffs(0), m_degree(0), m_nvar(0){

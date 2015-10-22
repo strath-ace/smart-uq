@@ -24,7 +24,7 @@
 using namespace std;
 
 namespace smart{
-namespace intrusive{
+namespace polynomial{
 	template < class T >
 	class Polynomial{
 	public:

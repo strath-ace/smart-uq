@@ -51,7 +51,7 @@ endif(FFTW_LIBRARY AND (FFTWF_LIBRARY AND FFTWL_LIBRARY))
 file(GLOB SRC
   "${SRC_PATH}/Sampling/*.cpp"
   "${SRC_PATH}/Non-intrusive/*.cpp"
-  "${SRC_PATH}/Intrusive/*.cpp"
+  "${SRC_PATH}/Polynomial/*.cpp"
   "${SRC_PATH}/main_accuracy.cpp"
   "${SRC_PATH}/main_AKP.cpp"
   "${SRC_PATH}/main_collision.cpp"
@@ -69,7 +69,7 @@ set(MAIN_SRC
 file(GLOB TEST_SRC
   "${TEST_SRC_PATH}/Sampling/*.cpp"
   "${TEST_SRC_PATH}/Non-intrusive/*.cpp"
-  "${TEST_SRC_PATH}/Intrusive/*.cpp"
+  "${TEST_SRC_PATH}/Polynomial/*.cpp"
 )
 
 # Set CMake build-type. If it not supplied by the user, the default built type is "Release".
