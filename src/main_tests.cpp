@@ -8,7 +8,7 @@ void main_tests(){
     Chebyshev_Polynomial<double> y (nvar, degree,1);
     Chebyshev_Polynomial<double> z (nvar, degree,2);
 
-    Chebyshev_Polynomial<double> p = (3*x*x)/y;
+    Chebyshev_Polynomial<double> p = 3*x+y+z;
 
     std::vector<double> point;
     point.push_back(.6);
