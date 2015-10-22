@@ -10,9 +10,9 @@ int main(){
     //main_AKP();
     //main_collision_avoidance();
     //main_vanderpol();
-    main_test_dct();
+    // main_test_dct();
     //main_test_multivariate();
     // main_test_accuracy();
-    // main_tests();
+    main_tests();
     return 0;
 }

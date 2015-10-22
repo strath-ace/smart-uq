@@ -51,7 +51,7 @@ namespace intrusive{
 
 			os <<std::setfill(' ')<<setw(16);
 			for(int i=0; i<nvar; i++)
-		    		os << poly.get_basis_name() << "(x"<<i<<")\t";
+		    	os << poly.get_basis_name() << "(x"<<i<<")\t";
 			os << "\n";
 			for(int deg=0; deg<=poly.get_degree(); deg++){
 	    		for(int i=0; i<poly.get_J()[poly.get_nvar()][deg]; i++){
@@ -90,9 +90,8 @@ namespace intrusive{
 	    		return range;
 		}
 
-		virtual T evaluate(const std::vector<T> &x)=0;
-		virtual T evaluate(const T &x)=0;
-		virtual std::vector<T> evaluate (const std::vector< std:: vector <T> > &x)=0;
+		virtual T evaluate(const std::vector<T> &x) const = 0;
+		virtual T evaluate(const T &x) const = 0;
 
 	private:
 		//polynomial representation variables

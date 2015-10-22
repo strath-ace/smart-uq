@@ -49,6 +49,10 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const int &i): m_co
     m_degree = order;
     m_nvar = nvar;
 
+    if (order == 0){
+        std::cout<<"cannot assign variables to a polynomial of order 0";
+        exit(EXIT_FAILURE);
+    }
     if(i>=m_nvar){
         std::cout<<"base elements index are from [0,nvar-1]";
         exit(EXIT_FAILURE);

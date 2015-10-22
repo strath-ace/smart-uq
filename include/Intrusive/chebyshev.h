@@ -82,16 +82,16 @@ namespace intrusive{
 		std::string get_basis_name() const;
 		std::string get_name() const;
 
-		T evaluate(const std::vector<T> &x){std::cout<<"NOT IMPLEMENTED"<<std::endl;};
-		T evaluate(const T &x){std::cout<<"NOT IMPLEMENTED"<<std::endl;};
-		std::vector<T> evaluate(const std::vector< std:: vector <T> > &x){std::cout<<"NOT IMPLEMENTED"<<std::endl;};
+		T evaluate(const std::vector<T> &x) const;
+		T evaluate(const T &x) const;
 	
 	private:
 		void initialize_t();
+		std::vector<std::vector<int> > get_t() const {return m_t;}
 		std::vector<std::vector<int> > m_t;
 
 	private:
-		std::vector<std::vector<int> > get_t() const {return m_t;}
+		T clenshaw(T x, int n) const;
 
 	};
 	

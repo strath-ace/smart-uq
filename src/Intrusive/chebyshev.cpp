@@ -119,7 +119,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 // //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
 // template <class T>
 // Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
-//     
+    
 //     if(get_name()!=other.get_name()){
 //         std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
 //         exit(EXIT_FAILURE);
@@ -146,8 +146,8 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 //                         if(i>0) sub_idx2=m_N[m_nvar][i-1];
 //                         if(j>0) sub_idx3=m_N[m_nvar][j-1];
 //                         if(fabs(m_coeffs[sub_idx2+idx1])>ZERO && fabs(other_coeffs[sub_idx3+idx2])>ZERO){
-//                             std::vector<int> v1 = get_row(idx1,i);
-//                             std::vector<int> v2 = get_row(idx2,j);
+//                             std::vector<int> v1 = this->get_row(idx1,i);
+//                             std::vector<int> v2 = this->get_row(idx2,j);
 //                             std::vector<int> v3(m_nvar);
 //                             for(int iter=0; iter<nvariations; iter++){
 //                                 for(int k=0; k<m_nvar; k++){
@@ -253,7 +253,8 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     // rescale and save results
     for (int i=0;i<ncoeffs;i++){
         T term_result=dct01[idx[i]]/scale[i];
-        res.set_coeffs(i,term_result);
+        if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
+        else res.set_coeffs(i,0.0);
     }
     
     // deallocate and return
@@ -261,7 +262,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     return res;
 
     #else
-    
+
     return direct_multiplication(*this,other);
 
     #endif
@@ -516,6 +517,64 @@ bool Chebyshev_Polynomial<T>::operator!=(const Chebyshev_Polynomial<T> &other) c
 
 }
 
+template <class T>
+T Chebyshev_Polynomial<T>::evaluate(const T &x) const {
+    if(m_nvar>1){
+        std::cout<<"(evaluate) Dimension of point must correspond to number of variables of polynomial."<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if (fabs(x)>1){
+        std::cout<<"(evaluate) All components of point must belong to [-1,1]."<<std::endl;
+        exit(EXIT_FAILURE); 
+    }
+
+    return m_coeffs[0]+x*clenshaw(x,1)-clenshaw(x,2);
+}
+
+template <class T> 
+T Chebyshev_Polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
+    if(m_nvar!=x.size()){
+        std::cout<<"(evaluate) Dimension of point must correspond to number of variables of polynomial."<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    for (int i=0;i<m_nvar;i++){
+        if (fabs(x[i])>1){
+            std::cout<<"(evaluate) All components of point must belong to [-1,1]."<<std::endl;
+            exit(EXIT_FAILURE); 
+        }
+    }
+
+    //evaluate the bases
+    std::vector < std::vector <T> > base;
+    base.resize(m_nvar);
+    for (int i=0; i<m_nvar;i++){
+        base[i].resize(m_degree+1);
+        base[i][0]=1.0;
+        if (m_degree>0) base[i][1]=x[i];
+        for (int j=2; j<=m_degree; j++){
+            base[i][j]=2.0*x[i]*base[i][j-1]-base[i][j-2];
+        }
+    }
+
+    //construct the full polynomial value
+    T res = 0;
+    int idx=0;
+    for(int deg=0; deg<=m_degree; deg++){
+        for(int i=0; i<m_J[m_nvar][deg]; i++){
+            T prod = 1.0;
+            if (fabs(m_coeffs[idx])>ZERO){
+                std::vector<int> row = this->get_row(i,deg);
+                for(int j=0;j<m_nvar; j++){
+                    prod*=base[j][row[j]];
+                }
+                res += m_coeffs[idx]*prod;
+            }
+            idx++;
+        }
+    }
+
+    return res;
+}
 
 //evaluate chebyshev base t0(x), t1(x), t2(x) in a polynomial. It first map x from [a,b] to [-1,1]
 template <class T>
@@ -710,6 +769,14 @@ void Chebyshev_Polynomial<T>::initialize_t(){
     variations(values,m_nvar, m_t);
 
 }
+
+// private routine for evaluation
+template <class T>
+T Chebyshev_Polynomial<T>::clenshaw(T x, int n) const{
+    if (n>m_degree) return 0;
+    else return m_coeffs[n]+2*x*clenshaw(x,n+1)-clenshaw(x,n+2);
+}
+
 
 template class Chebyshev_Polynomial<double>;
 template class Chebyshev_Polynomial<float>;
