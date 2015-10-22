@@ -1,6 +1,11 @@
 #include "main_list.h"
+#include "Sampling/sampling.h"
 
 void main_tests(){
+
+    ////**********************************
+    ////*******   TESTS EVALUATE   *******
+    ////**********************************
 
     int nvar=1;
     int degree=100;

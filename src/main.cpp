@@ -13,6 +13,7 @@ int main(){
     // main_test_dct();
     //main_test_multivariate();
     // main_test_accuracy();
-    main_tests();
+    main_test_sampling();
+    // main_tests();
     return 0;
 }

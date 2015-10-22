@@ -38,7 +38,7 @@ namespace polynomial{
 		Polynomial(const int &vars, const int &order, const T &value);
 
 		//deconstructor
-		virtual ~Polynomial(){} //make accessible if the class is made non-abstract
+		virtual ~Polynomial(){}
 
 		//virtual getters
 		virtual std::string get_basis_name() const = 0; //basis identifier like "T" for Chebyshev

@@ -174,6 +174,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 // }
 
 //OPERATOR* OVERLOADING FOR DCT-BASED MULTIPLICATION
+//Author : Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
     if(get_name()!=other.get_name()){
@@ -517,6 +518,8 @@ bool Chebyshev_Polynomial<T>::operator!=(const Chebyshev_Polynomial<T> &other) c
 
 }
 
+//1-d Evaluation method
+//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
 template <class T>
 T Chebyshev_Polynomial<T>::evaluate(const T &x) const {
     if(m_nvar>1){
@@ -531,7 +534,9 @@ T Chebyshev_Polynomial<T>::evaluate(const T &x) const {
     return m_coeffs[0]+x*clenshaw(x,1)-clenshaw(x,2);
 }
 
-template <class T> 
+//n-d Evaluation method
+//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
+template <class T>
 T Chebyshev_Polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
     if(m_nvar!=x.size()){
         std::cout<<"(evaluate) Dimension of point must correspond to number of variables of polynomial."<<std::endl;
