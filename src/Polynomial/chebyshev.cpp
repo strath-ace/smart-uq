@@ -782,7 +782,7 @@ T Chebyshev_Polynomial<T>::clenshaw(T x, int n) const{
     else return m_coeffs[n]+2*x*clenshaw(x,n+1)-clenshaw(x,n+2);
 }
 
-
+ 
 template class Chebyshev_Polynomial<double>;
 template class Chebyshev_Polynomial<float>;
 template class Chebyshev_Polynomial<long double>;

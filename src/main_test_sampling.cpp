@@ -1,6 +1,7 @@
 #include "main_list.h"
 #include "Sampling/sampling.h"
 
+
 void main_test_sampling(){
     int dimension = 10;
     int points = 10;
@@ -13,6 +14,7 @@ void main_test_sampling(){
         }
         cout << endl;
     }    
+
     cout << endl;
     cout << "LHS SAMPLING - "<< points<<" POINTS IN "<< dimension <<"D" << endl;
     sampling::lhs<double> lhs_gen(dimension,points);

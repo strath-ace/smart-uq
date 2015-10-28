@@ -25,7 +25,7 @@ namespace sampling{
     /// Sobol quasi-random point sequence
     /**
      * Generates a quasi-random sequence of points
-     * in the unit hyper cube using the Sobol sequence.
+     * in the unit hyper cube [0,1] using the Sobol sequence.
      * The code wraps original routines from the link below.
      *
      * @see http://people.sc.fsu.edu/~jburkardt/cpp_src/sobol/sobol.html
@@ -58,9 +58,10 @@ namespace sampling{
     /// Latin Hypercube Sampling
     /**
      * Generates a latin hypersquare sampling
-     * in the unit hyper cube.
+     * in the unit hyper cube [0,1].
      * The code wraps original routines from the link below.
-     * NOTE: uses rand and srand. Modify if a better random number generator is available.
+     *
+     * NOTE: uses rand and srand. MODIFY WHEN A BETTER RNG IS AVAILABLE
      *
      * @see http://people.sc.fsu.edu/~jburkardt/cpp_src/latin_random/latin_random.html
      * @author carlos.ortega@strath.ac.uk

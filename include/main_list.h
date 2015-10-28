@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <string>
 #include <math.h>
-#include <fftw3.h>
 
 #include "Polynomial/chebyshev.h"
 #include "Polynomial/elementary_functions.h"
@@ -31,6 +30,7 @@ namespace patch
 
 void main_multiphase();
 void main_test_accuracy();
+void main_AKP_ni();
 void main_AKP();
 void main_collision_avoidance();
 void main_vanderpol();

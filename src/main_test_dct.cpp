@@ -7,12 +7,10 @@ void main_test_dct(){
     // std::ofstream file;
     // std::string filename = "intermediate_dcts.out";
     // file.open (filename.data());
-    
-    // cout << endl << endl << "degree = 4-6   nvar = 1-9" << endl;
-
-    for (int degree=10; degree <=10; degree+=1){
+    for (int nvar=9; nvar <=9; nvar+=1){
+        cout << "nvar = "<< nvar << "   degree 1-8"<< endl;
         cout << "[" << endl;
-        for (int nvar=4; nvar<=4; nvar++){
+        for (int degree=1; degree<=8; degree++){
             //TIME
             clock_t direct0, directf, dct0, dctf;
             double direct_t, dct_t, t_rel;

@@ -2,17 +2,17 @@
 
 void main_AKP(){
     std::ofstream file;
-    file.open ("intrusive_case4.txt");
-
+    file.open ("intrusive_case1.txt");
+for (int degree = 4; degree <= 12; degree ++){
     //algebra params
-    int degree = 4;
+    // int degree = 4;
     int nvar = 4;
-    int nparam = 1; //*********
+    int nparam = 0; //*********
     //integration params
     double step = 0.01;
-    double sma = 2; //*********
-    double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
-    double e = 0.5; //*********
+    double sma = 1; //*********
+    double tend = 1.1;//2.0*M_PI/pow(sma,-3.0/2.0);
+    double e = 0; //*********
 
     std::vector<std::vector<double> > ranges_x, ranges_p;
     for(int i=0; i<nvar; i++){
@@ -36,8 +36,8 @@ void main_AKP(){
 
     unc_x[0] = 0.01;
     unc_x[1] = 0.01;
-    unc_x[2] = 0.0001;
-    unc_x[3] = 0.0001;
+    unc_x[2] = 0.005;
+    unc_x[3] = 0.005;
 
     if(nparam>0)
         unc_p[0] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
@@ -80,12 +80,14 @@ void main_AKP(){
     }
 
     std::vector<std::vector<double> > coeffs_all;
+    clock_t begin,end;
+    begin=clock();
     try{
         //perform integration
         for(int i=0; i<tend/step; i++){
-            std::cout<<"iteration "<<i<<std::endl;
+            // std::cout<<"iteration "<<i<<std::endl;
 
-            res = rk4<double>(f,res,param0,step);
+            res = rk4(f,res,param0,step);
 
             if((i+1)%100 == 0){
                 for(int j=0; j<nvar; j++){
@@ -111,6 +113,9 @@ void main_AKP(){
         file.close();
         exit(EXIT_FAILURE);
     }
+    end=clock();
+    double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
+    cout << "time elapsed : " << time_akp << endl << endl;
 
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++)
@@ -123,7 +128,8 @@ void main_AKP(){
             file << "\n";
         }
     }
+file << "\n\n\n\n";
+}
     file.close();
 
 }
-
