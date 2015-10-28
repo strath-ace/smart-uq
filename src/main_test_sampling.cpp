@@ -4,7 +4,7 @@
 
 void main_test_sampling(){
     int dimension = 10;
-    int points = 10;
+    int points = 15;
     cout << "SOBOL SAMPLING - "<< points<<" POINTS IN "<< dimension <<"D" << endl;
     sampling::sobol<double> sobol_gen(dimension);
     for (int i=0;i<points;i++){

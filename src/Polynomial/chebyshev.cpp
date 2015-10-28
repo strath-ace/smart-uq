@@ -175,6 +175,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
 
 //OPERATOR* OVERLOADING FOR DCT-BASED MULTIPLICATION
 //Author : Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
+//Note: the indexing, scaling, etc. operations could be suppressed with 1-var polynomials for a performance gain
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
     if(get_name()!=other.get_name()){
