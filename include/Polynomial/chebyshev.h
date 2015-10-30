@@ -54,6 +54,9 @@ namespace polynomial{
 		Chebyshev_Polynomial<T> operator-(const T& other) const;
 		Chebyshev_Polynomial<T> operator*(const T& other) const;
 		Chebyshev_Polynomial<T> operator/(const T& other) const;
+		//unary
+		Chebyshev_Polynomial<T> operator+() const;
+		Chebyshev_Polynomial<T> operator-() const;
 		//assignment operator
 		Chebyshev_Polynomial<T>& operator=(const Chebyshev_Polynomial<T> &other);
 		Chebyshev_Polynomial<T>& operator=(const T &other);
@@ -97,32 +100,38 @@ namespace polynomial{
 	
 	template < class T>
 	static Chebyshev_Polynomial<T> operator-(const T left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)-right;
+		// return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)-right;
+		return -right+left;
 	}
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator-(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)-right;
+		// return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)-right;
+		return -right+((T) left);
 	}
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator+(const T left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)+right;
+		// return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)+right;
+		return right+left;
 	}
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator+(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)+right;
+		// return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)+right;
+		return right+((T) left);
 	}
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator*(const T left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)*right;
+		// return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), left)*right;
+		return right*left;
 	}
 
 	template < class T>
 	static Chebyshev_Polynomial<T> operator*(const int left, const Chebyshev_Polynomial<T> right){
-		return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)*right;
+		// return Chebyshev_Polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)*right;
+		return right*((T) left);
 	}
 
 	template < class T>

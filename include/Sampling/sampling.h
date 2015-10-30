@@ -5,8 +5,8 @@
 
 /*
 ---------------- Copyright (C) 2015 University of Strathclyde----------------
------------------ e-mail:  carlos.ortega@strath.ac.uk -----------------------
------------------------ Author:  Carlos Ortega Absil ------------------------
+----------------- e-mail: carlos.ortega@strath.ac.uk ------------------------
+----------------------- Author: Carlos Ortega Absil -------------------------
 */
 #ifndef SAMPLING_H_
 #define SAMPLING_H_

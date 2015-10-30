@@ -1,29 +1,35 @@
 #include "main_list.h"
 #include "utils.h"
+
 void main_tests(){
 
-    ////**********************************
-    ////*******   TESTS EVALUATE   *******
-    ////**********************************
+    srand(time(NULL));
 
-    for (int nvar=4;nvar<=4;nvar++){
-        cout << "[ ";
-        for(int degree=4;degree<=12;degree++){
-            Chebyshev_Polynomial<double> x (nvar, degree);
-            cout << x.get_coeffs().size() << " , ";
-        }
-        cout <<" ]"<< endl;
-    }
-    // int nvar=4;
-    // int degree=4;
-    // Chebyshev_Polynomial<double> x (nvar, degree);
+    int nvar=1;
+    int deg=4;
+    Newton_Polynomial<double> p(nvar,deg);
 
-    // Chebyshev_Polynomial<double> p = (1+0.5*x+.3*x*x+4.6*x*x*x+18*x*x*x*x)/(x+2);
+    cout << p << endl;
+    std::vector<double> nodes(5), coeffs(5);
+    nodes[0]=-1.5;
+    nodes[1]=-.75;
+    nodes[2]=0;
+    nodes[3]=.75;
+    nodes[4]=1.5;
+    coeffs[0]=-14.1014;
+    coeffs[1]=17.5597;
+    coeffs[2]=-10.8784;
+    coeffs[3]=4.83484;
+    coeffs[4]=0;
 
-    // std::vector<double> point;
-    // point.push_back(.6);
-
-    // // cout << p << endl << endl;
-    // cout << p.evaluate(point) << endl;
+    p.set_nodes(nodes);
+    p.set_coeffs(coeffs);
     
+    for (int i=0; i<nodes.size(); i++) cout << nodes[i] << "    ";
+    cout << endl;
+    
+    cout << p.evaluate(0)<<endl;
+    cout << p.evaluate(-.75)<<endl;
+    cout << p.evaluate(1.5)<<endl;
+
 }

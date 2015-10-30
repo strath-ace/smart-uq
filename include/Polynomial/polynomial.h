@@ -48,7 +48,6 @@ namespace polynomial{
 			std::vector<T> coeffs = poly.get_coeffs();
 			int nvar = poly.get_nvar();
 			int idx=0;
-
 			os <<std::setfill(' ')<<setw(16);
 			for(int i=0; i<nvar; i++)
 		    	os << poly.get_basis_name() << "(x"<<i<<")\t";

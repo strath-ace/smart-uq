@@ -216,7 +216,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
     std::vector <T> scale;
     int ii=0;
     for (int deg=0;deg<=m_degree;deg++){
-        int max_i=res.get_J()[m_nvar][deg];
+        int max_i=m_J[m_nvar][deg];
         for (int i=0;i<max_i;i++){
             std::vector<int> row = res.get_row(i,deg);
             int term_idx=0;
@@ -399,6 +399,27 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator/(const T& other) const
 }
 
 template <class T>
+Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator+() const{
+
+    std::vector<T> coeffs=this->get_coeffs();
+    Chebyshev_Polynomial<T> res(m_nvar,m_degree);
+    res.set_coeffs(coeffs);
+    return res;
+}
+
+template <class T>
+Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-() const{
+    
+    std::vector<T> coeffs=this->get_coeffs();
+    Chebyshev_Polynomial<T> res(m_nvar,m_degree);
+    for (int i=0;i<coeffs.size();i++){
+        coeffs[i]= -coeffs[i];
+    }
+    res.set_coeffs(coeffs);
+    return res;
+}
+
+template <class T>
 Chebyshev_Polynomial<T>& Chebyshev_Polynomial<T>::operator=(const Chebyshev_Polynomial<T> &other){
  
     if(get_name()!=other.get_name()){
@@ -535,7 +556,7 @@ T Chebyshev_Polynomial<T>::evaluate(const T &x) const {
     return m_coeffs[0]+x*clenshaw(x,1)-clenshaw(x,2);
 }
 
-//n-d Evaluation method
+//Multivariate Evaluation method
 //Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
 template <class T>
 T Chebyshev_Polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
