@@ -7,6 +7,7 @@
 
 #include "Polynomial/chebyshev.h"
 #include "Polynomial/newton.h"
+#include "Polynomial/canonical.h"
 #include "Polynomial/elementary_functions.h"
 #include "integrators.h"
 #include "f.h"

@@ -79,12 +79,13 @@ namespace polynomial{
 
 		T evaluate(const std::vector<T> &x) const;
 		T evaluate(const T &x) const;
+		void interpolate_nodes(const std::vector<T> &y);
 
 	public:
 		std::vector<T> get_nodes() const {return m_nodes;}
 		void set_nodes(std::vector<T> &nodes){
     		if(m_nodes.size()!=nodes.size()){
-			std::cout<<"Provided inappropiate number of nodes."<<std::endl;
+			std::cout<<"(set_nodes) Provided inappropiate number of nodes."<<std::endl;
 			exit(EXIT_FAILURE);
     		}
     	// 	for (int i=0;i<nodes.size();i++){
@@ -101,7 +102,7 @@ namespace polynomial{
 		std::vector<T> m_nodes;
 
 	private:
-		T nested_multiplication(T x, int i) const;
+		T nested_mult(T x, int i) const;
 	};
 	
 	template < class T>

@@ -40,11 +40,6 @@ std::string Newton_Polynomial<T>::get_basis_name() const
 template <class T>
 Newton_Polynomial<T> Newton_Polynomial<T>::operator+(const Newton_Polynomial<T> &other) const{
 
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
-
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -70,11 +65,6 @@ Newton_Polynomial<T> Newton_Polynomial<T>::operator+(const Newton_Polynomial<T> 
 
 template <class T>
 Newton_Polynomial<T> Newton_Polynomial<T>::operator-(const Newton_Polynomial<T> &other) const{
-    
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
 
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
@@ -102,10 +92,7 @@ Newton_Polynomial<T> Newton_Polynomial<T>::operator-(const Newton_Polynomial<T> 
 //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
 template <class T>
 Newton_Polynomial<T> Newton_Polynomial<T>::operator*(const Newton_Polynomial<T> &other) const{
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
+
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -156,10 +143,7 @@ Newton_Polynomial<T> Newton_Polynomial<T>::operator*(const Newton_Polynomial<T> 
 
 template <class T>
 Newton_Polynomial<T> Newton_Polynomial<T>::operator/(const Newton_Polynomial<T> &other) const{
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
+
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -250,11 +234,6 @@ Newton_Polynomial<T> Newton_Polynomial<T>::operator-() const{
 
 template <class T>
 Newton_Polynomial<T>& Newton_Polynomial<T>::operator=(const Newton_Polynomial<T> &other){
- 
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
 
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
@@ -321,10 +300,6 @@ Newton_Polynomial<T>& Newton_Polynomial<T>::operator/=(const T& other){
 
 template <class T>
 bool Newton_Polynomial<T>::operator==(const Newton_Polynomial<T> &other) const{
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
 
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
@@ -342,10 +317,6 @@ bool Newton_Polynomial<T>::operator==(const Newton_Polynomial<T> &other) const{
 
 template <class T>  
 bool Newton_Polynomial<T>::operator!=(const Newton_Polynomial<T> &other) const{
-    if(get_name()!=other.get_name()){
-        std::cout<<"Polynomials don't have the same basis. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
-    }
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -372,7 +343,7 @@ T Newton_Polynomial<T>::evaluate(const T &x) const {
     //     exit(EXIT_FAILURE); 
     // }
 
-    return nested_mult(x,0);
+    return m_coeffs[0]+nested_mult(x,1);
 
 }
 
@@ -393,6 +364,26 @@ T Newton_Polynomial<T>::evaluate(const std::vector<T> &x) const {
     std::cout<<"NOT IMPLEMENTED"<<std::endl;
 }
 
+//interpolate given a set of values in the nodes (1d)
+template <class T>
+void Newton_Polynomial<T>::interpolate_nodes(const std::vector<T> &y) {
+    if (y.size()!=m_nodes.size()){
+        std::cout<<"(interpolate) Values provided must correspond to number of nodes."<<std::endl;
+        exit(EXIT_FAILURE);  
+    }
+
+    std::vector<T> coeffs = y;
+    for (int i = 0 ; i < m_degree ; i++){
+        for (int j = m_degree ; j > i ; j--){
+            coeffs[j]-=coeffs[j-1];
+            coeffs[j]/=(m_nodes[j]-m_nodes[j-i-1]);
+        }
+    }
+
+    m_coeffs=coeffs;
+}
+
+
 //private routine for evaluation and interpolation
 template <class T>
 void Newton_Polynomial<T>::initialize_nodes(){
@@ -409,7 +400,6 @@ void Newton_Polynomial<T>::initialize_nodes(){
 template <class T>
 T Newton_Polynomial<T>::nested_mult(T x, int i) const{
     if (i>m_degree) return 0;
-    else if (i==0) return m_coeffs[0]+nested_mult(x,1);
     else return (x-m_nodes[i-1])*(m_coeffs[i]+nested_mult(x,i+1));
 }
 
