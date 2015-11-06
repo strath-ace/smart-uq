@@ -11,7 +11,7 @@ void main_AKP_ni(){//coded for nparam=0
     std::ofstream file;
     file.open ("non_intrusive_case1.txt");
     //algebra params
-    for (int degree = 4; degree <=12; degree++){
+    for (int degree = 4; degree <=4; degree++){
 
         int nvar = 4;
         int nparam = 0; //*********
@@ -21,7 +21,7 @@ void main_AKP_ni(){//coded for nparam=0
         //integration params
         double step = 0.01;
         double sma = 1.0; //*********
-        double tend = 1.01; //2.0*M_PI/pow(sma,-3.0/2.0);
+        double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
         double e = 0.0; //*********
 
         std::vector<std::vector<double> > ranges_x, ranges_p;
@@ -117,7 +117,7 @@ void main_AKP_ni(){//coded for nparam=0
             //perform integration
             for(int i=0; i<tend/step; i++){
                 for (int j=0;j<npoints;j++){
-                    res[j] = rk4_ni(f_ni,res[j],param0,step);
+                    res[j] = rk4(f,res[j],param0,step);
                 }
 
                 if((i+1)%100 == 0){

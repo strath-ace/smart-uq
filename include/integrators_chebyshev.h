@@ -1,5 +1,5 @@
-#ifndef INTEGRATORS_H
-#define INTEGRATORS_H
+#ifndef INTEGRATORS_CHEBYSHEV_H
+#define INTEGRATORS_CHEBYSHEV_H
 
 #include <vector>
 #include "Polynomial/chebyshev.h"
@@ -146,4 +146,4 @@ std::vector<Chebyshev_Polynomial<T> > rk4(std::vector<Chebyshev_Polynomial<T> > 
     return x;
 }
 
-#endif // INTEGRATORS_H
+#endif // INTEGRATORS_CHEBYSHEV_H

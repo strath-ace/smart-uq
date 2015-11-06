@@ -136,7 +136,7 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::inv() const{
     T a = range[0];
     T b = range[1];
 
-    std::vector<T> inv = approximation_1d(inverse,a,b);
+    std::vector<T> inv = approximation_1d(inverse,a,b,m_degree);
     //univariate composition
     std::vector<Canonical_Polynomial<T> > base = Canonical_Polynomial<T>::evaluate_base(a,b);
     for (int i=0; i<=m_degree; i++){
@@ -485,34 +485,90 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::composition(const std::vector<C
     return res;
 }
 
-template <class T>
-std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b){
-    int n = Canonical_Polynomial<T>::MAX_DEGREE;
-    Eigen::MatrixXd base_matrix (n+1,n+1);
-    Eigen::VectorXd y(n+1);
+////DIRECT INTERPOLATION WITH MATRIX INVERSION
+// template <class T>
+// std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, int degree){
+//     // int n = Canonical_Polynomial<T>::MAX_DEGREE;
+//     int n = degree+2;
+//     Eigen::MatrixXd base_matrix (n+1,n+1);
+//     Eigen::VectorXd y(n+1);
 
-    std::vector<T> res(n+1);
+//     std::vector<T> res(n+1);
     
+//     T pi = 3.141592653589793;
+//     T t, x_mapped;
+
+//     for (int k = 0; k <= n; k++)
+//     {
+//         t = cos(pi*(k+0.5)/(n+1)); //zeros Ti
+//         x_mapped = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
+//         y(k) = f(x_mapped); //evaluate function
+//         base_matrix(k,0)=1.0; //build base_matrix
+//         for (int kk=1; kk<=n; kk++){
+//             base_matrix(k,kk)=base_matrix(k,kk-1)*t;
+//         }
+//     }
+
+//     Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+//     for (int k=0; k<=n; k++){
+//         res[k]=coe(k);
+//     }
+
+//     return res;
+// }
+
+
+////INTERPOLATION IN CHEBYSHEV BASIS + CHANGE OF BASIS
+template <class T>
+std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, const int degree){
+    
+    int n = Canonical_Polynomial<T>::MAX_DEGREE;
+    int deg = std::min((int) (degree*1.5+1), n);//RULE OF THUMB
+    std::vector<T> res(deg+1), d(n+1);
+    T fac;
     T pi = 3.141592653589793;
-    T t, x_mapped;
+    T t;
+    T total;
+    T y;
 
     for (int k = 0; k <= n; k++)
     {
         t = cos(pi*(k+0.5)/(n+1)); //zeros Ti
-        x_mapped = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
-        y(k) = f(x_mapped); //evaluate function
-        base_matrix(k,0)=1.0; //build base_matrix
-        for (int kk=1; kk<=n; kk++){
-            base_matrix(k,kk)=base_matrix(k,kk-1)*t;
+        y = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
+        d[k] = f(y); //evaluate function
+    }
+
+    //Interpolation in chebyshev basis -> MAX_DEGREE chebyshev nodes but only a deg polynomial.
+    fac = 2.0/(n+1);
+    for (int j = 0; j <= deg; j++)
+    {
+        total = 0.0;
+        for (int k = 0; k <= n; k++)
+        {
+            total = total+d[k]*cos( (pi*j)*( (k+ 0.5)/(n+1) ) );
         }
+        res[j] = fac*total;
     }
 
-    Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
-    for (int k=0; k<=n; k++){
-        res[k]=coe(k);
+    res[0] = res[0]/2.0;
+
+    //We translate to canonical basis, we take into acount deg+1 Chebyshev
+    //terms but we build a Canonical polynomial of degree+1 terms.
+    Canonical_Polynomial<T> result(1,degree,res[0]);
+    Canonical_Polynomial<T> x(1,degree,(int) 0);
+    Canonical_Polynomial<T> base1(1,degree,(int) 0);
+    Canonical_Polynomial<T> base2(1,degree, (T) 1.0);
+    Canonical_Polynomial<T> base(1,degree);
+
+    result+= res[1]*x;
+    for (int i=2;i<=deg;i++){
+        base=2.0*x*base1-base2;
+        base2=base1;
+        base1=base;
+        result+=res[i]*base;
     }
 
-    return res;
+    return result.get_coeffs();
 }
 
 //private routine for 1d evaluation

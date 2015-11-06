@@ -1,5 +1,5 @@
-#ifndef F_H
-#define F_H
+#ifndef F_CHEBYSHEV_H
+#define F_CHEBYSHEV_H
 
 #include <vector>
 #include "Polynomial/chebyshev.h"
@@ -76,4 +76,4 @@ std::vector<Chebyshev_Polynomial<T> > f(const std::vector<Chebyshev_Polynomial<T
 }
 
 
-#endif // F_H
+#endif // F_CHEBYSHEV_H

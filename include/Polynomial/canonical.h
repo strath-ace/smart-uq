@@ -35,6 +35,7 @@ namespace polynomial{
 	public:
 
 		static const int MAX_DEGREE = 100;
+
 		// arithmetic operators
 		Canonical_Polynomial<T> operator+(const Canonical_Polynomial<T> &other) const;
 		Canonical_Polynomial<T> operator-(const Canonical_Polynomial<T> &other) const;
@@ -70,7 +71,7 @@ namespace polynomial{
 		// static Canonical_Polynomial<T> direct_multiplication(const Canonical_Polynomial<T> &x0, const Canonical_Polynomial<T> &x1);
 
 		std::vector<Canonical_Polynomial<T> > evaluate_base(const T &a, const T &b) const;
-		static std::vector<T> approximation_1d(T (*f)(T x), const T a, const T b);
+		static std::vector<T> approximation_1d(T (*f)(T x), const T a, const T b, const int degree);
 
 		std::string get_basis_name() const;
 		std::string get_name() const;

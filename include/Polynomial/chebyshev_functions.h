@@ -1,5 +1,5 @@
-#ifndef ELEMENTARY_FUNCTIONS_H
-#define ELEMENTARY_FUNCTIONS_H
+#ifndef CHEBYSHEV_FUNCTIONS_H
+#define CHEBYSHEV_FUNCTIONS_H
 
 
 #include <iostream>
@@ -56,4 +56,4 @@ Chebyshev_Polynomial<T> pow(const Chebyshev_Polynomial<T> &other, const double &
 
 
 
-#endif // ELEMENTARY_FUNCTIONS_H
+#endif // CHEBYSHEV_FUNCTIONS_H

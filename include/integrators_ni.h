@@ -102,7 +102,7 @@
 // //   h          fixed step size
 
 template <class T>
-std::vector<T> rk4_ni (std::vector<T> (*f)(const std::vector<T> &x, const std::vector<T> &param), std::vector<T> &x, const std::vector<T> &param, const T &h) {
+std::vector<T> rk4 (std::vector<T> (*f)(const std::vector<T> &x, const std::vector<T> &param), std::vector<T> &x, const std::vector<T> &param, const T &h) {
     int n = x.size();
     // int degree = x[0].get_degree();
     // int nvar = x[0].get_nvar();

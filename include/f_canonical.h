@@ -1,21 +1,21 @@
-#ifndef F_NI_H
-#define F_NI_H
+#ifndef F_CANONICAL_H
+#define F_CANONICAL_H
 
 #include <vector>
-#include "Polynomial/chebyshev.h"
+#include "Polynomial/canonical.h"
 
 //autonomous ODE system definition
 template <class T>
-std::vector<T> f(const std::vector<T> &x, const std::vector<T> &param) {
+std::vector<Canonical_Polynomial<T> > f(const std::vector<Canonical_Polynomial<T> > &x, const std::vector<Canonical_Polynomial<T> > &param) {
 	int n = x.size();
-	// int degree = x[0].get_degree();
-	// int nvar = x[0].get_nvar();
-	std::vector<T> deriv (n,0.0);
+	int degree = x[0].get_degree();
+	int nvar = x[0].get_nvar();
+	std::vector<Canonical_Polynomial<T> > deriv;
 
 	//allocate memory for polynomials
-	// for(int i=0; i<n; i++){
-	//     deriv.push_back(Chebyshev_Polynomial<T>(nvar,degree));
-	// }
+	for(int i=0; i<n; i++){
+	    deriv.push_back(Canonical_Polynomial<T>(nvar,degree));
+	}
 
 // pendolo
 //	deriv[0] = x[1];
@@ -35,15 +35,15 @@ std::vector<T> f(const std::vector<T> &x, const std::vector<T> &param) {
 //	deriv[4] = 0;
 
 //Accelerated Kepler problem planar
-	T mu = 1.0;
-	T tmp_2D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]), 3);
+	double mu = 1.0;
+	Canonical_Polynomial<T> tmp_2D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]), 3);
 	deriv[0] =  x[2];		// vx
 	deriv[1] =  x[3];		// vy
 	deriv[2] = -1.0*tmp_2D*x[0];	// ax
     deriv[3] = -1.0*tmp_2D*x[1] ;//+ param[0];	// ay
 
 //Accelerated Kepler problem spatial
-//	Chebyshev_Polynomial<T> tmp_3D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]), 3);
+//	Canonical_Polynomial<T> tmp_3D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]), 3);
 //	deriv[0] = x[3];
 //	deriv[1] = x[4];
 //	deriv[2] = x[5];
@@ -76,4 +76,4 @@ std::vector<T> f(const std::vector<T> &x, const std::vector<T> &param) {
 }
 
 
-#endif // F_NI_H
+#endif // F_CANONICAL_H

@@ -6,12 +6,18 @@
 #include <math.h>
 
 #include "Polynomial/chebyshev.h"
-#include "Polynomial/newton.h"
-#include "Polynomial/canonical.h"
-#include "Polynomial/elementary_functions.h"
-#include "integrators.h"
-#include "f.h"
+#include "Polynomial/chebyshev_functions.h"
 
+#include "Polynomial/newton.h"
+
+#include "Polynomial/canonical.h"
+#include "Polynomial/canonical_functions.h"
+
+
+#include "integrators_chebyshev.h"
+#include "f_chebyshev.h"
+#include "integrators_canonical.h"
+#include "f_canonical.h"
 
 #include <iterator>
 #include <algorithm>
@@ -33,9 +39,11 @@ namespace patch
 void main_multiphase();
 void main_test_accuracy();
 void main_AKP_ni();
-void main_AKP();
+void main_AKP_i_chebyshev();
+void main_AKP_i_canonical();
 void main_collision_avoidance();
 void main_vanderpol();
 void main_test_dct();
+void main_test_canonical_multiplication();
 void main_test_sampling();
 void main_tests();

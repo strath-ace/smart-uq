@@ -1,9 +1,9 @@
 #include "main_list.h"
 
-void main_AKP(){
+void main_AKP_i_canonical(){
     std::ofstream file;
-    file.open ("intrusive_case1.txt");
-for (int degree = 4; degree <= 12; degree ++){
+    file.open ("intrusive_canonical_case1.txt");
+for (int degree = 4; degree <= 4; degree ++){
     //algebra params
     // int degree = 4;
     int nvar = 4;
@@ -11,7 +11,7 @@ for (int degree = 4; degree <= 12; degree ++){
     //integration params
     double step = 0.01;
     double sma = 1; //*********
-    double tend = 1.1;//2.0*M_PI/pow(sma,-3.0/2.0);
+    double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
     double e = 0; //*********
 
     std::vector<std::vector<double> > ranges_x, ranges_p;
@@ -51,19 +51,19 @@ for (int degree = 4; degree <= 12; degree ++){
         ranges_p[i][1] = param[i]+unc_p[i];
     }
 
-    std::vector<Chebyshev_Polynomial<double> > x0, param0;
+    std::vector<Canonical_Polynomial<double> > x0, param0;
     for(int i=0; i<nvar; i++){
-        x0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        x0.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
         x0[i].set_coeffs(i+1,1);
     }
     for(int i=0; i<nparam; i++){
-        param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        param0.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
         param0[i].set_coeffs(i+1+nvar,1);
     }
 
-    std::vector<Chebyshev_Polynomial<double> > res;
+    std::vector<Canonical_Polynomial<double> > res;
     for(int i=0; i<nvar; i++){
-        res.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        res.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
     }
 
     //translation  [-1,1] ----> [a,b]

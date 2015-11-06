@@ -1,4 +1,4 @@
-#include "Polynomial/elementary_functions.h"
+#include "Polynomial/chebyshev_functions.h"
 
 using namespace smart;
 using namespace polynomial;
