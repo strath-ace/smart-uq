@@ -14,8 +14,8 @@
  *   2012
  *
  */
-# include "sparse_grid_dataset.h"
-# include "utils.h"
+# include "Non-Intrusive/sparse_grid_dataset.h"
+# include "Non-Intrusive/utils.h"
 
 //****************************************************************************80
 

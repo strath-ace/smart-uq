@@ -39,6 +39,7 @@ namespace patch
 void main_multiphase();
 void main_test_accuracy();
 void main_AKP_ni();
+void main_AKP_ni_sparse();
 void main_AKP_i_chebyshev();
 void main_AKP_i_canonical();
 void main_collision_avoidance();

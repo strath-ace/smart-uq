@@ -2,12 +2,12 @@
 
 void main_AKP_i_canonical(){
     std::ofstream file;
-    file.open ("intrusive_canonical_case1.txt");
+    file.open ("intrusive_canonical_case3_2.txt");
 for (int degree = 4; degree <= 4; degree ++){
     //algebra params
     // int degree = 4;
     int nvar = 4;
-    int nparam = 0; //*********
+    int nparam = 1; //*********
     //integration params
     double step = 0.01;
     double sma = 1; //*********
@@ -39,8 +39,8 @@ for (int degree = 4; degree <= 4; degree ++){
     unc_x[2] = 0.005;
     unc_x[3] = 0.005;
 
-    if(nparam>0)
-        unc_p[0] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
+    for (int i=0; i<nparam; i++)
+        unc_p[i] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
 
     for(int i=0; i<nvar; i++){
         ranges_x[i][0] = x[i]-unc_x[i];
@@ -50,6 +50,9 @@ for (int degree = 4; degree <= 4; degree ++){
         ranges_p[i][0] = param[i]-unc_p[i];
         ranges_p[i][1] = param[i]+unc_p[i];
     }
+
+    clock_t begin,end;
+    begin=clock();
 
     std::vector<Canonical_Polynomial<double> > x0, param0;
     for(int i=0; i<nvar; i++){
@@ -80,8 +83,7 @@ for (int degree = 4; degree <= 4; degree ++){
     }
 
     std::vector<std::vector<double> > coeffs_all;
-    clock_t begin,end;
-    begin=clock();
+
     try{
         //perform integration
         for(int i=0; i<tend/step; i++){
@@ -115,17 +117,19 @@ for (int degree = 4; degree <= 4; degree ++){
     }
     end=clock();
     double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << "time elapsed : " << time_akp << endl << endl;
+    cout << "canonical, time elapsed : " << time_akp << endl << endl;
 
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++)
             file << setprecision(16) << coeffs_all[k][kk] << " ";
         file << "\n";
         if((k+1)%nvar == 0 && nparam>0){
-            std::vector<double> param_coeff = param0[0].get_coeffs();
-            for(int kk=0; kk<param_coeff.size(); kk++)
-                file << setprecision(16) << param_coeff[kk] << " ";
-            file << "\n";
+            for (int p=0;p<nparam;p++){
+                std::vector<double> param_coeff = param0[p].get_coeffs();
+                for(int kk=0; kk<param_coeff.size(); kk++)
+                    file << setprecision(16) << param_coeff[kk] << " ";
+                file << "\n";
+            }
         }
     }
 file << "\n\n\n\n";

@@ -523,6 +523,7 @@ template <class T>
 std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, const int degree){
     
     int n = Canonical_Polynomial<T>::MAX_DEGREE;
+    // int deg = degree;
     int deg = std::min((int) (degree*1.5+1), n);//RULE OF THUMB
     std::vector<T> res(deg+1), d(n+1);
     T fac;

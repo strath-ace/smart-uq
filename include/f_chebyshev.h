@@ -39,8 +39,8 @@ std::vector<Chebyshev_Polynomial<T> > f(const std::vector<Chebyshev_Polynomial<T
 	Chebyshev_Polynomial<T> tmp_2D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]), 3);
 	deriv[0] =  x[2];		// vx
 	deriv[1] =  x[3];		// vy
-	deriv[2] = -1.0*tmp_2D*x[0];	// ax
-    deriv[3] = -1.0*tmp_2D*x[1] ;//+ param[0];	// ay
+	deriv[2] = -1.0*tmp_2D*x[0];// + param[1];	// ax
+    deriv[3] = -1.0*tmp_2D*x[1] + param[0];	// ay
 
 //Accelerated Kepler problem spatial
 //	Chebyshev_Polynomial<T> tmp_3D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]), 3);

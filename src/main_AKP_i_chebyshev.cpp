@@ -2,16 +2,16 @@
 
 void main_AKP_i_chebyshev(){
     std::ofstream file;
-    file.open ("intrusive_chebyshev_case1.txt");
-for (int degree = 4; degree <= 6; degree ++){
+    file.open ("intrusive_chebyshev_case3.txt");
+for (int degree = 4; degree <= 4; degree ++){
     //algebra params
     // int degree = 4;
     int nvar = 4;
-    int nparam = 0; //*********
+    int nparam = 1; //*********
     //integration params
     double step = 0.01;
     double sma = 1; //*********
-    double tend = 1.01;//2.0*M_PI/pow(sma,-3.0/2.0);
+    double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
     double e = 0; //*********
 
     std::vector<std::vector<double> > ranges_x, ranges_p;
@@ -39,8 +39,8 @@ for (int degree = 4; degree <= 6; degree ++){
     unc_x[2] = 0.005;
     unc_x[3] = 0.005;
 
-    if(nparam>0)
-        unc_p[0] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
+    for (int i=0;i<nparam;i++)
+        unc_p[i] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter
 
     for(int i=0; i<nvar; i++){
         ranges_x[i][0] = x[i]-unc_x[i];
@@ -50,6 +50,9 @@ for (int degree = 4; degree <= 6; degree ++){
         ranges_p[i][0] = param[i]-unc_p[i];
         ranges_p[i][1] = param[i]+unc_p[i];
     }
+
+    clock_t begin,end;
+    begin=clock();
 
     std::vector<Chebyshev_Polynomial<double> > x0, param0;
     for(int i=0; i<nvar; i++){
@@ -80,8 +83,7 @@ for (int degree = 4; degree <= 6; degree ++){
     }
 
     std::vector<std::vector<double> > coeffs_all;
-    clock_t begin,end;
-    begin=clock();
+
     try{
         //perform integration
         for(int i=0; i<tend/step; i++){
@@ -115,7 +117,7 @@ for (int degree = 4; degree <= 6; degree ++){
     }
     end=clock();
     double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << "time elapsed : " << time_akp << endl << endl;
+    cout << "chebyshev, time elapsed : " << time_akp << endl << endl;
 
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++)

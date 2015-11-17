@@ -25,7 +25,7 @@
 
 using namespace std;
 
-# include "chebyshev_polynomial.h"
+# include "Non-Intrusive/chebyshev_polynomial.h"
 
 //****************************************************************************80
 

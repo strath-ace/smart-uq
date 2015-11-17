@@ -8,10 +8,10 @@
 using namespace std;
 using namespace Eigen;
 
-# include "multivariate_polynomials.h"
-# include "chebyshev_polynomial.h"
-# include "sparse_grid_index.h"
-# include "sparse_grid_dataset.h"
+# include "Non-Intrusive/multivariate_polynomials.h"
+# include "Non-Intrusive/chebyshev_polynomial.h"
+# include "Non-Intrusive/sparse_grid_index.h"
+# include "Non-Intrusive/sparse_grid_dataset.h"
 
 //****************************************************************************80
 
@@ -185,11 +185,12 @@ void sparse_multivariate_polynomials ( int dim_num, int level_max )
   for( int i=0; i<dim_num; i++)
     {
       for ( int k=0; k<point_num; k++ )
-	  x[k] = xpr[k*dim_num+i];
+	      x[k] = xpr[k*dim_num+i];
+      
       v = t_polynomial ( point_num, deg_max, x );
 
       for( int j=0; j<point_num*(deg_max+1); j++)
-	  T[i*point_num*(deg_max+1)+j] = v[j]; // Add the row to the main vector
+        T[i*point_num*(deg_max+1)+j] = v[j]; // Add the row to the main vector
     }
   delete [] x;
 
@@ -223,21 +224,20 @@ void sparse_multivariate_polynomials ( int dim_num, int level_max )
   vector<double> row(len);
   double prod;
 
-  for ( int j=0; j<point_num; ++j )
-    {
-      for ( int k=0; k<len; ++k )
-	{
-	  prod=1;
-	  for ( int i=0; i<dim_num; ++i)
-	      prod *= T[i*point_num*(deg_max+1) + idx[k][i]*point_num + j];
-	  row[k] = prod;
-	}
+  for ( int j=0; j<point_num; ++j ){
+      for ( int k=0; k<len; ++k ){
+	        prod=1;
+	        for ( int i=0; i<dim_num; ++i)
+	            prod *= T[i*point_num*(deg_max+1) + idx[k][i]*point_num + j];
+	            row[k] = prod;
+	    }
       H.push_back( row );
-    }
+  }
+
   MatrixXf HP(point_num, len);
   for( int i=0; i<point_num; ++i)
       for( int j=0; j<len; ++j )
-	HP(i,j) = H[i][j];
+	       HP(i,j) = H[i][j];
   
 
   vector<double> trues(point_num);

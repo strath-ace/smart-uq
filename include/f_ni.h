@@ -2,7 +2,6 @@
 #define F_NI_H
 
 #include <vector>
-#include "Polynomial/chebyshev.h"
 
 //autonomous ODE system definition
 template <class T>
@@ -34,22 +33,22 @@ std::vector<T> f(const std::vector<T> &x, const std::vector<T> &param) {
 //	deriv[3] = (-2.0*x[2]*x[3] + x[4]*cos(x[1]))/x[0];  //theta_dot --> x[3]
 //	deriv[4] = 0;
 
-//Accelerated Kepler problem planar
-	T mu = 1.0;
+T mu = 1.0;
+// //Accelerated Kepler problem planar
 	T tmp_2D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]), 3);
 	deriv[0] =  x[2];		// vx
 	deriv[1] =  x[3];		// vy
-	deriv[2] = -1.0*tmp_2D*x[0];	// ax
-    deriv[3] = -1.0*tmp_2D*x[1] ;//+ param[0];	// ay
+	deriv[2] = -1.0*tmp_2D*x[0];// + param[1];	// ax
+ 	deriv[3] = -1.0*tmp_2D*x[1] + param[0];	// ay
 
-//Accelerated Kepler problem spatial
-//	Chebyshev_Polynomial<T> tmp_3D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]), 3);
-//	deriv[0] = x[3];
-//	deriv[1] = x[4];
-//	deriv[2] = x[5];
-//	deriv[3] = -1.0*tmp_3D*x[0];
-//	deriv[4] = -1.0*tmp_3D*x[1];
-//	deriv[5] = -1.0*tmp_3D*x[2];
+// //Accelerated Kepler problem spatial
+	// T tmp_3D =  mu/pow(sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]), 3);
+	// deriv[0] = x[3];
+	// deriv[1] = x[4];
+	// deriv[2] = x[5];
+	// deriv[3] = -1.0*tmp_3D*x[0]+param[1];
+	// deriv[4] = -1.0*tmp_3D*x[1]+param[0];
+	// deriv[5] = -1.0*tmp_3D*x[2]+param[2];
 
 //van der pol
 //	deriv[0] = x[1];

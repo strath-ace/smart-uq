@@ -3,52 +3,34 @@
 
 void main_tests(){
 
-    srand(time(NULL));
+    // int nvar, degree;
 
-    // Canonical_Polynomial <double> x (1,5,0);
-    // Canonical_Polynomial <double> p=1+x*x;
-    // std::vector<Canonical_Polynomial<double> > q;
-    // q.push_back(3+x);
+    // cout << "degree max =  ";
+    // cin >> degree;
+    // cout << endl;
 
-    // cout << p << endl;
-    // cout << q[0] << endl;
+    // cout << "number of variables =  ";
+    // cin >> nvar;
+    // cout << endl;
 
-    // cout << p*p << endl;;
+    // std::ofstream file;
+    // std::string filename = "canonical_poly_"+patch::to_string(degree)+"_"+patch::to_string(nvar)+".m";
+    // file.open (filename.data());
+    // file << "function y = canonical_poly(x)" << "\n" << "% Canonical Polynomial basis of up to order "<<degree<<" in "<<nvar<<" variables" << "\n" << "\n" << "y = [ 1,..." << "\n";
 
-    // cout << p.composition(q) << endl;
-
-
-
-
-    // int nvar=8;
-    // int deg=4;
-
-    // Chebyshev_Polynomial <double> p (nvar,deg,0);
-
-
-    // for (int j=0; j<p.get_coeffs().size();j++){
-    //     p.set_coeffs(j,(double) (rand()%1000)/50.0-10); //randomly
+    // Canonical_Polynomial<double> p(nvar,degree);
+    // for (int deg=1;deg<=degree;deg++){
+    //     for(int i=0; i<p.get_J()[nvar][deg]; i++){
+    //         std::vector<int> row = p.get_row(i,deg);
+    //         for (int j=0;j<nvar;j++){
+    //             if (row[j]==0) file << 1;
+    //             else if (row[j]==1) file << "x(" << j+1 << ")";
+    //             else file << "x(" << j+1 << ").^"<< row[j];
+    //             if (j!= nvar-1) file << " .* ";
+    //         }
+    //         if (deg==degree && i==p.get_J()[nvar][deg]-1) file << "  ];"<< "\n" << "end";
+    //         else file << ",..." << "\n";
+    //     }
     // }
-
-    // p+=1000000000;
-    // cout << p << endl;
-    // cout << p/p << endl;
-
-
-
-    Canonical_Polynomial<double> x (3,3,0);
-    Canonical_Polynomial<double> y (3,3,1);
-    Canonical_Polynomial<double> z (3,3,2);
-    Canonical_Polynomial<double> p (3,3);
-
-    p = 3 + 2*x*x*x + x*y + y*y*z + 5*z*z;
-
-    std::vector<double> point (3,0);
-    point[0]=1;
-    point[1]=-.5;
-
-    cout << p.evaluate(point) << endl;
-
-
- 
+    // file.close();
 } 

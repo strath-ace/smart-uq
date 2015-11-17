@@ -4,11 +4,11 @@
 // # include <fstream>
 // # include <iomanip>
 
-# include "utils.h"
-# include "sparse_grid_index.h"
-# include "sparse_grid_dataset.h"
-# include "chebyshev_polynomial.h"
-# include "multivariate_polynomials.h"
+# include "Non-Intrusive/utils.h"
+# include "Non-Intrusive/sparse_grid_index.h"
+# include "Non-Intrusive/sparse_grid_dataset.h"
+# include "Non-Intrusive/chebyshev_polynomial.h"
+# include "Non-Intrusive/multivariate_polynomials.h"
 
 #include <iostream>
 #include <Eigen/Dense>

@@ -15,7 +15,7 @@
  *
  */
 
-# include "sparse_grid_index.h"
+# include "Non-Intrusive/sparse_grid_index.h"
 
 //****************************************************************************80
 
@@ -633,7 +633,7 @@ vector< vector<int> > sparse_grid_index( int dim, int mu)
   // Put each index in the range [0,2^mu]
   for( unsigned int i=0; i<idx.size(); i++)
       for( int j=0; j<dim; j++)
-	idx[i][j] -= 1;
+	       idx[i][j] -= 1;
 
   // Reorder index (Reference: Giorgilli e Sansottera)
   vector< vector<int> > Jtab, Ntab;
@@ -663,7 +663,7 @@ vector< vector<int> > sparse_grid_index( int dim, int mu)
     }
 
   int i_prev=0, count=0;
-  for(int deg=0; deg<=deg_max; ++deg) 
+  for(int deg=0; deg<=deg_max; ++deg) {
       for(int j=0; j<Jtab[dim][deg]; ++j)
 	{
 	  if (deg==0)
@@ -676,23 +676,24 @@ vector< vector<int> > sparse_grid_index( int dim, int mu)
 	      idx[count] = idx_to_vector( j, deg, dim, Ntab);
 	      count += 1;
 	    }
+    }
 	}
 
-  // Write on file.
-  string filename;
-  ostringstream convert1, convert2;   // stream used for the conversion
+  // // Write on file.
+  // string filename;
+  // ostringstream convert1, convert2;   // stream used for the conversion
 
-  string dimension;
-  convert1 << dim; 
-  dimension = convert1.str();
+  // string dimension;
+  // convert1 << dim; 
+  // dimension = convert1.str();
 
-  string level;
-  convert2 << mu; 
-  level = convert2.str();
+  // string level;
+  // convert2 << mu; 
+  // level = convert2.str();
 
-  filename = "index_" + dimension + "_" + level + ".txt";
+  // filename = "index_" + dimension + "_" + level + ".txt";
 
-  print_rows( idx, filename );
+  // print_rows( idx, filename );
 
   return idx;
 }

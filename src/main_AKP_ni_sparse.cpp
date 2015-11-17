@@ -5,19 +5,42 @@
 #include "f_ni.h"
 #include "integrators_ni.h"
 
+# include "Non-Intrusive/utils.h"
+# include "Non-Intrusive/sparse_grid_index.h"
+# include "Non-Intrusive/sparse_grid_dataset.h"
+# include "Non-Intrusive/chebyshev_polynomial.h"
+# include "Non-Intrusive/multivariate_polynomials.h"
 
-void main_AKP_ni(){
+std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <double> > coeffs_sparse, std::vector < std::vector <int> > index, int dim, int degree){//should add sanity checks and so...
+    std::vector < std::vector <double> > coeffs_full;
+    for (int p=0; p<coeffs_sparse.size(); p++){
+        std::vector <double> coeffs = coeffs_sparse[p];
+        Chebyshev_Polynomial<double> poly(dim,degree);
+        for (int i=0;i<coeffs.size();i++){
+            int deg = std::accumulate(index[i].begin(),index[i].end(),0);
+            int pos0=0;
+            if (deg>0) pos0=combination(dim,deg-1);
+            int pos= poly.get_idx(index[i]);
+            poly.set_coeffs(pos+pos0,coeffs[i]);
+        }
+        coeffs_full.push_back(poly.get_coeffs());
+    }
+    return coeffs_full;
+}
+
+void main_AKP_ni_sparse(){
 
     std::ofstream file;
-    file.open ("non_intrusive_case3.txt");
+    file.open ("non_intrusive_sparse_case3.txt");
     //algebra params
-    for (int degree = 4; degree <=4; degree++){
+    for (int level = 2; level <=2; level++){
 
+        int degree=pow(2,level);
         int nvar = 4;
         int nparam = 1; //*********
         //sampling
-        int npoints=combination(nvar+nparam,degree);
-        int ncoeffs=combination(nvar+nparam,degree);
+        int ncoeffs = sparse_grid_cfn_size ( nvar+nparam,level );
+        int npoints = ncoeffs;
         //integration params
         double step = 0.01;
         double sma = 1.0; //*********
@@ -64,38 +87,51 @@ void main_AKP_ni(){
 
         clock_t begin,end;
         begin=clock();
+
         //sampling and evaluating basis
-        sampling::lhs<double> lhs_gen(nvar+nparam,npoints);
+        double *weights, *points;
+        weights = new double[npoints];
+        points = new double[(nvar+nparam)*npoints];
+
+        sparse_grid_cc (nvar+nparam, level, npoints, weights, points);
+        
+        vector< vector<int> > idx;
+        idx = sparse_grid_index( nvar+nparam, level); //this is also printing to file
+
         Eigen::MatrixXd base_matrix (npoints,ncoeffs);
 
-        std::vector<std::vector<double> > x0;
-        std::vector<std::vector<double> > param0;
+        std::vector<std::vector<double> > x0, param0;
+
         for(int i=0; i<npoints; i++){
-            std::vector<double> xp_aux=lhs_gen();
-            std::vector<double> x_next,p_next;
-            // translation to real range for x0 and to -1,1 for evaluation of basis
+
+            std::vector<double> xp_aux, x_next, p_next;
+            for (int j=0; j<nvar+nparam;j++){
+                xp_aux.push_back(points[i*(nvar+nparam)+j]);
+            }
+
+            //translation to range
             for (int j=0; j<nvar; j++){
-                x_next.push_back(ranges_x[j][0]+xp_aux[j]*(ranges_x[j][1]-ranges_x[j][0]));
-                xp_aux[j]*=2;
-                xp_aux[j]-=1;
+                x_next.push_back((ranges_x[j][0]+ranges_x[j][1])/2.0+xp_aux[j]*(ranges_x[j][1]-ranges_x[j][0])/2.0);
             }
             for (int j=0; j<nparam; j++){
-                p_next.push_back(ranges_p[j][0]+xp_aux[j+nvar]*(ranges_p[j][1]-ranges_p[j][0]));
-                xp_aux[j+nvar]*=2;
-                xp_aux[j+nvar]-=1;
+                p_next.push_back((ranges_p[j][0]+ranges_p[j][1])/2.0+xp_aux[j+nvar]*(ranges_p[j][1]-ranges_p[j][0])/2.0);
             }
+
+            //storage
             x0.push_back(x_next);
             param0.push_back(p_next);
+            
             //evaluation of the base
-            Chebyshev_Polynomial<double> base_poly(nvar+nparam,degree,1.0);
-            base_matrix(i,0)=1.0;
-            for (int j=1;j<ncoeffs;j++){
-                base_poly.set_coeffs(j-1,0.0);
-                base_poly.set_coeffs(j,1.0);
-                base_matrix(i,j)=base_poly.evaluate(xp_aux);
+            for (int c=0; c<ncoeffs; c++){
+                double term=1;
+                for (int j=0; j<nvar+nparam; j++){
+                    Chebyshev_Polynomial<double> base_poly(1,degree);
+                    base_poly.set_coeffs(idx[c][j],1);
+                    term*=base_poly.evaluate(xp_aux[j]);
+                }
+                base_matrix(i,c)=term;
             }
         }
-
 
         // for(int i=0; i<nparam; i++){
         //     param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
@@ -117,7 +153,7 @@ void main_AKP_ni(){
         //     res[i] = x0[i];
         // }
 
-        std::vector<std::vector<double> > coeffs_all;
+        std::vector<std::vector<double> > coeffs_all_sparse;
         
         try{
             //perform integration
@@ -137,23 +173,26 @@ void main_AKP_ni(){
                         for (int c=0;c<ncoeffs;c++){
                             coeffs.push_back(coe(c));
                         }
-                        coeffs_all.push_back(coeffs);
+                        coeffs_all_sparse.push_back(coeffs);
                     }
                 }
             }
         }
         catch(const std::exception&)
         {
+            std::vector<std::vector<double> > coeffs_all;
+            coeffs_all=sparse_to_full(coeffs_all_sparse,idx,nvar+nparam,degree);
+            int ncoeffs_full=coeffs_all[0].size();
             for(int k=0; k<coeffs_all.size(); k++){
                 for(int kk=0; kk<coeffs_all[k].size(); kk++)
                     file << setprecision(16) << coeffs_all[k][kk] << " ";
                 file << "\n";
                 if((k+1)%nvar == 0  && nparam>0){// implement this better... i left it like this for postprocessing needs
                     file << "0.01 0 0 0 0 0.0009999999999999992 ";
-                    for (int c=6; c<ncoeffs; c++) file << "0 ";
+                    for (int c=6; c<ncoeffs_full; c++) file << "0 ";
                     file << "\n";  
                     for (int p=1;p<nparam;p++){
-                        for (int c=0;c<ncoeffs;c++){
+                        for (int c=0;c<ncoeffs_full;c++){
                             if (c==nvar+p+1) file << "0.001 ";
                             else file << "0 ";
                         }
@@ -170,18 +209,21 @@ void main_AKP_ni(){
 
         end=clock();
         double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
-        cout << "non-intrusive, time elapsed : " << time_akp << endl << endl;
+        cout << "non-intrusive sparse, time elapsed : " << time_akp << endl << endl;
         
+        std::vector<std::vector<double> > coeffs_all;
+        coeffs_all=sparse_to_full(coeffs_all_sparse,idx,nvar+nparam,degree);
+        int ncoeffs_full=coeffs_all[0].size();
         for(int k=0; k<coeffs_all.size(); k++){
             for(int kk=0; kk<coeffs_all[k].size(); kk++)
                 file << setprecision(16) << coeffs_all[k][kk] << " ";
             file << "\n";
             if((k+1)%nvar == 0  && nparam>0){// implement this better... i left it like this for postprocessing needs
                 file << "0.01 0 0 0 0 0.0009999999999999992 ";
-                for (int c=6; c<ncoeffs; c++) file << "0 ";
+                for (int c=6; c<ncoeffs_full; c++) file << "0 ";
                 file << "\n";
                 for (int p=1;p<nparam;p++){
-                    for (int c=0;c<ncoeffs;c++){
+                    for (int c=0;c<ncoeffs_full;c++){
                         if (c==nvar+p+1) file << "0.001 ";
                         else file << "0 ";
                     }
