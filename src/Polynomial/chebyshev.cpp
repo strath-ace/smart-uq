@@ -722,6 +722,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T> :: direct_multiplication(const C
                             std::vector<int> v1 = x0.get_row(idx1,i);
                             std::vector<int> v2 = x0.get_row(idx2,j);
                             std::vector<int> v3(x0.get_nvar());
+                            T term = (1.0/nvariations)*(x0_coeffs[sub_idx2+idx1]*x1_coeffs[sub_idx3+idx2]);
                             for(int iter=0; iter<nvariations; iter++){
                                 for(int k=0; k<x0.get_nvar(); k++){
                                     v3[k] = std::fabs(v1[k]+x0_t[iter][k]*v2[k]);
@@ -731,8 +732,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T> :: direct_multiplication(const C
                                     int pos = res.get_idx(v3);
                                     sub_idx1 = 0;
                                     if(deg3>0) sub_idx1=x0_N[x0.get_nvar()][deg3-1];
-                                    res_coeffs[sub_idx1 + pos] +=
-                                        (1.0/nvariations)*(x0_coeffs[sub_idx2+idx1]*x1_coeffs[sub_idx3+idx2]);
+                                    res_coeffs[sub_idx1 + pos] += term;
                                 }
                             }
                         }
