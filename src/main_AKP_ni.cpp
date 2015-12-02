@@ -1,15 +1,9 @@
 #include "main_list.h"
-#include "utils.h"
-#include "Sampling/sampling.h"
-#include "Eigen/Dense"
-#include "f_ni.h"
-#include "integrators_ni.h"
-
 
 void main_AKP_ni(){
 
     std::ofstream file;
-    file.open ("non_intrusive_case3.txt");
+    file.open ("non_intrusive_case4.txt");
     //algebra params
     for (int degree = 4; degree <=4; degree++){
 
@@ -20,9 +14,9 @@ void main_AKP_ni(){
         int ncoeffs=combination(nvar+nparam,degree);
         //integration params
         double step = 0.01;
-        double sma = 1.0; //*********
-        double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
-        double e = 0.0; //*********
+        double sma = 2.0; //*********
+        double tend = 15.01;//2.0*M_PI/pow(sma,-3.0/2.0);
+        double e = 0.5; //*********
 
         std::vector<std::vector<double> > ranges_x, ranges_p;
         for(int i=0; i<nvar; i++){
@@ -44,10 +38,10 @@ void main_AKP_ni(){
         if(nparam>0)
             param[0] = 0.01;
 
-        unc_x[0] = 0.01;
-        unc_x[1] = 0.01;
-        unc_x[2] = 0.005;
-        unc_x[3] = 0.005;
+        unc_x[0] = 0.005;
+        unc_x[1] = 0.005;
+        unc_x[2] = 0.0001;
+        unc_x[3] = 0.0001;
 
 
         for (int i=0; i<nparam; i++)
@@ -95,28 +89,9 @@ void main_AKP_ni(){
                 base_matrix(i,j)=base_poly.evaluate(xp_aux);
             }
         }
-
-
-        // for(int i=0; i<nparam; i++){
-        //     param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
-        //     param0[i].set_coeffs(i+1+nvar,1);
-        // }
         
-        // //translation  [-1,1] ----> [a,b]
-        // for(int i=0; i<nvar; i++){
-        //     x0[i] = (ranges_x[i][1]-ranges_x[i][0])/2.0*x0[i] + (ranges_x[i][1]+ranges_x[i][0])/2.0;
-        // }
-        // for(int i=0; i<nparam; i++){
-        //     param0[i] = (ranges_p[i][1]-ranges_p[i][0])/2.0*param0[i] + (ranges_p[i][1]+ranges_p[i][0])/2.0;
-        // }
-
+        // assign initial status
         std::vector<std::vector<double> > res = x0;
-
-        // //assign initial status
-        // for(int i=0; i<nvar; i++){
-        //     res[i] = x0[i];
-        // }
-
         std::vector<std::vector<double> > coeffs_all;
         
         try{

@@ -2,7 +2,7 @@
 
 void main_AKP_i_chebyshev(){
     std::ofstream file;
-    file.open ("intrusive_chebyshev_case3.txt");
+    file.open ("intrusive_chebyshev_case4.txt");
 for (int degree = 4; degree <= 4; degree ++){
     //algebra params
     // int degree = 4;
@@ -10,9 +10,9 @@ for (int degree = 4; degree <= 4; degree ++){
     int nparam = 1; //*********
     //integration params
     double step = 0.01;
-    double sma = 1; //*********
-    double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
-    double e = 0; //*********
+    double sma = 2; //*********
+    double tend = 15.01;//2.0*M_PI/pow(sma,-3.0/2.0);
+    double e = 0.5; //*********
 
     std::vector<std::vector<double> > ranges_x, ranges_p;
     for(int i=0; i<nvar; i++){
@@ -34,10 +34,10 @@ for (int degree = 4; degree <= 4; degree ++){
     if(nparam>0)
         param[0] = 0.01;
 
-    unc_x[0] = 0.01;
-    unc_x[1] = 0.01;
-    unc_x[2] = 0.005;
-    unc_x[3] = 0.005;
+    unc_x[0] = 0.005;
+    unc_x[1] = 0.005;
+    unc_x[2] = 0.0001;
+    unc_x[3] = 0.0001;
 
     for (int i=0;i<nparam;i++)
         unc_p[i] = param[0]* 10.0/100.0; //10% of uncertainty on the model parameter

@@ -10,26 +10,21 @@
 // //   t         independent variable (initial time)
 // //   h          fixed step size
 
-// template <class T>
-// std::vector<Chebyshev_Polynomial<T> > euler(std::vector<Chebyshev_Polynomial<T> > (*f)(const std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param),std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param, const T &h) {
+template <class T>
+std::vector<T> euler(std::vector<T> (*f)(const std::vector<T> &x, const std::vector<T> &param), std::vector<T> &x, const std::vector<T> &param, const T &h){
 
-//         int n = x.size();
-//         int degree = x[0].get_degree();
-//         int nvar = x[0].get_nvar();
+        int n = x.size();
 
-//         std::vector<Chebyshev_Polynomial<T> > k1;
-//         for(int i=0; i<n; i++){
-//             k1.push_back(Chebyshev_Polynomial<T>(nvar,degree));
-//         }
+        std::vector<T> k1(n,0.0);
 
-//         //* Evaluate k1 = f(x).
-//         k1 = (*f)(x,param);
+        //* Evaluate k1 = f(x).
+        k1 = (*f)(x,param);
 
-//         for(int i=0; i<n; i++)
-//             x[i] += h*k1[i];
+        for(int i=0; i<n; i++)
+            x[i] += h*k1[i];
 
-//         return x;
-// }
+        return x;
+}
 
 // template <class T>
 // std::vector<Chebyshev_Polynomial<T> > discrete_method(std::vector<Chebyshev_Polynomial<T> > (*f)(const std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param), std::vector<Chebyshev_Polynomial<T> > &x, const std::vector<Chebyshev_Polynomial<T> > &param, const T &h) {

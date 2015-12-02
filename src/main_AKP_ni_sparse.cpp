@@ -1,15 +1,4 @@
 #include "main_list.h"
-#include "utils.h"
-#include "Sampling/sampling.h"
-#include "Eigen/Dense"
-#include "f_ni.h"
-#include "integrators_ni.h"
-
-# include "Non-Intrusive/utils.h"
-# include "Non-Intrusive/sparse_grid_index.h"
-# include "Non-Intrusive/sparse_grid_dataset.h"
-# include "Non-Intrusive/chebyshev_polynomial.h"
-# include "Non-Intrusive/multivariate_polynomials.h"
 
 std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <double> > coeffs_sparse, std::vector < std::vector <int> > index, int dim, int degree){//should add sanity checks and so...
     std::vector < std::vector <double> > coeffs_full;
@@ -31,7 +20,7 @@ std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <dou
 void main_AKP_ni_sparse(){
 
     std::ofstream file;
-    file.open ("non_intrusive_sparse_case3.txt");
+    file.open ("non_intrusive_sparse_case4.txt");
     //algebra params
     for (int level = 2; level <=2; level++){
 
@@ -43,9 +32,9 @@ void main_AKP_ni_sparse(){
         int npoints = ncoeffs;
         //integration params
         double step = 0.01;
-        double sma = 1.0; //*********
-        double tend = 2.0*M_PI/pow(sma,-3.0/2.0);
-        double e = 0.0; //*********
+        double sma = 2.0; //*********
+        double tend = 15.01;//2.0*M_PI/pow(sma,-3.0/2.0);
+        double e = 0.5; //*********
 
         std::vector<std::vector<double> > ranges_x, ranges_p;
         for(int i=0; i<nvar; i++){
@@ -67,10 +56,10 @@ void main_AKP_ni_sparse(){
         if(nparam>0)
             param[0] = 0.01;
 
-        unc_x[0] = 0.01;
-        unc_x[1] = 0.01;
-        unc_x[2] = 0.005;
-        unc_x[3] = 0.005;
+        unc_x[0] = 0.005;
+        unc_x[1] = 0.005;
+        unc_x[2] = 0.0001;
+        unc_x[3] = 0.0001;
 
 
         for (int i=0; i<nparam; i++)
@@ -96,7 +85,7 @@ void main_AKP_ni_sparse(){
         sparse_grid_cc (nvar+nparam, level, npoints, weights, points);
         
         vector< vector<int> > idx;
-        idx = sparse_grid_index( nvar+nparam, level); //this is also printing to file
+        idx = sparse_grid_index( nvar+nparam, level);
 
         Eigen::MatrixXd base_matrix (npoints,ncoeffs);
 
