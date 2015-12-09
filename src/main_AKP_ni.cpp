@@ -1,4 +1,5 @@
 #include "main_list.h"
+// #include <Eigen/SVD>
 
 void main_AKP_ni(){
 
@@ -89,7 +90,10 @@ void main_AKP_ni(){
                 base_matrix(i,j)=base_poly.evaluate(xp_aux);
             }
         }
-        
+        //check matrix conditioning
+        // Eigen::JacobiSVD<Eigen::MatrixXd> svd(base_matrix);
+        // double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
+        // cout<< "CONDITION NUMBER ="<< cond << endl;
         // assign initial status
         std::vector<std::vector<double> > res = x0;
         std::vector<std::vector<double> > coeffs_all;

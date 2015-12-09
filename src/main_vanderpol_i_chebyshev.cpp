@@ -9,6 +9,7 @@ void main_vanderpol_i_chebyshev()
     //integration params
     double step = 0.01;
     double tend = 5.0;
+    int freq = 10; //every how many iterations we save the results
 
     std::vector<std::vector<double> > ranges;
     for(int i=0; i<nvar+nparam; i++){
@@ -58,7 +59,7 @@ void main_vanderpol_i_chebyshev()
 
         res = euler(f,res,param0,step);
 
-        if((i+1)%100 == 0){
+        if((i+1)%freq == 0){
             for(int j=0; j<nvar; j++){
                 std::vector<double> coeffs = res[j].get_coeffs();
                 coeffs_all.push_back(coeffs);
@@ -77,7 +78,7 @@ void main_vanderpol_i_chebyshev()
 
     // write to file
     std::ofstream file;
-    file.open ("results_vanderpol_chebyshev.out");
+    file.open ("results_vanderpol_chebyshev_rk4.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

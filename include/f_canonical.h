@@ -54,8 +54,9 @@ std::vector<Canonical_Polynomial<T> > f(const std::vector<Canonical_Polynomial<T
 	// deriv[5] = -1.0*tmp_3D*x[2]+param[2];
 
 // //van der pol
+	T mu = .5;
 	deriv[0] = x[1];
-	deriv[1] = 0.5*(1.0-x[0]*x[0])*x[1]-x[0];
+	deriv[1] = mu*(1.0-x[0]*x[0])*x[1]-x[0];
 
 //logistic map
 //	deriv[0] = x[1]*x[0]*(1.0-x[0]);

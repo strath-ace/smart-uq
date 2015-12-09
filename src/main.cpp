@@ -12,9 +12,9 @@ int main(){
     // main_AKP_i_canonical();
     // main_AKP_i_chebyshev();
     // main_collision_avoidance();
-    main_vanderpol_ni();
-    main_vanderpol_ni_sparse();
-    main_vanderpol_i_chebyshev();
+    // main_vanderpol_ni();
+    // main_vanderpol_ni_sparse();
+    // main_vanderpol_i_chebyshev();
     main_vanderpol_i_canonical();
     // main_test_dct();
     // main_test_canonical_multiplication();

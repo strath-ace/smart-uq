@@ -1,9 +1,10 @@
 #include "main_list.h"
+#include <Eigen/SVD>
 
 void main_vanderpol_ni()
 {
     //algebra params
-    int degree = 10;
+    int degree = 3;
     int nvar = 2;
     int nparam=0;
     //sampling
@@ -11,7 +12,8 @@ void main_vanderpol_ni()
     int ncoeffs=combination(nvar+nparam,degree);
     //integration params
     double step = 0.01;
-    double tend = 5.0;
+    double tend = 10.0;
+    int freq = 10; //every how many iterations we save the results
 
     std::vector<std::vector<double> > ranges;
     for(int i=0; i<nvar+nparam; i++){
@@ -19,8 +21,8 @@ void main_vanderpol_ni()
         ranges[i][0] = -1.0; ranges[i][1] = 1.0;
     }
 
-    ranges[0][0] = -2.0; ranges[0][1] = 2.0;
-    ranges[1][0] = -2.0; ranges[1][1] = 2.0;
+    ranges[0][0] = -2; ranges[0][1] = 2;
+    ranges[1][0] = -2; ranges[1][1] = 2;
 
     //timer
     clock_t begin,end;
@@ -58,25 +60,52 @@ void main_vanderpol_ni()
             base_matrix(i,j)=base_poly.evaluate(xp_aux);
         }
     }
-    
+
+    // Eigen::MatrixXd base_inv (npoints,ncoeffs);
+    // base_inv=base_matrix.inverse();
+
+    //matrix condition number
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd(base_matrix);
+    double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
+    cout<< "CONDITION NUMBER ="<<cond << endl;
+
     // assign initial status
     std::vector<std::vector<double> > res = x0;
 
     //perform integration
     std::vector<std::vector<double> > coeffs_all;
+    // // //pointwise results
+    // for (int v=0; v<nvar; v++){
+    //     std::vector<double> coeffs;
+    //     for (int j=0;j<npoints;j++){
+    //         coeffs.push_back(x0[j][v]);
+    //     }
+    //     coeffs_all.push_back(coeffs);
+    // }
+
     for(int i=0; i<tend/step; i++){
         // std::cout<<"iteration "<<i<<std::endl;
         for (int j=0;j<npoints;j++){
             res[j] = euler(f,res[j],param0[j],step);
         }
+        // //pointwise results
+        // for (int v=0; v<nvar; v++){
+        //     std::vector<double> coeffs;
+        //     for (int j=0;j<npoints;j++){
+        //         coeffs.push_back(res[j][v]);
+        //     }
+        //     coeffs_all.push_back(coeffs);
+        // }
 
-        if((i+1)%100 == 0){
+        if((i+1)%freq == 0){
             for (int v=0; v<nvar; v++){
                 Eigen::VectorXd y(npoints);
                 for (int j=0;j<npoints;j++){
                     y(j)=res[j][v];
                 }
+
                 Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+                // Eigen::VectorXd coe = base_inv*y;
                 std::vector<double> coeffs;
                 for (int c=0;c<ncoeffs;c++){
                     coeffs.push_back(coe(c));
@@ -92,7 +121,7 @@ void main_vanderpol_ni()
 
     // write to file
     std::ofstream file;
-    file.open ("results_vanderpol_ni.out");
+    file.open ("vanderpol_ni_euler_n10.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

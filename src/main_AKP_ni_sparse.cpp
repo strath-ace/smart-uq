@@ -1,4 +1,5 @@
 #include "main_list.h"
+// #include <Eigen/SVD>
 
 std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <double> > coeffs_sparse, std::vector < std::vector <int> > index, int dim, int degree){//should add sanity checks and so...
     std::vector < std::vector <double> > coeffs_full;
@@ -121,6 +122,11 @@ void main_AKP_ni_sparse(){
                 base_matrix(i,c)=term;
             }
         }
+
+        // //check matrix conditioning
+        // Eigen::JacobiSVD<Eigen::MatrixXd> svd(base_matrix);
+        // double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
+        // cout<< "CONDITION NUMBER ="<< cond << endl;
 
         // for(int i=0; i<nparam; i++){
         //     param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));

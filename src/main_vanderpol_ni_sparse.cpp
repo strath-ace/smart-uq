@@ -1,4 +1,6 @@
 #include "main_list.h"
+#include <Eigen/SVD>
+
 
 std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <double> > coeffs_sparse, std::vector < std::vector <int> > index, int dim, int degree){//should add sanity checks and so...
     std::vector < std::vector <double> > coeffs_full;
@@ -20,7 +22,7 @@ std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <dou
 void main_vanderpol_ni_sparse()
 {
     //algebra params
-    int level = 3;
+    int level = 4;
     int degree = pow(2,level);
     int nvar = 2;
     int nparam=0;
@@ -29,7 +31,8 @@ void main_vanderpol_ni_sparse()
     int npoints = ncoeffs;
     //integration params
     double step = 0.01;
-    double tend = 5.0;
+    double tend = 10.0;
+    int freq = 10; //every how many iterations we save the results
 
     std::vector<std::vector<double> > ranges;
     for(int i=0; i<nvar+nparam; i++){
@@ -89,6 +92,11 @@ void main_vanderpol_ni_sparse()
         }
     }
 
+    //matrix condition number
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd(base_matrix);
+    double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
+    cout<< "CONDITION NUMBER ="<<cond << endl;
+
     // assign initial status
     std::vector<std::vector<double> > res = x0;
 
@@ -100,7 +108,7 @@ void main_vanderpol_ni_sparse()
             res[j] = euler(f,res[j],param0[j],step);
         }
 
-        if((i+1)%100 == 0){
+        if((i+1)%freq == 0){
             for (int v=0; v<nvar; v++){
                 Eigen::VectorXd y(npoints);
                 for (int j=0;j<npoints;j++){
@@ -125,7 +133,7 @@ void main_vanderpol_ni_sparse()
     coeffs_all=sparse_to_full(coeffs_all_sparse,idx,nvar+nparam,degree);
 
     std::ofstream file;
-    file.open ("results_vanderpol_ni.out");
+    file.open ("results_vanderpol_ni_sparse_euler_t10s.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

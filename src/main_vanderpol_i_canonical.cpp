@@ -9,6 +9,7 @@ void main_vanderpol_i_canonical()
     //integration params
     double step = 0.01;
     double tend = 5.0;
+    int freq = 1; //every how many iterations we save the results
 
     std::vector<std::vector<double> > ranges;
     for(int i=0; i<nvar+nparam; i++){
@@ -16,8 +17,8 @@ void main_vanderpol_i_canonical()
         ranges[i][0] = -1.0; ranges[i][1] = 1.0;
     }
 
-    ranges[0][0] = -2.0; ranges[0][1] = 2.0;
-    ranges[1][0] = -2.0; ranges[1][1] = 2.0;
+    ranges[0][0] = 0.1; ranges[0][1] = 1.9;
+    ranges[1][0] = 0.1; ranges[1][1] = 1.9;
 
     //timer
     clock_t begin,end;
@@ -41,9 +42,11 @@ void main_vanderpol_i_canonical()
     //translation  [-1,1] ----> [a,b]
     for(int i=0; i<nvar; i++){
         x0[i] = (ranges[i][1]-ranges[i][0])/2.0*x0[i] + (ranges[i][1]+ranges[i][0])/2.0;
+        // x0[i]*=2;
     }
     for(int i=0; i<nparam; i++){
         param0[i] = (ranges[nvar+i][1]-ranges[nvar+i][0])/2.0*param0[i] + (ranges[nvar+i][1]+ranges[nvar+i][0])/2.0;
+        // param0[nvar+i]*=2;
     }
 
     //assign initial status
@@ -58,7 +61,7 @@ void main_vanderpol_i_canonical()
 
         res = euler(f,res,param0,step);
 
-        if((i+1)%100 == 0){
+        if((i+1)%freq == 0){
             for(int j=0; j<nvar; j++){
                 std::vector<double> coeffs = res[j].get_coeffs();
                 coeffs_all.push_back(coeffs);
@@ -77,7 +80,7 @@ void main_vanderpol_i_canonical()
 
     // write to file
     std::ofstream file;
-    file.open ("results_vanderpol_canonical.out");
+    file.open ("vanderpol_canonical_euler_n10_[0,2]_t20s.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";
