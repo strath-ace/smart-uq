@@ -97,7 +97,7 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const Canonical_Polyn
         if (deg0==0) i_0=0;
         else i_0=m_N[m_nvar][deg0-1];
 
-        for (int deg1=0; deg1<=m_degree-deg0; deg1++){ //loop over orther of terms of poly1
+        for (int deg1=0; deg1<=m_degree-deg0; deg1++){ //loop over other of terms of poly1
             int max_j=m_J[m_nvar][deg1];
             if (deg1==0) j_0=0;
             else j_0=m_N[m_nvar][deg1-1];
@@ -485,6 +485,55 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::composition(const std::vector<C
     return res;
 }
 
+//takes a vector of chebyshev coeffs, changes basis and assigns the object to the result
+template <class T>
+void Canonical_Polynomial<T>::assign_from_chebyshev(const std::vector<T> cheb_coeffs){ //implementation could be WAY more efficient
+    
+    Canonical_Polynomial<T> res(m_nvar,m_degree,(T) 0.0);
+    int ncoeffs=res.get_coeffs().size();
+    if (cheb_coeffs.size()!=ncoeffs){
+        std::cout<<"Chebyshev coefficients provided must correspond to size of the algebra"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    std::vector <Canonical_Polynomial <T> > term_vector;
+    
+    for (int i=0;i<ncoeffs;i++){
+        term_vector.push_back(Canonical_Polynomial<T>(m_nvar,m_degree,(T) cheb_coeffs[i]));
+    }
+
+    for (int v=0;v<m_nvar;v++){
+        Canonical_Polynomial<T> base2(m_nvar,m_degree,(T) 1.0);
+        Canonical_Polynomial<T> base1(m_nvar,m_degree,(int) v);
+        Canonical_Polynomial<T> x(m_nvar,m_degree,(int) v);
+        Canonical_Polynomial<T> term(m_nvar,m_degree);
+        for (int d=1;d<=m_degree;d++){
+            if (d==1)  term=base1;
+            else{
+                term=2.0*x*base1-base2;
+                base2=base1;
+                base1=term;
+            }
+            //term is the chebyshev term of order d in variable v. Now we multiply by it the necessary terms in term_vector
+            int coeff_idx=m_N[m_nvar][d-1];
+            for(int deg=d; deg<=m_degree; deg++){
+                for(int i=0; i<m_J[m_nvar][deg]; i++){
+                    std::vector<int> row = res.get_row(i,deg);
+                    if (row[v]==d) term_vector[coeff_idx]*=term;
+                    coeff_idx+=1;
+                }
+            }
+        }
+    }
+
+    for (int i=0;i<ncoeffs;i++){
+        res+=term_vector[i];
+    }
+
+    *this=res;
+    // return *this;
+}
+
 ////DIRECT INTERPOLATION WITH MATRIX INVERSION
 // template <class T>
 // std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, int degree){
@@ -578,7 +627,6 @@ T Canonical_Polynomial<T>::horner(T x, int i) const{
     if (i>m_degree) return 0;
     else return x*(m_coeffs[i]+horner(x,i+1));
 }
-
 
 template class Canonical_Polynomial<double>;
 template class Canonical_Polynomial<float>;

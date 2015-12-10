@@ -68,10 +68,9 @@ namespace polynomial{
 		Canonical_Polynomial<T> inv() const;
 		Canonical_Polynomial<T> composition(const std::vector<Canonical_Polynomial<T> > &other) const;
 
-		// static Canonical_Polynomial<T> direct_multiplication(const Canonical_Polynomial<T> &x0, const Canonical_Polynomial<T> &x1);
-
 		std::vector<Canonical_Polynomial<T> > evaluate_base(const T &a, const T &b) const;
 		static std::vector<T> approximation_1d(T (*f)(T x), const T a, const T b, const int degree);
+		void assign_from_chebyshev(const std::vector<T> cheb_coeffs);
 
 		std::string get_basis_name() const;
 		std::string get_name() const;

@@ -9,7 +9,7 @@ void main_vanderpol_i_chebyshev()
     //integration params
     double step = 0.01;
     double tend = 5.0;
-    int freq = 10; //every how many iterations we save the results
+    int freq = 1; //every how many iterations we save the results
 
     std::vector<std::vector<double> > ranges;
     for(int i=0; i<nvar+nparam; i++){
@@ -63,6 +63,9 @@ void main_vanderpol_i_chebyshev()
             for(int j=0; j<nvar; j++){
                 std::vector<double> coeffs = res[j].get_coeffs();
                 coeffs_all.push_back(coeffs);
+                // Canonical_Polynomial<double> res_canon(nvar,degree);
+                // res_canon.assign_from_chebyshev(coeffs);
+                // coeffs_all.push_back(res_canon.get_coeffs());
             }
             // // depends on the postprocessor for nparam!=0
             // for(int j=0; j<nparam; j++){
@@ -78,7 +81,7 @@ void main_vanderpol_i_chebyshev()
 
     // write to file
     std::ofstream file;
-    file.open ("results_vanderpol_chebyshev_rk4.out");
+    file.open ("results_vanderpol_chebyshev_euler_n10_canonical_t50s.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

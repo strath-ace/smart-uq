@@ -17,8 +17,8 @@ void main_vanderpol_i_canonical()
         ranges[i][0] = -1.0; ranges[i][1] = 1.0;
     }
 
-    ranges[0][0] = 0.1; ranges[0][1] = 1.9;
-    ranges[1][0] = 0.1; ranges[1][1] = 1.9;
+    ranges[0][0] = -2.0; ranges[0][1] = 2.0;
+    ranges[1][0] = -2.0; ranges[1][1] = 2.0;
 
     //timer
     clock_t begin,end;
@@ -80,7 +80,7 @@ void main_vanderpol_i_canonical()
 
     // write to file
     std::ofstream file;
-    file.open ("vanderpol_canonical_euler_n10_[0,2]_t20s.out");
+    file.open ("vanderpol_canonical_euler_n10_test.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";
