@@ -141,6 +141,10 @@ void main_AKP_ni_sparse(){
         //     param0[i] = (ranges_p[i][1]-ranges_p[i][0])/2.0*param0[i] + (ranges_p[i][1]+ranges_p[i][0])/2.0;
         // }
 
+        // solve by inversion, faster when we want a lot of representations
+        Eigen::MatrixXd base_inv (npoints,ncoeffs);
+        base_inv=base_matrix.inverse();
+        
         std::vector<std::vector<double> > res = x0;
 
         // //assign initial status
@@ -163,7 +167,10 @@ void main_AKP_ni_sparse(){
                         for (int j=0;j<npoints;j++){
                             y(j)=res[j][v];
                         }
-                        Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+                        
+                        // Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+                        Eigen::VectorXd coe = base_inv*y;
+
                         std::vector<double> coeffs;
                         for (int c=0;c<ncoeffs;c++){
                             coeffs.push_back(coe(c));

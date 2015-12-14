@@ -95,6 +95,11 @@ void main_AKP_ni(){
         // double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
         // cout<< "CONDITION NUMBER ="<< cond << endl;
         // assign initial status
+
+        // solve by inversion, faster when we want a lot of representations
+        Eigen::MatrixXd base_inv (npoints,ncoeffs);
+        base_inv=base_matrix.inverse();
+        
         std::vector<std::vector<double> > res = x0;
         std::vector<std::vector<double> > coeffs_all;
         
@@ -111,7 +116,10 @@ void main_AKP_ni(){
                         for (int j=0;j<npoints;j++){
                             y(j)=res[j][v];
                         }
-                        Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+
+                        // Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+                        Eigen::VectorXd coe = base_inv*y;
+                        
                         std::vector<double> coeffs;
                         for (int c=0;c<ncoeffs;c++){
                             coeffs.push_back(coe(c));

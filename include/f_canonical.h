@@ -54,9 +54,19 @@ std::vector<Canonical_Polynomial<T> > f(const std::vector<Canonical_Polynomial<T
 	// deriv[5] = -1.0*tmp_3D*x[2]+param[2];
 
 // //van der pol
-	T mu = .5;
-	deriv[0] = x[1];
-	deriv[1] = mu*(1.0-x[0]*x[0])*x[1]-x[0];
+	// T mu = .5;
+	// deriv[0] = x[1];
+	// deriv[1] = mu*(1.0-x[0]*x[0])*x[1]-x[0];
+
+// Lotka-Volterra
+	Canonical_Polynomial<T> a=param[0];
+	Canonical_Polynomial<T> b=param[1];
+	Canonical_Polynomial<T> c=param[2];
+	Canonical_Polynomial<T> d=param[3];
+	
+	Canonical_Polynomial<T> xy = x[0]*x[1];
+	deriv[0] = a*x[0]-b*xy;
+	deriv[1] = -c*x[1]+d*xy;
 
 //logistic map
 //	deriv[0] = x[1]*x[0]*(1.0-x[0]);
