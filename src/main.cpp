@@ -23,6 +23,9 @@ int main(){
     // main_lotka_volterra_ni();
     // main_lotka_volterra_ni_sparse();
     // main_lotka_volterra_i_chebyshev();
+
+    // // Spring-mass n-dof system
+    main_spring_mass_ni();
     
     // // Other problems
     // main_collision_avoidance();
@@ -35,5 +38,7 @@ int main(){
     // main_test_accuracy();
     // main_test_sampling();
     // main_tests();
+
+
     return 0;
 }

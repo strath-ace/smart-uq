@@ -25,6 +25,7 @@
 #include "utils.h"
 #include "Sampling/sampling.h"
 #include "Eigen/Dense"
+#include "Eigen/Sparse"
 #include "f_ni.h"
 #include "integrators_ni.h"
 //non-intrusive sparse additional routines
@@ -63,6 +64,9 @@ void main_lotka_volterra_ni();
 void main_lotka_volterra_ni_sparse();
 void main_lotka_volterra_i_chebyshev();
 void main_lotka_volterra_i_canonical();
+
+void main_spring_mass_ni();
+
 void main_test_dct();
 void main_test_canonical_multiplication();
 void main_test_sampling();

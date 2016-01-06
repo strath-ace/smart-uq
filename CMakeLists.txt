@@ -67,6 +67,9 @@ file(GLOB SRC
   "${SRC_PATH}/main_lotka_volterra_i_canonical.cpp"
   "${SRC_PATH}/main_lotka_volterra_ni.cpp"
   "${SRC_PATH}/main_lotka_volterra_ni_sparse.cpp"
+
+  "${SRC_PATH}/main_spring_mass_ni.cpp"
+  
   "${SRC_PATH}/main_intersect.cpp"
   "${SRC_PATH}/main_test_dct.cpp"
   "${SRC_PATH}/main_test_canonical_multiplication.cpp"
