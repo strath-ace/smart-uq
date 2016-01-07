@@ -66,6 +66,9 @@ void main_lotka_volterra_i_chebyshev();
 void main_lotka_volterra_i_canonical();
 
 void main_spring_mass_ni();
+void main_spring_mass_ni_sparse();
+void main_spring_mass_i_canonical();
+void main_spring_mass_i_chebyshev();
 
 void main_test_dct();
 void main_test_canonical_multiplication();

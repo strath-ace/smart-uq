@@ -5,8 +5,24 @@ Eigen::MatrixXd derivxv(Eigen::MatrixXd xv, Eigen::SparseMatrix<double> A, Eigen
     return dxv;
 }
 
-Eigen::MatrixXd propagate_euler (Eigen::MatrixXd xv, double step, Eigen::SparseMatrix<double> A, Eigen::SparseMatrix<double> B){
-    Eigen::MatrixXd xv_next = xv + step*derivxv(xv,A,B);
+Eigen::MatrixXd propagate_euler (Eigen::MatrixXd xv, double step, Eigen::SparseMatrix<double> A, Eigen::SparseMatrix<double> B, std::vector < std::vector <int> > idx, std::vector <int> dim, std::vector<std::vector<double> > par){
+    Eigen::MatrixXd xv_next(xv.rows(),xv.cols());
+    if (dim[2]==0){
+        xv_next = xv + step*derivxv(xv,A,B);
+    }
+    else{
+        for (int i=0; i<xv.cols(); i++){
+            // assign nominal A
+            Eigen::SparseMatrix<double> Ai = A;
+            // modify A
+            for (int j=0; j<dim[2]; j++){
+                int jj=idx[2][j];
+                Ai.coeffRef(jj,jj)=1.0/par[i][dim[0]+dim[1]+j];
+            } 
+            // propagate only this point   
+            xv_next.col(i) = xv.col(i) + step*derivxv(xv.col(i),Ai,B);
+        }
+    }
     return xv_next;
 }
 
@@ -22,7 +38,7 @@ void main_spring_mass_ni()
 
 // System
     // n_DOF of the system
-    int n = 10;
+    int n = 3;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -37,14 +53,13 @@ void main_spring_mass_ni()
     std::vector<double> mass(n,1.0); // mass
     std::vector<double> ks(n+1,1.0); // rigidity
     std::vector<double> cs(n+1,0.0); // damping
-    // std::vector<double> ls(n+1,1.0); // natural longitude of the spring
     // std::vector<double> fs(n,0.0); // amplitudes of the exciting forces NOT IMPLEMENTED
 
-    // // Uncertainty in parameters NOT IMPLEMENTED
-    // std::vector<double> unc_mass(n,0.10);
-    // std::vector<double> unc_ks(n+1,0.0);
-    // std::vector<double> unc_cs(n+1,0.0);
-    // std::vector<double> unc_fs(n,0.0);    
+    // // Uncertainty in parameters 
+    std::vector<double> unc_mass(n,0.10);
+    // std::vector<double> unc_ks(n+1,0.0); // NOT IMPLEMENTED
+    // std::vector<double> unc_cs(n+1,0.0); // NOT IMPLEMENTED
+    // std::vector<double> unc_fs(n,0.0);   // NOT IMPLEMENTED   
 
 // Simulation
     double step = 0.005;
@@ -53,8 +68,8 @@ void main_spring_mass_ni()
 
 // INITIALISATIONS
 
-    std::vector < std::vector <int> > idx(2);
-    std::vector <int> dim(2,0);
+    std::vector < std::vector <int> > idx(3);
+    std::vector <int> dim(3,0);
     int dim_unc = 0;
     for (int i=0;i<n;i++){
         if (fabs(unc_x0[i])>ZERO) {
@@ -68,11 +83,12 @@ void main_spring_mass_ni()
             dim_unc++;
         }
 
-        // if (fabs(unc_mass[i])>ZERO) {
-        //     idx[2].push_back(i);
-        //     dim[2]++;
-        //     dim_unc++;
-        // }
+        if (fabs(unc_mass[i])>ZERO) {
+            idx[2].push_back(i);
+            dim[2]++;
+            dim_unc++;
+        }
+
         // if (fabs(unc_fs[i])>ZERO) {
         //     idx[5].push_back(i);
         //     dim[5]++;
@@ -117,6 +133,14 @@ void main_spring_mass_ni()
         r[1] = v0[idx[1][i]]+unc_v0[idx[1][i]];
         ranges.push_back(r);
     }
+
+    for (int i=0; i<dim[2];i++){
+        std::vector<double> r(2);
+        r[0] = mass[idx[2][i]]-unc_mass[idx[2][i]];
+        r[1] = mass[idx[2][i]]+unc_mass[idx[2][i]];
+        ranges.push_back(r);
+    }
+
 
     //timer
     clock_t begin,end;
@@ -204,6 +228,7 @@ void main_spring_mass_ni()
         }
     }
 
+
     // build system matrices
     Eigen::SparseMatrix<double> A(2*n,2*n);
     Eigen::SparseMatrix<double> B(2*n,2*n);
@@ -230,19 +255,19 @@ void main_spring_mass_ni()
             B.insert(j,j+1) = cs [i+1];
         }
     }
-
 // INTEGRATION
     std::vector<std::vector<double> > coeffs_all;
 
     // double t=0;
 
-    //Compute constant zero force, put inside loop if non-constant
+    //Compute constant zero force, put inside loop if non-constant NOT IMPLEMENTED
 
     // cout << xv << endl; //DEBUG
 
     for(int i=0; i<tend/step; i++){
-        // std::cout<<"iteration "<<i<<std::endl;
-        xv = propagate_euler (xv,step,A,B);
+        // if(i%100==0) std::cout<<"iteration "<<i<<std::endl;
+
+        xv = propagate_euler (xv,step,A,B,idx,dim,par);
         // xv = xv + step*(A*(B*xv));
         
         // t+=step;

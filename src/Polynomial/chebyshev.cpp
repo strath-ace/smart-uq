@@ -11,37 +11,32 @@
 using namespace smart;
 using namespace polynomial;
 
-template < class T >
-Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order) : Polynomial<T>::Polynomial(nvar,order){
+// template < class T >
+// Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order) : Polynomial<T>::Polynomial(nvar,order){
     
-    m_t.resize(pow(2,nvar));
-    for(int i=0; i<nvar; i++){
-        m_t[i].resize(2);
-    }
+//     initialize_t();
+// }
 
-    initialize_t();
-}
-
-template <class T>
-Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const int &i) : Polynomial<T>::Polynomial(nvar,order,i){
+// template <class T>
+// Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const int &i) : Polynomial<T>::Polynomial(nvar,order,i){
         
-    m_t.resize(pow(2,nvar));
-    for(int i=0; i<nvar; i++){
-        m_t[i].resize(2);
-    }
+//     m_t.resize(pow(2,nvar));
+//     for(int i=0; i<nvar; i++){
+//         m_t[i].resize(2);
+//     }
 
-    initialize_t();
-}
+//     initialize_t();
+// }
 
-template <class T>
-Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const T &value) : Polynomial<T>::Polynomial(nvar,order,value){
+// template <class T>
+// Chebyshev_Polynomial<T>::Chebyshev_Polynomial(const int &nvar, const int &order, const T &value) : Polynomial<T>::Polynomial(nvar,order,value){
         
-    m_t.resize(pow(2,nvar));
-    for(int i=0; i<nvar; i++){
-        m_t[i].resize(2);
-    }
-    initialize_t();
-}
+//     m_t.resize(pow(2,nvar));
+//     for(int i=0; i<nvar; i++){
+//         m_t[i].resize(2);
+//     }
+//     initialize_t();
+// }
 
 template < class T >
 std::string Chebyshev_Polynomial<T>::get_name() const
@@ -709,7 +704,8 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T> :: direct_multiplication(const C
     std::vector<T> x1_coeffs = x1.get_coeffs();
     std::vector<std::vector<int> > x0_J=x0.get_J();
     std::vector<std::vector<int> > x0_N=x0.get_N();
-    std::vector<std::vector<int> > x0_t=x0.get_t();
+    res.initialize_t();
+    std::vector<std::vector<int> > t=res.get_t();
     for(int i=0; i<=x0.get_degree(); i++){//loop over subset degree i of poly1
         for(int j=0; j<=x1.get_degree(); j++){//loop over subset degree j of poly2
             //if((i+j)<=m_degree){
@@ -725,7 +721,7 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T> :: direct_multiplication(const C
                             T term = (1.0/nvariations)*(x0_coeffs[sub_idx2+idx1]*x1_coeffs[sub_idx3+idx2]);
                             for(int iter=0; iter<nvariations; iter++){
                                 for(int k=0; k<x0.get_nvar(); k++){
-                                    v3[k] = std::fabs(v1[k]+x0_t[iter][k]*v2[k]);
+                                    v3[k] = std::fabs(v1[k]+t[iter][k]*v2[k]);
                                 }
                                 int deg3 = std::accumulate(v3.begin(),v3.end(),0);
                                 if(deg3<=x0.get_degree()){
@@ -749,6 +745,12 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T> :: direct_multiplication(const C
 // private routine for direct multiplication
 template <class T>
 void Chebyshev_Polynomial<T>::initialize_t(){
+
+    m_t.resize(pow(2,m_nvar));
+    for(int i=0; i<m_nvar; i++){
+        m_t[i].resize(2);
+    }
+    
     std::vector<int> values(2);
     values[0] = -1;
     values[1] = 1;

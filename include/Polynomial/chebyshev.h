@@ -27,8 +27,8 @@ namespace polynomial{
 	class Chebyshev_Polynomial: public Polynomial <T> {
 	
 	// // for class template inheritance
-	// public:
-	// using Polynomial<T>::Polynomial;
+	public:
+	using Polynomial<T>::Polynomial;
 	// // for class template inheritance
 	private:
 	using Polynomial<T>::m_coeffs;
@@ -38,11 +38,12 @@ namespace polynomial{
 	using Polynomial<T>::m_N;
 
 	public:
-		Chebyshev_Polynomial(const int &vars, const int &order);
-		//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
-		Chebyshev_Polynomial(const int &vars, const int &order, const int &i);
-		//initialize a chebyshev polynomial with only the constant term
-		Chebyshev_Polynomial(const int &vars, const int &order, const T &value);
+		// //constructors redefined because they initialize t
+		// Chebyshev_Polynomial(const int &vars, const int &order); 
+		// //initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
+		// Chebyshev_Polynomial(const int &vars, const int &order, const int &i);
+		// //initialize a chebyshev polynomial with only the constant term
+		// Chebyshev_Polynomial(const int &vars, const int &order, const T &value);
 
 		static const int MAX_DEGREE = 100;
 		// arithmetic operators

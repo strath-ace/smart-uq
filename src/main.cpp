@@ -25,8 +25,12 @@ int main(){
     // main_lotka_volterra_i_chebyshev();
 
     // // Spring-mass n-dof system
+    main_spring_mass_i_canonical();
     main_spring_mass_ni();
-    
+    main_spring_mass_ni_sparse();
+    main_spring_mass_i_chebyshev();
+
+
     // // Other problems
     // main_collision_avoidance();
     // main_multiphase();

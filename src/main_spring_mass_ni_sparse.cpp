@@ -20,13 +20,29 @@ std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <dou
     return coeffs_full;
 }
 
-Eigen::MatrixXd derivxv(Eigen::MatrixXd xv, Eigen::SparseMatrix<double> A, Eigen::SparseMatrix<double> B){
+Eigen::MatrixXd derivxv_s(Eigen::MatrixXd xv, Eigen::SparseMatrix<double> A, Eigen::SparseMatrix<double> B){
     Eigen::MatrixXd dxv = A*(B*xv);
     return dxv;
 }
 
-Eigen::MatrixXd propagate_euler (Eigen::MatrixXd xv, double step, Eigen::SparseMatrix<double> A, Eigen::SparseMatrix<double> B){
-    Eigen::MatrixXd xv_next = xv + step*derivxv(xv,A,B);
+Eigen::MatrixXd propagate_euler_s (Eigen::MatrixXd xv, double step, Eigen::SparseMatrix<double> A, Eigen::SparseMatrix<double> B, std::vector < std::vector <int> > idx, std::vector <int> dim, std::vector<std::vector<double> > par){
+    Eigen::MatrixXd xv_next(xv.rows(),xv.cols());
+    if (dim[2]==0){
+        xv_next = xv + step*derivxv_s(xv,A,B);
+    }
+    else{
+        for (int i=0; i<xv.cols(); i++){
+            // assign nominal A
+            Eigen::SparseMatrix<double> Ai = A;
+            // modify A
+            for (int j=0; j<dim[2]; j++){
+                int jj=idx[2][j];
+                Ai.coeffRef(jj,jj)=1.0/par[i][dim[0]+dim[1]+j];
+            } 
+            // propagate only this point   
+            xv_next.col(i) = xv.col(i) + step*derivxv_s(xv.col(i),Ai,B);
+        }
+    }
     return xv_next;
 }
 
@@ -41,7 +57,7 @@ void main_spring_mass_ni_sparse()
 
 // System
     // n_DOF of the system
-    int n = 10;
+    int n = 3;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -59,11 +75,11 @@ void main_spring_mass_ni_sparse()
     // std::vector<double> ls(n+1,1.0); // natural longitude of the spring
     // std::vector<double> fs(n,0.0); // amplitudes of the exciting forces NOT IMPLEMENTED
 
-    // // Uncertainty in parameters NOT IMPLEMENTED
-    // std::vector<double> unc_mass(n,0.10);
-    // std::vector<double> unc_ks(n+1,0.0);
-    // std::vector<double> unc_cs(n+1,0.0);
-    // std::vector<double> unc_fs(n,0.0);    
+    // // Uncertainty in parameters 
+    std::vector<double> unc_mass(n,0.10);
+    // std::vector<double> unc_ks(n+1,0.0); // NOT IMPLEMENTED
+    // std::vector<double> unc_cs(n+1,0.0); // NOT IMPLEMENTED
+    // std::vector<double> unc_fs(n,0.0);   // NOT IMPLEMENTED     
 
 // Simulation
     double step = 0.005;
@@ -75,8 +91,8 @@ void main_spring_mass_ni_sparse()
 // INITIALISATIONS
 
     int degree=pow(2,level);
-    std::vector < std::vector <int> > idx(2);
-    std::vector <int> dim(2,0);
+    std::vector < std::vector <int> > idx(3);
+    std::vector <int> dim(3,0);
     int dim_unc = 0;
     for (int i=0;i<n;i++){
         if (fabs(unc_x0[i])>ZERO) {
@@ -90,11 +106,11 @@ void main_spring_mass_ni_sparse()
             dim_unc++;
         }
 
-        // if (fabs(unc_mass[i])>ZERO) {
-        //     idx[2].push_back(i);
-        //     dim[2]++;
-        //     dim_unc++;
-        // }
+        if (fabs(unc_mass[i])>ZERO) {
+            idx[2].push_back(i);
+            dim[2]++;
+            dim_unc++;
+        }
         // if (fabs(unc_fs[i])>ZERO) {
         //     idx[5].push_back(i);
         //     dim[5]++;
@@ -137,6 +153,13 @@ void main_spring_mass_ni_sparse()
         std::vector<double> r(2);
         r[0] = v0[idx[1][i]]-unc_v0[idx[1][i]];
         r[1] = v0[idx[1][i]]+unc_v0[idx[1][i]];
+        ranges.push_back(r);
+    }    
+
+    for (int i=0; i<dim[2];i++){
+        std::vector<double> r(2);
+        r[0] = mass[idx[2][i]]-unc_mass[idx[2][i]];
+        r[1] = mass[idx[2][i]]+unc_mass[idx[2][i]];
         ranges.push_back(r);
     }
 
@@ -269,7 +292,7 @@ void main_spring_mass_ni_sparse()
 
     for(int i=0; i<tend/step; i++){
         // std::cout<<"iteration "<<i<<std::endl;
-        xv = propagate_euler (xv,step,A,B);
+        xv = propagate_euler_s (xv,step,A,B,idx,dim,par);
         // xv = xv + step*(A*(B*xv));
         
         // t+=step;
@@ -299,7 +322,7 @@ void main_spring_mass_ni_sparse()
 
     // write to file
     std::vector<std::vector<double> > coeffs_all;
-    coeffs_all=sparse_to_full(coeffs_all_sparse,idx,dim_unc,degree);
+    coeffs_all=sparse_to_full(coeffs_all_sparse,idx_sparse,dim_unc,degree);
 
     std::ofstream file;
     file.open ("sm_ni_sparse.out");
