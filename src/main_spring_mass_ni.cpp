@@ -38,7 +38,7 @@ void main_spring_mass_ni()
 
 // System
     // n_DOF of the system
-    int n = 3;
+    int n = 10;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -56,7 +56,7 @@ void main_spring_mass_ni()
     // std::vector<double> fs(n,0.0); // amplitudes of the exciting forces NOT IMPLEMENTED
 
     // // Uncertainty in parameters 
-    std::vector<double> unc_mass(n,0.10);
+    std::vector<double> unc_mass(n,0.05);
     // std::vector<double> unc_ks(n+1,0.0); // NOT IMPLEMENTED
     // std::vector<double> unc_cs(n+1,0.0); // NOT IMPLEMENTED
     // std::vector<double> unc_fs(n,0.0);   // NOT IMPLEMENTED   

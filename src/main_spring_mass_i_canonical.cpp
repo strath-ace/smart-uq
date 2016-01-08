@@ -55,7 +55,7 @@ void main_spring_mass_i_canonical()
 
 // System
     // n_DOF of the system
-    int n = 3;
+    int n = 20;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -72,16 +72,16 @@ void main_spring_mass_i_canonical()
     std::vector<double> cs(n+1,0.0); // damping
     // std::vector<double> fs(n,0.0); // amplitudes of the exciting forces NOT IMPLEMENTED
 
-    // // Uncertainty in parameters NOT IMPLEMENTED
-    std::vector<double> unc_mass(n,0.10);
-    // std::vector<double> unc_ks(n+1,0.0);
-    // std::vector<double> unc_cs(n+1,0.0);
-    // std::vector<double> unc_fs(n,0.0);    
+    // // Uncertainty in parameters 
+    std::vector<double> unc_mass(n,0.05);
+    // std::vector<double> unc_ks(n+1,0.0); // NOT IMPLEMENTED
+    // std::vector<double> unc_cs(n+1,0.0); // NOT IMPLEMENTED
+    // std::vector<double> unc_fs(n,0.0); // NOT IMPLEMENTED    
 
 // Simulation
     double step = 0.005;
     double tend = 50.0;
-    int freq = 2500; //every how many iterations we save the results
+    int freq = 250; //every how many iterations we save the results
 
 // INITIALISATIONS
 
@@ -154,6 +154,7 @@ void main_spring_mass_i_canonical()
         ranges.push_back(r);
     }
 
+    // std::cout<<combination(dim_unc,degree)<<endl;
     //timer
     clock_t begin,end;
     begin=clock();

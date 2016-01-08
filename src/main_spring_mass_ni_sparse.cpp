@@ -57,7 +57,7 @@ void main_spring_mass_ni_sparse()
 
 // System
     // n_DOF of the system
-    int n = 3;
+    int n = 20;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -76,7 +76,7 @@ void main_spring_mass_ni_sparse()
     // std::vector<double> fs(n,0.0); // amplitudes of the exciting forces NOT IMPLEMENTED
 
     // // Uncertainty in parameters 
-    std::vector<double> unc_mass(n,0.10);
+    std::vector<double> unc_mass(n,0.05);
     // std::vector<double> unc_ks(n+1,0.0); // NOT IMPLEMENTED
     // std::vector<double> unc_cs(n+1,0.0); // NOT IMPLEMENTED
     // std::vector<double> unc_fs(n,0.0);   // NOT IMPLEMENTED     
@@ -84,7 +84,7 @@ void main_spring_mass_ni_sparse()
 // Simulation
     double step = 0.005;
     double tend = 50.0;
-    int freq = 2500; //every how many iterations we save the results
+    int freq = 250; //every how many iterations we save the results
 
 
 
@@ -163,6 +163,8 @@ void main_spring_mass_ni_sparse()
         ranges.push_back(r);
     }
 
+
+    // std::cout<<npoints<<endl;
     //timer
     clock_t begin,end;
     begin=clock();
@@ -180,6 +182,7 @@ void main_spring_mass_ni_sparse()
     Eigen::MatrixXd base_matrix (npoints,ncoeffs);
 
     std::vector<std::vector<double> > par;
+    
 
     for(int i=0; i<npoints; i++){
         std::vector<double> par_aux, par_next;
