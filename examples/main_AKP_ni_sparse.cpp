@@ -1,5 +1,4 @@
-#include "main_list.h"
-// #include <Eigen/SVD>
+#include "../include/smartuq.h"
 
 std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <double> > coeffs_sparse, std::vector < std::vector <int> > index, int dim, int degree){//should add sanity checks and so...
     std::vector < std::vector <double> > coeffs_full;
@@ -18,7 +17,7 @@ std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <dou
     return coeffs_full;
 }
 
-void main_AKP_ni_sparse(){
+int main(){
 
     std::ofstream file;
     file.open ("non_intrusive_sparse_case4.txt");

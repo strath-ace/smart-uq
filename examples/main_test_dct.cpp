@@ -1,8 +1,8 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 #include <time.h>
 #include <ctime>
 
-void main_test_dct(){
+int main(){
     // //INTERMEDIATE OUTPUT
     // std::ofstream file;
     // std::string filename = "intermediate_dcts.out";

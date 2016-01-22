@@ -1,8 +1,8 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 #include <time.h>
 #include <ctime> 
 
-void main_test_canonical_multiplication(){
+int main(){
 
     for (int nvar=1; nvar <=9; nvar+=1){
         cout << "nvar = "<< nvar << "   degree 1-8"<< endl;

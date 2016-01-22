@@ -1,7 +1,7 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 #include <sstream>
 
-void main_multiphase(){
+int main(){
     
     //algebra params
     int degree = 4;

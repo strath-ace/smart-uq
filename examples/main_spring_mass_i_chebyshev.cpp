@@ -1,17 +1,17 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 
-// std::vector<Canonical_Polynomial <double> > derivxv (std::vector<Canonical_Polynomial <double> > xv, std::vector <double> ks, std::vector <double> cs, std::vector<double> mass){
+// std::vector<Chebyshev_Polynomial <double> > derivxv (std::vector<Chebyshev_Polynomial <double> > xv, std::vector <double> ks, std::vector <double> cs, std::vector<double> mass){
 //     Eigen::MatrixXd dxv = A*(B*xv);
 //     return dxv;
-// }std::vector<Canonical_Polynomial <double> >
+// }std::vector<Chebyshev_Polynomial <double> >
 
 template < class T >
-std::vector<Canonical_Polynomial <double> > propagate_euler (std::vector<Canonical_Polynomial <double> > xv, double step, std::vector <double> ks, std::vector <double> cs, T mass){
+std::vector<Chebyshev_Polynomial <double> > propagate_euler (std::vector<Chebyshev_Polynomial <double> > xv, double step, std::vector <double> ks, std::vector <double> cs, T mass){
     
     int n = xv.size()/2;
 
-    std::vector<Canonical_Polynomial <double> > res;
-    Canonical_Polynomial<double> term(xv[0].get_nvar(),xv[0].get_degree());
+    std::vector<Chebyshev_Polynomial <double> > res;
+    Chebyshev_Polynomial<double> term(xv[0].get_nvar(),xv[0].get_degree());
 
     // //DEBUG
     // clock_t begin = clock();
@@ -43,7 +43,7 @@ std::vector<Canonical_Polynomial <double> > propagate_euler (std::vector<Canonic
     return res;
 }
 
-void main_spring_mass_i_canonical()
+int main()
 {
 
 // Coded only for uncertainty in states (x and v). It can be in all or just in some of them.
@@ -55,7 +55,7 @@ void main_spring_mass_i_canonical()
 
 // System
     // n_DOF of the system
-    int n = 20;
+    int n = 10;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -81,7 +81,7 @@ void main_spring_mass_i_canonical()
 // Simulation
     double step = 0.005;
     double tend = 50.0;
-    int freq = 250; //every how many iterations we save the results
+    int freq = 2500; //every how many iterations we save the results
 
 // INITIALISATIONS
 
@@ -154,18 +154,17 @@ void main_spring_mass_i_canonical()
         ranges.push_back(r);
     }
 
-    // std::cout<<combination(dim_unc,degree)<<endl;
     //timer
     clock_t begin,end;
     begin=clock();
 
     //assign initial status, there will be 2n polynomial representations of dimension dim_unc
-    std::vector<Canonical_Polynomial <double> > xv;
+    std::vector<Chebyshev_Polynomial <double> > xv;
     
     // initialize x polynomials
     int count=0; 
     for (int i=0; i<n;i++){
-        Canonical_Polynomial<double> poly(dim_unc, degree);
+        Chebyshev_Polynomial<double> poly(dim_unc, degree);
         if (!idx[0].empty() && idx[0][count]==i){
             poly.set_coeffs(count+1,1);
             poly *= (ranges[count][1]-ranges[count][0])/2.0;
@@ -180,7 +179,7 @@ void main_spring_mass_i_canonical()
     // initialize v polynomials
     count=0; 
     for (int i=0; i<n;i++){
-        Canonical_Polynomial<double> poly(dim_unc, degree);
+        Chebyshev_Polynomial<double> poly(dim_unc, degree);
         if (!idx[1].empty() && idx[1][count]==i){
             poly.set_coeffs(dim[0]+count+1,1);
             poly *= (ranges[dim[0]+count][1]-ranges[dim[0]+count][0])/2.0;
@@ -193,12 +192,12 @@ void main_spring_mass_i_canonical()
         xv.push_back(poly);
     }
     // initialize m polynomials
-    std::vector<Canonical_Polynomial <double> > mass_polys;
+    std::vector<Chebyshev_Polynomial <double> > mass_polys;
     bool massisunc = (dim[2]!=0);
     if (massisunc){
         count=0; 
         for (int i=0; i<n;i++){
-            Canonical_Polynomial<double> poly(dim_unc, degree);
+            Chebyshev_Polynomial<double> poly(dim_unc, degree);
             if (!idx[2].empty() && idx[2][count]==i){
                 poly.set_coeffs(dim[0]+dim[1]+count+1,1);
                 poly *= (ranges[dim[0]+dim[1]+count][1]-ranges[dim[0]+dim[1]+count][0])/2.0;
@@ -238,11 +237,11 @@ void main_spring_mass_i_canonical()
     //timer
     end=clock();
     double time_elapsed = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << n<<"-dof spring-mass, dim_unc="<<dim_unc<<", intr.canonical, time elapsed : " << time_elapsed << endl << endl;
+    cout << n<<"-dof spring-mass, dim_unc="<<dim_unc<<", intr.chebyshev, time elapsed : " << time_elapsed << endl << endl;
     
     // write to file
     std::ofstream file;
-    file.open ("sm_i_canonical.out");
+    file.open ("sm_i_chebyshev.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

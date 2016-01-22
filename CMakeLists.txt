@@ -32,10 +32,13 @@ set(BIN_PATH                                   "${PROJECT_BINARY_DIR}/bin")
 set(MAIN_NAME                                  "main")
 set(TEST_PATH                                  "${PROJECT_BINARY_DIR}/test")
 set(TEST_NAME                                  "test")
+set(EXAMPLES_PATH                              "${PROJECT_BINARY_DIR}/examples")
+set(EXAMPLES_NAME                              "examples")
 
 option(BUILD_MAIN                              "Build main function"            ON)
 option(BUILD_DOCS                              "Build docs"                     OFF)
 option(BUILD_TESTS                             "Build tests"                    OFF)
+option(BUILD_EXAMPLES                          "Build examples"                 OFF)
 
 find_library(FFTW_LIBRARY fftw3)
 find_library(FFTWF_LIBRARY fftw3f)
@@ -52,32 +55,6 @@ file(GLOB SRC
   "${SRC_PATH}/Sampling/*.cpp"
   "${SRC_PATH}/Non-Intrusive/*.cpp"
   "${SRC_PATH}/Polynomial/*.cpp"
-  "${SRC_PATH}/main_accuracy.cpp"
-  "${SRC_PATH}/main_AKP_ni.cpp"
-  "${SRC_PATH}/main_AKP_ni_sparse.cpp"
-  "${SRC_PATH}/main_AKP_i_chebyshev.cpp"
-  "${SRC_PATH}/main_AKP_i_canonical.cpp"
-  "${SRC_PATH}/main_collision.cpp"
-  "${SRC_PATH}/main_multiphase.cpp"
-  "${SRC_PATH}/main_vanderpol_i_chebyshev.cpp"
-  "${SRC_PATH}/main_vanderpol_i_canonical.cpp"
-  "${SRC_PATH}/main_vanderpol_ni.cpp"
-  "${SRC_PATH}/main_vanderpol_ni_sparse.cpp"  
-  "${SRC_PATH}/main_lotka_volterra_i_chebyshev.cpp"
-  "${SRC_PATH}/main_lotka_volterra_i_canonical.cpp"
-  "${SRC_PATH}/main_lotka_volterra_ni.cpp"
-  "${SRC_PATH}/main_lotka_volterra_ni_sparse.cpp"
-
-  "${SRC_PATH}/main_spring_mass_ni.cpp"
-  "${SRC_PATH}/main_spring_mass_ni_sparse.cpp"
-  "${SRC_PATH}/main_spring_mass_i_canonical.cpp"
-  "${SRC_PATH}/main_spring_mass_i_chebyshev.cpp"
-
-  "${SRC_PATH}/main_intersect.cpp"
-  "${SRC_PATH}/main_test_dct.cpp"
-  "${SRC_PATH}/main_test_canonical_multiplication.cpp"
-  "${SRC_PATH}/main_test_sampling.cpp"
-  "${SRC_PATH}/main_tests.cpp"
 )
 
 set(MAIN_SRC
@@ -181,6 +158,11 @@ if(BUILD_TESTS)
     setup_target_for_coverage(coverage "${TEST_NAME}" coverage)
   endif(BUILD_COVERAGE_ANALYSIS)
 endif(BUILD_TESTS)
+
+if(BUILD_EXAMPLES)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXAMPLES_PATH})
+	add_subdirectory("${PROJECT_PATH}/examples")
+endif(BUILD_EXAMPLES)
 
 # Install header files and library.
 # Destination is set by CMAKE_INSTALL_PREFIX and defaults to usual locations, unless overridden by

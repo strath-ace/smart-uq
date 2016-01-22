@@ -1,12 +1,7 @@
-#include "main_list.h"
-#include "utils.h"
-#include "Sampling/sampling.h"
-#include "Eigen/Dense"
-#include "f_ni.h"
-#include "integrators_ni.h"
+#include "../include/smartuq.h"
 
 
-void main_AKP_ni(){
+int main(){
 
     std::ofstream file;
     file.open ("non_intrusive_case3_3D.txt");

@@ -1,6 +1,6 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 
-void main_collision_avoidance(){
+int main(){
     std::ofstream file;
     file.open ("results2.out");
 

@@ -1,6 +1,16 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 
-void main_test_accuracy(){
+namespace patch
+{
+    template < typename T > std::string to_string( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
+    }
+}
+
+int main(){
 
 //    //TEST FUNCTIONS UNIVARIATE
 //    int nvar = 1;

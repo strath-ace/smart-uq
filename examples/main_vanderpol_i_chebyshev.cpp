@@ -1,6 +1,6 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 
-void main_vanderpol_i_canonical()
+int main()
 {
     //algebra params
     int degree = 10;
@@ -24,29 +24,27 @@ void main_vanderpol_i_canonical()
     clock_t begin,end;
     begin=clock();
 
-    std::vector<Canonical_Polynomial<double> > x0, param0;
+    std::vector<Chebyshev_Polynomial<double> > x0, param0;
     for(int i=0; i<nvar; i++){
-        x0.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
+        x0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
         x0[i].set_coeffs(i+1,1);
     }
     for(int i=0; i<nparam; i++){
-        param0.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
+        param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
         param0[i].set_coeffs(nvar+i+1,1);
     }
 
-    std::vector<Canonical_Polynomial<double> > res;
+    std::vector<Chebyshev_Polynomial<double> > res;
     for(int i=0; i<nvar; i++){
-        res.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
+        res.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
     }
 
     //translation  [-1,1] ----> [a,b]
     for(int i=0; i<nvar; i++){
         x0[i] = (ranges[i][1]-ranges[i][0])/2.0*x0[i] + (ranges[i][1]+ranges[i][0])/2.0;
-        // x0[i]*=2;
     }
     for(int i=0; i<nparam; i++){
         param0[i] = (ranges[nvar+i][1]-ranges[nvar+i][0])/2.0*param0[i] + (ranges[nvar+i][1]+ranges[nvar+i][0])/2.0;
-        // param0[nvar+i]*=2;
     }
 
     //assign initial status
@@ -65,8 +63,11 @@ void main_vanderpol_i_canonical()
             for(int j=0; j<nvar; j++){
                 std::vector<double> coeffs = res[j].get_coeffs();
                 coeffs_all.push_back(coeffs);
+                // Canonical_Polynomial<double> res_canon(nvar,degree);
+                // res_canon.assign_from_chebyshev(coeffs);
+                // coeffs_all.push_back(res_canon.get_coeffs());
             }
-            // //depends on the postprocessor for nparam!=0
+            // // depends on the postprocessor for nparam!=0
             // for(int j=0; j<nparam; j++){
             //     std::vector<double> coeffs = param0[j].get_coeffs();
             //     coeffs_all.push_back(coeffs);
@@ -76,11 +77,11 @@ void main_vanderpol_i_canonical()
     //timer
     end=clock();
     double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << "vanderpol canonical, time elapsed : " << time_akp << endl << endl;
+    cout << "vanderpol chebyshev, time elapsed : " << time_akp << endl << endl;
 
     // write to file
     std::ofstream file;
-    file.open ("vanderpol_canonical_euler_n10_test.out");
+    file.open ("results_vanderpol_chebyshev_euler_n10_canonical_t50s.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

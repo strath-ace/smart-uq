@@ -1,7 +1,16 @@
-#include "main_list.h"
-#include "utils.h"
+#include "../include/smartuq.h"
 
-void main_tests(){
+namespace patch
+{
+    template < typename T > std::string to_string( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
+    }
+}
+
+int main(){
 
     // int nvar, degree;
 

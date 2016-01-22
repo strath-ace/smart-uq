@@ -1,8 +1,8 @@
-#include "main_list.h"
+#include "../include/smartuq.h"
 
-void main_AKP_i_chebyshev(){
+int main(){
     std::ofstream file;
-    file.open ("intrusive_Chebyshev_case3_3D.txt");
+    file.open ("intrusive_canonical_case3_3D.txt");
 for (int degree = 4; degree <= 4; degree ++){
     //algebra params
     // int degree = 4;
@@ -58,19 +58,19 @@ for (int degree = 4; degree <= 4; degree ++){
     clock_t begin,end;
     begin=clock();
 
-    std::vector<Chebyshev_Polynomial<double> > x0, param0;
+    std::vector<Canonical_Polynomial<double> > x0, param0;
     for(int i=0; i<nvar; i++){
-        x0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        x0.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
         x0[i].set_coeffs(i+1,1);
     }
     for(int i=0; i<nparam; i++){
-        param0.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        param0.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
         param0[i].set_coeffs(i+1+nvar,1);
     }
 
-    std::vector<Chebyshev_Polynomial<double> > res;
+    std::vector<Canonical_Polynomial<double> > res;
     for(int i=0; i<nvar; i++){
-        res.push_back(Chebyshev_Polynomial<double>(nvar+nparam,degree));
+        res.push_back(Canonical_Polynomial<double>(nvar+nparam,degree));
     }
 
     //translation  [-1,1] ----> [a,b]

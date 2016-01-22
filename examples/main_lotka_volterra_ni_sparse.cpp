@@ -1,5 +1,4 @@
-#include "main_list.h"
-#include <Eigen/SVD>
+#include "../include/smartuq.h"
 
 
 std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <double> > coeffs_sparse, std::vector < std::vector <int> > index, int dim, int degree){//should add sanity checks and so...
@@ -19,10 +18,10 @@ std::vector <std::vector <double> > sparse_to_full(std::vector< std::vector <dou
     return coeffs_full;
 }
 
-void main_vanderpol_ni_sparse()
+int main()
 {
     //algebra params
-    int level = 4;
+    int level = 2;
     int degree = pow(2,level);
     int nvar = 2;
     int nparam=0;
@@ -31,17 +30,43 @@ void main_vanderpol_ni_sparse()
     int npoints = ncoeffs;
     //integration params
     double step = 0.01;
-    double tend = 10.0;
+    double tend = 40.0;
     int freq = 10; //every how many iterations we save the results
 
-    std::vector<std::vector<double> > ranges;
-    for(int i=0; i<nvar+nparam; i++){
-        ranges.push_back(std::vector<double>(2));
-        ranges[i][0] = -1.0; ranges[i][1] = 1.0;
+    std::vector<std::vector<double> > ranges_x, ranges_p;
+    for(int i=0; i<nvar; i++){
+        ranges_x.push_back(std::vector<double>(2));
+        ranges_x[i][0] = -1.0; ranges_x[i][1] = 1.0;
+    }
+    for(int i=0; i<nparam; i++){
+        ranges_p.push_back(std::vector<double>(2));
+        ranges_p[i][0] = -1.0; ranges_p[i][1] = 1.0;
     }
 
-    ranges[0][0] = -2.0; ranges[0][1] = 2.0;
-    ranges[1][0] = -2.0; ranges[1][1] = 2.0;
+    std::vector<double> x(nvar), param(nparam), unc_x(nvar), unc_p(nparam);
+
+    x[0] = 1.0;
+    x[1] = 0.5;
+    // param[0] = 1.0;
+    // param[1] = 1.0;
+    // param[2] = 1.0;
+    // param[3] = 1.0;
+    
+    for (int i=0; i<nvar; i++)
+        unc_x[i] = x[i]* 0.05; //uncertainty on the model states
+
+    for (int i=0; i<nparam; i++)
+        unc_p[i] = param[i]* 0.05; //uncertainty on the model parameter
+
+    for(int i=0; i<nvar; i++){
+        ranges_x[i][0] = x[i]-unc_x[i];
+        ranges_x[i][1] = x[i]+unc_x[i];
+    }
+
+    for(int i=0; i<nparam; i++){
+        ranges_p[i][0] = param[i]-unc_p[i];
+        ranges_p[i][1] = param[i]+unc_p[i];
+    }
 
     //timer
     clock_t begin,end;
@@ -70,10 +95,10 @@ void main_vanderpol_ni_sparse()
 
         //translation to range
         for (int j=0; j<nvar; j++){
-            x_next.push_back((ranges[j][0]+ranges[j][1])/2.0+xp_aux[j]*(ranges[j][1]-ranges[j][0])/2.0);
+            x_next.push_back((ranges_x[j][0]+ranges_x[j][1])/2.0+xp_aux[j]*(ranges_x[j][1]-ranges_x[j][0])/2.0);
         }
         for (int j=0; j<nparam; j++){
-            p_next.push_back((ranges[j+nvar][0]+ranges[j+nvar][1])/2.0+xp_aux[j+nvar]*(ranges[j+nvar][1]-ranges[j+nvar][0])/2.0);
+            p_next.push_back((ranges_p[j][0]+ranges_p[j][1])/2.0+xp_aux[j+nvar]*(ranges_p[j][1]-ranges_p[j][0])/2.0);
         }
 
         //storage
@@ -92,10 +117,14 @@ void main_vanderpol_ni_sparse()
         }
     }
 
-    //matrix condition number
-    Eigen::JacobiSVD<Eigen::MatrixXd> svd(base_matrix);
-    double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
-    cout<< "CONDITION NUMBER ="<<cond << endl;
+    // solve by inversion, faster when we want a lot of representations
+    Eigen::MatrixXd base_inv (npoints,ncoeffs);
+    base_inv=base_matrix.inverse();
+
+    // //matrix condition number
+    // Eigen::JacobiSVD<Eigen::MatrixXd> svd(base_matrix);
+    // double cond = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size()-1);
+    // cout<< "CONDITION NUMBER ="<<cond << endl;
 
     // assign initial status
     std::vector<std::vector<double> > res = x0;
@@ -114,7 +143,9 @@ void main_vanderpol_ni_sparse()
                 for (int j=0;j<npoints;j++){
                     y(j)=res[j][v];
                 }
-                Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+                // Eigen::VectorXd coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y);
+                Eigen::VectorXd coe = base_inv*y; //inversion
+
                 std::vector<double> coeffs;
                 for (int c=0;c<ncoeffs;c++){
                     coeffs.push_back(coe(c));
@@ -126,14 +157,14 @@ void main_vanderpol_ni_sparse()
     //timer
     end=clock();
     double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << "vanderpol non-intrusive sparse, time elapsed : " << time_akp << endl << endl;
+    cout << "lotka-volterra non-intr. sparse, time elapsed : " << time_akp << endl << endl;
 
     // write to file
     std::vector<std::vector<double> > coeffs_all;
     coeffs_all=sparse_to_full(coeffs_all_sparse,idx,nvar+nparam,degree);
 
     std::ofstream file;
-    file.open ("results_vanderpol_ni_sparse_euler_t10s.out");
+    file.open ("lotka_volterra_ni_sparse.out");
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";

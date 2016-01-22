@@ -1,8 +1,6 @@
-#include "main_list.h"
-#include "Sampling/sampling.h"
+#include "../include/smartuq.h"
 
-
-void main_test_sampling(){
+int main(){
     int dimension = 10;
     int points = 15;
     cout << "SOBOL SAMPLING - "<< points<<" POINTS IN "<< dimension <<"D" << endl;
