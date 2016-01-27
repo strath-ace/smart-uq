@@ -78,9 +78,13 @@ namespace polynomial{
 		T evaluate(const std::vector<T> &x) const;
 		T evaluate(const T &x) const;
 
+		static void initialize_M(const int nvar, const int degree);
+		static void delete_M();
+
 	private:
 		T horner(T x, int i) const;
-
+		static std::vector<int> m_M;
+		static int m_Mnvar, m_Mdegree;
 	};
 	
 	template < class T>

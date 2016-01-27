@@ -101,65 +101,10 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator-(const Chebyshev_Polyn
     return res;
 }
 
-// //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
-// template <class T>
-// Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
-    
-//     if(m_nvar!=other.get_nvar()){
-//         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-//         exit(EXIT_FAILURE);
-//     }
-//     if(m_degree!=other.get_degree()){
-//         std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-//         exit(EXIT_FAILURE);
-//     }
-
-//     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
-//     std::vector<T> res_coeffs(combination(m_nvar,m_degree));
-//     double nvariations = pow(2,m_nvar);
-//     std::vector<T> other_coeffs = other.get_coeffs();
-//     for(int i=0; i<=m_degree; i++){//loop over subset degree i of poly1
-//         for(int j=0; j<=other.get_degree(); j++){//loop over subset degree j of poly2
-//             //if((i+j)<=m_degree){
-//                 for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
-//                     for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
-//                         int sub_idx1=0, sub_idx2=0, sub_idx3=0;
-//                         if(i>0) sub_idx2=m_N[m_nvar][i-1];
-//                         if(j>0) sub_idx3=m_N[m_nvar][j-1];
-//                         if(fabs(m_coeffs[sub_idx2+idx1])>ZERO && fabs(other_coeffs[sub_idx3+idx2])>ZERO){
-//                             std::vector<int> v1 = this->get_row(idx1,i);
-//                             std::vector<int> v2 = this->get_row(idx2,j);
-//                             std::vector<int> v3(m_nvar);
-//                             for(int iter=0; iter<nvariations; iter++){
-//                                 for(int k=0; k<m_nvar; k++){
-//                                     v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
-//                                 }
-//                                 int deg3 = std::accumulate(v3.begin(),v3.end(),0);
-//                                 if(deg3<=m_degree){
-//                                     int pos = res.get_idx(v3);
-//                                     sub_idx1 = 0;
-//                                     if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
-//                                     res_coeffs[sub_idx1 + pos] +=
-//                                         (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             //}
-//         }
-//     }
-
-//     res.set_coeffs(res_coeffs);
-//     return res;
-// }
-
-//OPERATOR* OVERLOADING FOR DCT-BASED MULTIPLICATION
-//Author : Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
-//Note: the indexing, scaling, etc. operations could be suppressed with 1-var polynomials for a performance gain
+//OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
 template <class T>
 Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
-
+    
     if(m_nvar!=other.get_nvar()){
         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
         exit(EXIT_FAILURE);
@@ -169,84 +114,139 @@ Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polyn
         exit(EXIT_FAILURE);
     }
 
-    #ifdef CHEBYSHEV_DCT_MULTIPLICATION
-    int ncoeffs = combination(m_nvar,m_degree);
-    std::vector<T> other_coeffs = other.get_coeffs();
     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
-
-    //initialise stuff needed by fftw
-    int dct_degree_aux = int (m_degree*1.5+1);
-    int dct_degree[m_nvar];
-    for (int i=0;i<m_nvar;i++){
-        dct_degree[i]=dct_degree_aux+1;
-    }
-    int pointers_length=pow(dct_degree_aux+1,m_nvar);
-    T *dct0, *dct1, *dct01;
-
-    // allocate pointers for all DCTs
-    dct_malloc(dct0,pointers_length);
-    dct_malloc(dct1,pointers_length);
-    dct_malloc(dct01,pointers_length);
-
-    // build a vector idx[ncoeffs] with the pointer indexes in row-major format
-    // build a vector scale[ncoeffs] with the scale factor for each of the coefficients
-    std::vector <int> idx;
-    std::vector <T> scale;
-    int ii=0;
-    for (int deg=0;deg<=m_degree;deg++){
-        int max_i=m_J[m_nvar][deg];
-        for (int i=0;i<max_i;i++){
-            std::vector<int> row = res.get_row(i,deg);
-            int term_idx=0;
-            T term_scale=1.0;
-            for (int var=0;var<m_nvar;var++){
-                if (row[var]==0) term_scale*=2.0;
-                term_idx+=row[var]*pow((dct_degree_aux+1),var);
-            }
-            idx.push_back(term_idx);
-            scale.push_back(term_scale);
-            // initialise non-zero terms of dct0 and dct1 here too (to avoid an additional for loop)
-            dct0[term_idx]=m_coeffs[ii]*term_scale;
-            dct1[term_idx]=other_coeffs[ii]*term_scale;
-            ii++;
+    std::vector<T> res_coeffs(combination(m_nvar,m_degree));
+    double nvariations = pow(2,m_nvar);
+    std::vector<T> other_coeffs = other.get_coeffs();
+    for(int i=0; i<=m_degree; i++){//loop over subset degree i of poly1
+        for(int j=0; j<=other.get_degree(); j++){//loop over subset degree j of poly2
+            //if((i+j)<=m_degree){
+                for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
+                    for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
+                        int sub_idx1=0, sub_idx2=0, sub_idx3=0;
+                        if(i>0) sub_idx2=m_N[m_nvar][i-1];
+                        if(j>0) sub_idx3=m_N[m_nvar][j-1];
+                        if(fabs(m_coeffs[sub_idx2+idx1])>ZERO && fabs(other_coeffs[sub_idx3+idx2])>ZERO){
+                            std::vector<int> v1 = this->get_row(idx1,i);
+                            std::vector<int> v2 = this->get_row(idx2,j);
+                            std::vector<int> v3(m_nvar);
+                            for(int iter=0; iter<nvariations; iter++){
+                                for(int k=0; k<m_nvar; k++){
+                                    v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
+                                }
+                                int deg3 = std::accumulate(v3.begin(),v3.end(),0);
+                                if(deg3<=m_degree){
+                                    int pos = res.get_idx(v3);
+                                    sub_idx1 = 0;
+                                    if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
+                                    res_coeffs[sub_idx1 + pos] +=
+                                        (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
+                                }
+                            }
+                        }
+                    }
+                }
+            //}
         }
     }
 
-    //DCT(x0) and DCT(x1)
-    dct_do(m_nvar,dct_degree,dct0);
-    dct_do(m_nvar,dct_degree,dct1);
-
-    // component-wise multiplication DCT(x0):DCT(x1)
-    // scale already to avoid coefficients growing too much in large algebras
-    T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
-    for(int i=0;i<pointers_length;i++){
-        dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
-    }
-
-    // deallocate more stuff
-    dct_free(dct0);
-    dct_free(dct1);
-
-    // Obtain DCT(DCT(x0):DCT(x1))
-    dct_do(m_nvar,dct_degree,dct01);
-
-    // rescale and save results
-    for (int i=0;i<ncoeffs;i++){
-        T term_result=dct01[idx[i]]/scale[i];
-        if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
-        else res.set_coeffs(i,0.0);
-    }
-    
-    // deallocate and return
-    dct_free(dct01);
+    res.set_coeffs(res_coeffs);
     return res;
-
-    #else
-
-    return direct_multiplication(*this,other);
-
-    #endif
 }
+
+// //OPERATOR* OVERLOADING FOR DCT-BASED MULTIPLICATION
+// //Author : Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
+// //Note: the indexing, scaling, etc. operations could be suppressed with 1-var polynomials for a performance gain
+// template <class T>
+// Chebyshev_Polynomial<T> Chebyshev_Polynomial<T>::operator*(const Chebyshev_Polynomial<T> &other) const{
+
+//     if(m_nvar!=other.get_nvar()){
+//         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
+//         exit(EXIT_FAILURE);
+//     }
+//     if(m_degree!=other.get_degree()){
+//         std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
+//         exit(EXIT_FAILURE);
+//     }
+
+//     #ifdef CHEBYSHEV_DCT_MULTIPLICATION
+//     int ncoeffs = combination(m_nvar,m_degree);
+//     std::vector<T> other_coeffs = other.get_coeffs();
+//     Chebyshev_Polynomial<T> res(m_nvar,m_degree);
+
+//     //initialise stuff needed by fftw
+//     int dct_degree_aux = int (m_degree*1.5+1);
+//     int dct_degree[m_nvar];
+//     for (int i=0;i<m_nvar;i++){
+//         dct_degree[i]=dct_degree_aux+1;
+//     }
+//     int pointers_length=pow(dct_degree_aux+1,m_nvar);
+//     T *dct0, *dct1, *dct01;
+
+//     // allocate pointers for all DCTs
+//     dct_malloc(dct0,pointers_length);
+//     dct_malloc(dct1,pointers_length);
+//     dct_malloc(dct01,pointers_length);
+
+//     // build a vector idx[ncoeffs] with the pointer indexes in row-major format
+//     // build a vector scale[ncoeffs] with the scale factor for each of the coefficients
+//     std::vector <int> idx;
+//     std::vector <T> scale;
+//     int ii=0;
+//     for (int deg=0;deg<=m_degree;deg++){
+//         int max_i=m_J[m_nvar][deg];
+//         for (int i=0;i<max_i;i++){
+//             std::vector<int> row = res.get_row(i,deg);
+//             int term_idx=0;
+//             T term_scale=1.0;
+//             for (int var=0;var<m_nvar;var++){
+//                 if (row[var]==0) term_scale*=2.0;
+//                 term_idx+=row[var]*pow((dct_degree_aux+1),var);
+//             }
+//             idx.push_back(term_idx);
+//             scale.push_back(term_scale);
+//             // initialise non-zero terms of dct0 and dct1 here too (to avoid an additional for loop)
+//             dct0[term_idx]=m_coeffs[ii]*term_scale;
+//             dct1[term_idx]=other_coeffs[ii]*term_scale;
+//             ii++;
+//         }
+//     }
+
+//     //DCT(x0) and DCT(x1)
+//     dct_do(m_nvar,dct_degree,dct0);
+//     dct_do(m_nvar,dct_degree,dct1);
+
+//     // component-wise multiplication DCT(x0):DCT(x1)
+//     // scale already to avoid coefficients growing too much in large algebras
+//     T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
+//     for(int i=0;i<pointers_length;i++){
+//         dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
+//     }
+
+//     // deallocate more stuff
+//     dct_free(dct0);
+//     dct_free(dct1);
+
+//     // Obtain DCT(DCT(x0):DCT(x1))
+//     dct_do(m_nvar,dct_degree,dct01);
+
+//     // rescale and save results
+//     for (int i=0;i<ncoeffs;i++){
+//         T term_result=dct01[idx[i]]/scale[i];
+//         if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
+//         else res.set_coeffs(i,0.0);
+//     }
+    
+//     // deallocate and return
+//     dct_free(dct01);
+//     return res;
+
+//     #else
+
+//     return direct_multiplication(*this,other);
+
+//     #endif
+// }
 
 
 template <class T>

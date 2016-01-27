@@ -81,7 +81,7 @@ int main()
 // Simulation
     double step = 0.005;
     double tend = 50.0;
-    int freq = 250; //every how many iterations we save the results
+    int freq = 500; //every how many iterations we save the results
 
 // INITIALISATIONS
 

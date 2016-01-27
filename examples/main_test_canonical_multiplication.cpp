@@ -4,13 +4,13 @@
 
 int main(){
 
-    for (int nvar=1; nvar <=9; nvar+=1){
-        cout << "nvar = "<< nvar << "   degree 1-8"<< endl;
+    for (int nvar=1; nvar <=50; nvar++){
+        cout << "nvar = "<< nvar << "   degree 5"<< endl;
         cout << "[" << endl;
-        for (int degree=1; degree<=8; degree++){
+        for (int degree=5; degree<=5; degree++){
             //TIME
             clock_t direct0, directf;
-            double direct_t;
+            double direct_t, direct_t1;
 
             //int nvar = 4;
             //int degree = 10;
@@ -29,6 +29,8 @@ int main(){
             }
 
             Canonical_Polynomial<double> x0x1(nvar,degree);
+            Canonical_Polynomial<double> x0x1_1(nvar,degree);
+
             //TIME
             direct0=clock();
 
@@ -39,6 +41,15 @@ int main(){
 
             direct_t=(double (directf-direct0))/CLOCKS_PER_SEC;
             cout << setprecision(16)<< ncoeffs << " , " <<direct_t << " ,"<<endl;
+
+            Canonical_Polynomial<double>::initialize_M(nvar,degree);
+            direct0=clock();
+            x0x1_1 = x[0]*x[1];
+            directf=clock();
+            direct_t1=(double (directf-direct0))/CLOCKS_PER_SEC;
+            cout << setprecision(16)<< ncoeffs << " , " <<direct_t1 << " ," << direct_t/direct_t1<<endl;
+            cout << (x0x1==x0x1_1 ? "equal" : "f***ing different") << endl;
+            Canonical_Polynomial<double>::delete_M();
         }
 
     cout << "]" << endl;

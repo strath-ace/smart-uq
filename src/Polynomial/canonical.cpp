@@ -73,8 +73,14 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-(const Canonical_Polyn
     return res;
 }
 
-
 //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
+//initialisation of static terms for multiplication
+template <class T>
+std::vector<int> Canonical_Polynomial<T>::m_M(1,0);
+template <class T>
+int Canonical_Polynomial<T>::m_Mnvar = 0;
+template <class T>
+int Canonical_Polynomial<T>::m_Mdegree = 0;
 template <class T>
 Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const Canonical_Polynomial<T> &other) const{
 
@@ -87,10 +93,16 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const Canonical_Polyn
         exit(EXIT_FAILURE);
     }
 
+    // use M instead of searching index for faster multiplication
+    bool use_M = false;
+    if(m_nvar == m_Mnvar && m_degree == m_Mdegree) use_M = true;
+
     Canonical_Polynomial<T> res(m_nvar,m_degree);
     std::vector<T> res_coeffs(m_coeffs.size());
     std::vector<T> other_coeffs = other.get_coeffs();
     int i_0, j_0, idx_0; //index offsets
+    int idx;
+    int coeff=0;
 
     for (int deg0=0; deg0<=m_degree; deg0++){ //loop over order of terms of poly0
         int max_i=m_J[m_nvar][deg0];
@@ -109,15 +121,19 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const Canonical_Polyn
             for (int i=0;i<max_i;i++){
                 for (int j=0;j<max_j;j++){
                     if(fabs(m_coeffs[i_0+i])>ZERO && fabs(other_coeffs[j_0+j])>ZERO){
+                        if (use_M) idx = m_M[coeff];
+                        else{
                         //find what term is the result contributing to
-                        std::vector<int> row0=this->get_row(i,deg0);
-                        std::vector<int> row1=this->get_row(j,deg1);
-                        std::vector<int> row(m_nvar);
-                        for (int k=0;k<m_nvar;k++) row[k]=row0[k]+row1[k];
-                        int idx = res.get_idx(row);
+                            std::vector<int> row0=this->get_row(i,deg0);
+                            std::vector<int> row1=this->get_row(j,deg1);
+                            std::vector<int> row(m_nvar);
+                            for (int k=0;k<m_nvar;k++) row[k]=row0[k]+row1[k];
+                            idx = res.get_idx(row);
+                        }
                         //multiply and add contribution
                         res_coeffs[idx_0+idx]+= m_coeffs[i_0+i]*other_coeffs[j_0+j];
                     }
+                    coeff++;
                 }
             }
             
@@ -626,6 +642,48 @@ template <class T>
 T Canonical_Polynomial<T>::horner(T x, int i) const{
     if (i>m_degree) return 0;
     else return x*(m_coeffs[i]+horner(x,i+1));
+}
+
+//initialisation of M
+template <class T>
+void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
+    
+    Canonical_Polynomial<T> poly(nvar,degree);
+    std::vector<int> J=poly.get_J()[nvar];
+    std::vector<int> N=poly.get_N()[nvar];
+    std::vector<int> M(combination(2*nvar,degree));
+    long int term=0;
+    for (int deg0=0; deg0<=degree; deg0++){ //loop over order of terms of poly0
+        int max_i=J[deg0];        
+        for (int deg1=0; deg1<=degree-deg0; deg1++){ //loop over other of terms of poly1
+            int max_j=J[deg1];
+            int deg = deg0+deg1; //order of terms of result
+            for (int i=0;i<max_i;i++){
+                for (int j=0;j<max_j;j++){
+                    //find what term is the result contributing to
+                    std::vector<int> row0=poly.get_row(i,deg0);
+                    std::vector<int> row1=poly.get_row(j,deg1);
+                    std::vector<int> row(nvar);
+                    for (int k=0;k<nvar;k++) row[k]=row0[k]+row1[k];
+                    //store it to avoid computing it in every multiplication
+                    M[term]=poly.get_idx(row);
+                    term++;
+                }
+            }  
+        }
+    }
+    //modify static stuff    
+    m_M=M;
+    m_Mdegree = degree;
+    m_Mnvar = nvar;
+}
+
+template <class T>
+void Canonical_Polynomial<T>::delete_M(){
+    std::vector<int>M(1,0);
+    m_M=M;
+    m_Mnvar=0;
+    m_Mdegree=0;
 }
 
 template class Canonical_Polynomial<double>;
