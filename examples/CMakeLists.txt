@@ -50,8 +50,8 @@
 #add_executable(main_spring_mass_ni_sparse main_spring_mass_ni_sparse.cpp)
 #target_link_libraries(main_spring_mass_ni_sparse   ${LIB_NAME})
 
-#add_executable(main_spring_mass_i_canonical main_spring_mass_i_canonical.cpp)
-#target_link_libraries(main_spring_mass_i_canonical   ${LIB_NAME})
+add_executable(main_spring_mass_i_canonical main_spring_mass_i_canonical.cpp)
+target_link_libraries(main_spring_mass_i_canonical   ${LIB_NAME})
 
 #add_executable(main_spring_mass_i_chebyshev main_spring_mass_i_chebyshev.cpp)
 #target_link_libraries(main_spring_mass_i_chebyshev   ${LIB_NAME})

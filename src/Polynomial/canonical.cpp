@@ -651,8 +651,7 @@ void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
     Canonical_Polynomial<T> poly(nvar,degree);
     std::vector<int> J=poly.get_J()[nvar];
     std::vector<int> N=poly.get_N()[nvar];
-    std::vector<int> M(combination(2*nvar,degree));
-    long int term=0;
+    std::vector<int> M;
     for (int deg0=0; deg0<=degree; deg0++){ //loop over order of terms of poly0
         int max_i=J[deg0];        
         for (int deg1=0; deg1<=degree-deg0; deg1++){ //loop over other of terms of poly1
@@ -666,8 +665,7 @@ void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
                     std::vector<int> row(nvar);
                     for (int k=0;k<nvar;k++) row[k]=row0[k]+row1[k];
                     //store it to avoid computing it in every multiplication
-                    M[term]=poly.get_idx(row);
-                    term++;
+                    M.push_back(poly.get_idx(row));
                 }
             }  
         }
@@ -680,8 +678,7 @@ void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
 
 template <class T>
 void Canonical_Polynomial<T>::delete_M(){
-    std::vector<int>M(1,0);
-    m_M=M;
+    m_M.resize(1);
     m_Mnvar=0;
     m_Mdegree=0;
 }
