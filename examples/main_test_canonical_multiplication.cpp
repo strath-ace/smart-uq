@@ -4,16 +4,18 @@
 
 int main(){
 
-    for (int nvar=1; nvar <=9; nvar+=1){
-        cout << "nvar = "<< nvar << "   degree 1-8"<< endl;
-        cout << "[" << endl;
-        for (int degree=1; degree<=8; degree++){
-            //TIME
-            clock_t direct0, directf;
-            double direct_t;
+    int degmax = 5;
+    int nvarmax = 100;
 
-            //int nvar = 4;
-            //int degree = 10;
+    int degmin = 5;
+    int nvarmin = 51;
+
+    std::vector<double> t_D, t_M;
+    for (int degree=degmin; degree <=degmax; degree++){
+        for (int nvar=nvarmin; nvar<=nvarmax; nvar++){
+            
+            //TIME
+            clock_t begin, end;
 
             srand(time(NULL));
             int ncoeffs=combination(nvar,degree);
@@ -28,20 +30,63 @@ int main(){
                 }
             }
 
-            Canonical_Polynomial<double> x0x1(nvar,degree);
-            //TIME
-            direct0=clock();
+            Canonical_Polynomial<double> x0x1_D(nvar,degree);
+            Canonical_Polynomial<double> x0x1_M(nvar,degree);
 
-            x0x1 = x[0]*x[1];
+            // //direct
+            // begin=clock();
+            // x0x1_D = x[0]*x[1];
+            // end=clock();
 
-            // TIME
-            directf=clock();
+            // t_D.push_back((double (end-begin))/CLOCKS_PER_SEC);
 
-            direct_t=(double (directf-direct0))/CLOCKS_PER_SEC;
-            cout << setprecision(16)<< ncoeffs << " , " <<direct_t << " ,"<<endl;
+            //M
+            Canonical_Polynomial<double>::initialize_M(nvar,degree);
+            begin=clock();
+            x0x1_M = x[0]*x[1];
+            end=clock();
+            t_M.push_back((double (end-begin))/CLOCKS_PER_SEC);
+            Canonical_Polynomial<double>::delete_M();
+
+            //check equality
+            // if (x0x1_M!=x0x1_D) cout << "PRECISION ISSUE @  degree = " << degree <<" ,  nvar = "<< nvar << " !!!" << endl;
         }
-
-    cout << "]" << endl;
-
     }
+
+    // //printouts
+    int count;
+
+    // cout << "t_D = ["<< endl;
+    // count = 0;
+    // for (int degree=degmin; degree <=degmax; degree++){
+    //     cout << "[ ";
+    //     for (int nvar=nvarmin; nvar<=nvarmax; nvar++){
+    //         cout << setprecision(16) << t_D[count] << (nvar==nvarmax ? " ]" : " ,  ");
+    //         count ++;
+    //     }
+    //     cout << (degree==degmax ? "]" : ",") << endl;
+    // }
+
+    cout << "t_M = ["<< endl;
+    count = 0;
+    for (int degree=degmin; degree <=degmax; degree++){
+        cout << "[ ";
+        for (int nvar=nvarmin; nvar<=nvarmax; nvar++){
+            cout << setprecision(16) << t_M[count] << (nvar==nvarmax ? " ]" : " ,  ");
+            count ++;
+        }
+        cout << (degree==degmax ? "]" : ",") << endl;
+    }
+
+    cout << "ratio = ["<< endl;
+    count = 0;
+    for (int degree=degmin; degree <=degmax; degree++){
+        cout << "[ ";
+        for (int nvar=nvarmin; nvar<=nvarmax; nvar++){
+            cout << setprecision(16) << t_D[count]/t_M[count] << (nvar==nvarmax ? " ]" : " ,  ");
+            count ++;
+        }
+        cout << (degree==degmax ? "]" : ",") << endl;
+    }
+
 }

@@ -5,6 +5,16 @@
 //     return dxv;
 // }std::vector<Canonical_Polynomial <double> >
 
+namespace patch
+{
+    template < typename T > std::string to_string( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
+    }
+}
+
 template < class T >
 std::vector<Canonical_Polynomial <double> > propagate_euler (std::vector<Canonical_Polynomial <double> > xv, double step, std::vector <double> ks, std::vector <double> cs, T mass){
     
@@ -45,7 +55,7 @@ std::vector<Canonical_Polynomial <double> > propagate_euler (std::vector<Canonic
 
 int main()
 {
-
+for (int n=1; n<=12; n++){
 // Coded only for uncertainty in states (x and v). It can be in all or just in some of them.
 
 // INPUT
@@ -55,7 +65,7 @@ int main()
 
 // System
     // n_DOF of the system
-    int n = 20;
+    // int n = 20;
     //int repr[] = {1,6}; //masses to obtain polynomial representations of, NOT IMPLEMENTED
 
     // Nominal initial conditions
@@ -81,7 +91,7 @@ int main()
 // Simulation
     double step = 0.005;
     double tend = 50.0;
-    int freq = 250; //every how many iterations we save the results
+    int freq = 500; //every how many iterations we save the results
 
 // INITIALISATIONS
 
@@ -158,6 +168,10 @@ int main()
     //timer
     clock_t begin,end;
     begin=clock();
+
+    // to accelerate multiplication
+    Canonical_Polynomial<double>::initialize_M(dim_unc,degree);
+
 
     //assign initial status, there will be 2n polynomial representations of dimension dim_unc
     std::vector<Canonical_Polynomial <double> > xv;
@@ -236,13 +250,18 @@ int main()
         }
     }
     //timer
+
+    //deallocate M for next thing
+    Canonical_Polynomial<double>::delete_M();
+
     end=clock();
     double time_elapsed = (double (end-begin))/CLOCKS_PER_SEC;
     cout << n<<"-dof spring-mass, dim_unc="<<dim_unc<<", intr.canonical, time elapsed : " << time_elapsed << endl << endl;
     
     // write to file
     std::ofstream file;
-    file.open ("sm_i_canonical.out");
+    file.open (("sm_i_canonical_n"+patch::to_string( n)+".out").data());
+    // file.open ("sm_i_canonical.out);
     for(int k=0; k<coeffs_all.size(); k++){
         for(int kk=0; kk<coeffs_all[k].size(); kk++){
             file  << setprecision(16) << coeffs_all[k][kk] << " ";
@@ -251,8 +270,8 @@ int main()
     }
     file.close();
 }
+}
 
-
-template class std::vector< Chebyshev_Polynomial <double> >;
+template class std::vector< Canonical_Polynomial <double> >;
 template class std::vector< double >;
 
