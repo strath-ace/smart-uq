@@ -68,15 +68,13 @@ file(GLOB TEST_SRC
 )
 
 # Set CMake build-type. If it not supplied by the user, the default built type is "Release".
-if(((NOT CMAKE_BUILD_TYPE)
-  AND (NOT BUILD_COVERAGE_ANALYSIS))
+if(((NOT CMAKE_BUILD_TYPE))
   OR (CMAKE_BUILD_TYPE STREQUAL "Release"))
     message(STATUS "WARNING: building release version!")
     set(CMAKE_BUILD_TYPE Release)
-elseif((CMAKE_BUILD_TYPE STREQUAL "Debug") OR (BUILD_COVERAGE_ANALYSIS))
+elseif((CMAKE_BUILD_TYPE STREQUAL "Debug"))
     message(STATUS "WARNING: building debug version!")
-endif(((NOT CMAKE_BUILD_TYPE)
-  AND (NOT BUILD_COVERAGE_ANALYSIS))
+endif(((NOT CMAKE_BUILD_TYPE))
   OR (CMAKE_BUILD_TYPE STREQUAL "Release"))
 
 # Set platform-specific compiler flags.
@@ -152,11 +150,6 @@ if(BUILD_TESTS)
   target_link_libraries(${TEST_NAME} ${LIB_NAME})
   add_test(NAME ${TEST_NAME} COMMAND "${TEST_PATH}/${TEST_NAME}")
 
-  if(BUILD_COVERAGE_ANALYSIS)
-    include(CodeCoverage)
-    set(COVERAGE_EXTRACT '${PROJECT_PATH}/include/*' '${PROJECT_PATH}/src/*')
-    setup_target_for_coverage(coverage "${TEST_NAME}" coverage)
-  endif(BUILD_COVERAGE_ANALYSIS)
 endif(BUILD_TESTS)
 
 if(BUILD_EXAMPLES)
