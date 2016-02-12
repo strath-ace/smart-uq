@@ -34,55 +34,228 @@ namespace polynomial{
 
 		static const int MAX_DEGREE = 100;
 
+		/**
+		 * @brief canonical_polynomial
+		 * @param vars
+		 * @param order
+		 */
 		canonical_polynomial(const int &vars, const int &order);
-		//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
+		/**
+		 * @brief canonical_polynomial
+		 * @param vars
+		 * @param order
+		 * @param i
+		 */
 		canonical_polynomial(const int &vars, const int &order, const int &i);
-		//initialize a chebyshev polynomial with only the constant term
+		/**
+		 * @brief canonical_polynomial
+		 * @param vars
+		 * @param order
+		 * @param value
+		 */
 		canonical_polynomial(const int &vars, const int &order, const T &value);
 
 
 		// arithmetic operators
+		/**
+		 * @brief operator +
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator+(const canonical_polynomial<T> &other) const;
+		/**
+		 * @brief operator -
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator-(const canonical_polynomial<T> &other) const;
+		/**
+		 * @brief operator *
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator*(const canonical_polynomial<T> &other) const;
+		/**
+		 * @brief operator /
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator/(const canonical_polynomial<T> &other) const;
+		/**
+		 * @brief operator +
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator+(const T& other) const;
+		/**
+		 * @brief operator -
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator-(const T& other) const;
+		/**
+		 * @brief operator *
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator*(const T& other) const;
+		/**
+		 * @brief operator /
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> operator/(const T& other) const;
+
 		// unary
+		/**
+		 * @brief operator +
+		 * @return
+		 */
 		canonical_polynomial<T> operator+() const;
+		/**
+		 * @brief operator -
+		 * @return
+		 */
 		canonical_polynomial<T> operator-() const;
+
 		// assignment operator
+		/**
+		 * @brief operator =
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator=(const canonical_polynomial<T> &other);
+		/**
+		 * @brief operator =
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator=(const T &other);
 		// arithmetic operation and assignment
+		/**
+		 * @brief operator +=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator+=(const canonical_polynomial<T> &other);
+		/**
+		 * @brief operator -=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator-=(const canonical_polynomial<T> &other);
+		/**
+		 * @brief operator *=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator*=(const canonical_polynomial<T> &other);
+		/**
+		 * @brief operator /=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator/=(const canonical_polynomial<T> &other);
+		/**
+		 * @brief operator +=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator+=(const T& other);
+		/**
+		 * @brief operator -=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator-=(const T& other);
+		/**
+		 * @brief operator *=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator*=(const T& other);
+		/**
+		 * @brief operator /=
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T>& operator/=(const T& other);
 
 		//polynomial comparison (certainly) i.e. the comparison is true for every coefficient in the polynomial
+		/**
+		 * @brief operator ==
+		 * @param other
+		 * @return
+		 */
 		bool operator==(const canonical_polynomial<T> &other) const;
+		/**
+		 * @brief operator !=
+		 * @param other
+		 * @return
+		 */
 		bool operator!=(const canonical_polynomial<T> &other) const;
 
+		/**
+		 * @brief inv
+		 * @return
+		 */
 		canonical_polynomial<T> inv() const;
+		/**
+		 * @brief composition
+		 * @param other
+		 * @return
+		 */
 		canonical_polynomial<T> composition(const std::vector<canonical_polynomial<T> > &other) const;
 
+		/**
+		 * @brief evaluate_base
+		 * @param a
+		 * @param b
+		 * @return
+		 */
 		std::vector<canonical_polynomial<T> > evaluate_base(const T &a, const T &b) const;
+		/**
+		 * @brief approximation_1d
+		 * @param a
+		 * @param b
+		 * @param degree
+		 * @return
+		 */
 		static std::vector<T> approximation_1d(T (*f)(T x), const T a, const T b, const int degree);
+		/**
+		 * @brief assign_from_chebyshev
+		 * @param cheb_coeffs
+		 */
 		void assign_from_chebyshev(const std::vector<T> cheb_coeffs);
 
+		/**
+		 * @brief get_basis_name
+		 * @return
+		 */
 		std::string get_basis_name() const;
 
+		/**
+		 * @brief evaluate
+		 * @param x
+		 * @return
+		 */
 		T evaluate(const std::vector<T> &x) const;
+		/**
+		 * @brief evaluate
+		 * @param x
+		 * @return
+		 */
 		T evaluate(const T &x) const;
 
+		/**
+		 * @brief initialize_M
+		 * @param nvar
+		 * @param degree
+		 */
 		static void initialize_M(const int nvar, const int degree);
+		/**
+		 * @brief delete_M
+		 */
 		static void delete_M();
 
 	private:

@@ -36,7 +36,10 @@ namespace smart
              */
             virtual int evaluate(const double &t, const std::vector<double> &state, std::vector<double> &dstate) const = 0;
 
-
+            /**
+             * @brief get_name
+             * @return
+             */
             std::string get_name() const;
 
         protected:

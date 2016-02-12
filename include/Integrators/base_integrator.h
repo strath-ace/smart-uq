@@ -8,17 +8,41 @@ namespace smart
 {
     namespace integrator {
 
+        /**
+         * @brief The base_integrator class
+         */
         class base_integrator
         {
 
         public:
 
-
+            /**
+             * @brief base_integrator
+             * @param name
+             * @param dyn
+             */
             base_integrator(const std::string &name, const dynamics::base_dynamics *dyn);
+
+            /**
+             * @brief ~base_integrator
+             */
             virtual ~base_integrator();
 
+            /**
+             * @brief integrate
+             * @param ti
+             * @param tend
+             * @param nsteps
+             * @param x0
+             * @param xfinal
+             * @return
+             */
             virtual int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<double> x0, std::vector<double> xfinal) const = 0;
 
+            /**
+             * @brief get_name
+             * @return
+             */
             std::string get_name() const;
 
 

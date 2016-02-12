@@ -23,7 +23,7 @@ namespace smart{
 namespace sampling{
 
     /**
-     *
+     * @brief
      * @author annalisa.riccardi@strath.ac.uk
     */
 
@@ -35,24 +35,31 @@ namespace sampling{
             using base_sampling<T>::m_name;
 
         public:
+
             /**
-            * @param[in] dim dimension of the hypercube
-            * @param[in] number of points to sample
-            */
+             * @brief lhs
+             * @param dim
+             * @param npoints
+             */
             lhs(const unsigned int &dim, const unsigned int &npoints);
 
+            /**
+              * @brief ~lhs
+              */
             ~lhs();
 
             /**
-             * Returns the next point in the sequence
+             * @brief
              *
+             * Returns the next point in the sequence
              * @return an std::vector<T> containing the next point
              */
             std::vector<T> operator()() const;
 
             /**
-             * Returns the n-th point in the sequence
+             * @brief
              *
+             * Returns the n-th point in the sequence
              * @param[in] n the point along the sequence to be returned
              * @return an std::vector<T> containing the n-th point
              */

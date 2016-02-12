@@ -22,17 +22,37 @@ namespace smart{
 namespace sampling{
 
 
+    /**
+     *@brief base_sampling
+     */
     template <class T>
     class base_sampling
     {
         public:
 
+            /**
+             * @brief base_sampling
+             * @param dim
+             * @param name
+             */
             base_sampling(const unsigned int &dim, const string &name);
 
+            /**
+             * @brief ~base_sampling
+             */
             virtual ~base_sampling();
 
+            /**
+             * @brief operator ()
+             * @return
+             */
             virtual std::vector<T> operator()() const = 0;
 
+            /**
+             * @brief operator ()
+             * @param n
+             * @return
+             */
             virtual std::vector<T> operator()(const unsigned int &n) const = 0;
 
         protected:
