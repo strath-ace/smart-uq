@@ -27,24 +27,61 @@ using namespace std;
 
 namespace smart{
 namespace polynomial{
-	template < class T >
+
+        /**
+         * @brief The base_polynomial class
+         */
+        template < class T >
 	class base_polynomial{
 	public:
 
 		static const int MAX_DEGREE = 100;
 		
+		/**
+		 * @brief base_polynomial
+		 * @param name
+		 * @param vars
+		 * @param order
+		 */
 		base_polynomial(const string &name, const int &vars, const int &order);
-		//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
+
+		/**
+		 * @brief base_polynomial
+		 * @param name
+		 * @param vars
+		 * @param order
+		 * @param i
+		 */
 		base_polynomial(const string &name, const int &vars, const int &order, const int &i);
-		//initialize a chebyshev polynomial with only the constant term
+
+		/**
+		 * @brief base_polynomial
+		 * @param name
+		 * @param vars
+		 * @param order
+		 * @param value
+		 */
 		base_polynomial(const string &name, const int &vars, const int &order, const T &value);
 
 		//deconstructor
+		/**
+		 * @brief ~base_polynomial
+		 */
 		virtual ~base_polynomial(){}
 
 		//virtual getters
+		/**
+		 * @brief get_basis_name
+		 * @return
+		 */
 		virtual std::string get_basis_name() const = 0; //basis identifier like "T" for Chebyshev
 
+		/**
+		 * @brief operator <<
+		 * @param os
+		 * @param poly
+		 * @return
+		 */
 		friend ostream &operator<<(ostream &os, const base_polynomial<T> &poly) {
 			std::vector<T> coeffs = poly.get_coeffs();
 			int nvar = poly.get_nvar();
@@ -67,10 +104,21 @@ namespace polynomial{
 		}
 
 	public:
-       	//getter and setters
+		//getter and setters
+		/**
+		 * @brief get_coeffs
+		 * @return
+		 */
 		std::vector<T> get_coeffs() const {return m_coeffs;}
+		/**
+		 * @brief get_name
+		 * @return
+		 */
 		std::string get_name(){return m_name;} //name of the derived class like "Chebyshev_Polynomial"
-
+		/**
+		 * @brief set_coeffs
+		 * @param coeffs
+		 */
 		void set_coeffs(std::vector<T> &coeffs){
 	    		if(m_coeffs.size()!=coeffs.size()){
 				std::cout<<"Coefficients vectors don't have the same lenght"<<std::endl;
@@ -78,10 +126,32 @@ namespace polynomial{
 	    		}
 	    		m_coeffs=coeffs;
 		}
+		/**
+		 * @brief set_coeffs
+		 * @param idx
+		 * @param value
+		 */
 		void set_coeffs(const int &idx, const T &value){m_coeffs[idx]=value;}
+		/**
+		 * @brief get_degree
+		 * @return
+		 */
 		int get_degree() const {return m_degree;}
+		/**
+		 * @brief get_nvar
+		 * @return
+		 */
 		int get_nvar() const {return m_nvar;}
+		/**
+		 * @brief get_idx
+		 * @param k
+		 * @return
+		 */
 		int get_idx(const std::vector<int> &k) const;
+		/**
+		 * @brief get_range
+		 * @return
+		 */
 		std::vector<T> get_range() const{
 	    		std::vector<T> range(2,0);
 	    		T constant = m_coeffs[0];
@@ -92,7 +162,17 @@ namespace polynomial{
 	    		return range;
 		}
 
+		/**
+		 * @brief evaluate
+		 * @param x
+		 * @return
+		 */
 		virtual T evaluate(const std::vector<T> &x) const = 0;
+		/**
+		 * @brief evaluate
+		 * @param x
+		 * @return
+		 */
 		virtual T evaluate(const T &x) const = 0;
 
 	private:
