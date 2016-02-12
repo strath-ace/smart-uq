@@ -7,5 +7,4 @@ namespace smart-uq{
     }
 }
 
-
 #endif // CONSTANTS_H

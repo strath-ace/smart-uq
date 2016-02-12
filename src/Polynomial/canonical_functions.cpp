@@ -7,178 +7,178 @@ using namespace polynomial;
 /*                  SIN                         */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> sin(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> sin(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of sin in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate sin [-range,range]
-    std::vector<T> cheb_sin = Canonical_Polynomial<T>::approximation_1d(sin,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_sin = canonical_polynomial<T>::approximation_1d(sin,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_sin[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-sin(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-sin(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-sin(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+sin(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+sin(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+sin(const canonical_polynomial<long double> &);
 
 
 /************************************************/
 /*                  COS                         */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> cos(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> cos(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of cos in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate cos [-range,range]
-    std::vector<T> cheb_cos = Canonical_Polynomial<T>::approximation_1d(cos,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_cos = canonical_polynomial<T>::approximation_1d(cos,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_cos[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-cos(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-cos(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-cos(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+cos(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+cos(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+cos(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  TAN                         */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> tan(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> tan(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of tan in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate tan [-range,range]
-    std::vector<T> cheb_tan = Canonical_Polynomial<T>::approximation_1d(tan,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_tan = canonical_polynomial<T>::approximation_1d(tan,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_tan[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-tan(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-tan(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-tan(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+tan(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+tan(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+tan(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  COT                         */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> cot(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> cot(const canonical_polynomial<T> &other){
     std::cout<<"NOT IMPLEMENTED"<<std::endl;
-
+    return canonical_polynomial<T>(0,0);
 }
-template class Canonical_Polynomial<double>
-cot(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-cot(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-cot(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+cot(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+cot(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+cot(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  ASIN                        */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> asin(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> asin(const canonical_polynomial<T> &other){
     std::cout<<"NOT IMPLEMENTED"<<std::endl;
-
+    return canonical_polynomial<T>(0,0);
 }
-template class Canonical_Polynomial<double>
-asin(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-asin(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-asin(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+asin(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+asin(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+asin(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  ACOS                        */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> acos(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> acos(const canonical_polynomial<T> &other){
     std::cout<<"NOT IMPLEMENTED"<<std::endl;
-
+    return canonical_polynomial<T>(0,0);
 }
-template class Canonical_Polynomial<double>
-acos(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-acos(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-acos(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+acos(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+acos(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+acos(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  ATAN                        */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> atan(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> atan(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of atan in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate atan [-range,range]
-    std::vector<T> cheb_atan = Canonical_Polynomial<T>::approximation_1d(atan,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_atan = canonical_polynomial<T>::approximation_1d(atan,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_atan[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-atan(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-atan(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-atan(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+atan(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+atan(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+atan(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  ACOT                        */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> acot(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> acot(const canonical_polynomial<T> &other){
     std::cout<<"NOT IMPLEMENTED"<<std::endl;
-
+    return canonical_polynomial<T>(0,0);
 }
-template class Canonical_Polynomial<double>
-acot(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-acot(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-acot(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+acot(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+acot(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+acot(const canonical_polynomial<long double> &);
 
 
 
@@ -188,116 +188,117 @@ template <class T>
 /************************************************/
 /*                  EXP                         */
 /************************************************/
-Canonical_Polynomial<T> exp(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> exp(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of exp in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate exp [-range,range]
-    std::vector<T> cheb_exp = Canonical_Polynomial<T>::approximation_1d(exp,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_exp = canonical_polynomial<T>::approximation_1d(exp,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_exp[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-exp(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-exp(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-exp(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+exp(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+exp(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+exp(const canonical_polynomial<long double> &);
 
 
 /************************************************/
 /*                  SQRT                        */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> sqrt(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> sqrt(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of exp in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate exp [-range,range]
-    std::vector<T> cheb_sqrt = Canonical_Polynomial<T>::approximation_1d(sqrt,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_sqrt = canonical_polynomial<T>::approximation_1d(sqrt,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_sqrt[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-sqrt(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-sqrt(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-sqrt(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+sqrt(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+sqrt(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+sqrt(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  LOG                         */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> log(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T> log(const canonical_polynomial<T> &other){
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     //Canonical expansion of exp in [a,b]
     std::vector<T> range = other.get_range();
 
     //approximate exp [-range,range]
-    std::vector<T> cheb_log = Canonical_Polynomial<T>::approximation_1d(log,range[0],range[1],other.get_degree());
+    std::vector<T> cheb_log = canonical_polynomial<T>::approximation_1d(log,range[0],range[1],other.get_degree());
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = other.evaluate_base(range[0],range[1]);
+    std::vector<canonical_polynomial<T> > base = other.evaluate_base(range[0],range[1]);
     for (int i=0; i<=degree; i++){
         res += base[i]*cheb_log[i];
     }
 
     return res;
 }
-template class Canonical_Polynomial<double>
-log(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-log(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-log(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+log(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+log(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+log(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  LOG10                       */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> log10(const Canonical_Polynomial<T> &other){
-
+canonical_polynomial<T> log10(const canonical_polynomial<T> &other){
+    std::cout<<"NOT IMPLEMENTED"<<std::endl;
+        return canonical_polynomial<T>(0,0);
 }
-template class Canonical_Polynomial<double>
-log10(const Canonical_Polynomial<double> &);
-template class Canonical_Polynomial<float>
-log10(const Canonical_Polynomial<float> &);
-template class Canonical_Polynomial<long double>
-log10(const Canonical_Polynomial<long double> &);
+template class canonical_polynomial<double>
+log10(const canonical_polynomial<double> &);
+template class canonical_polynomial<float>
+log10(const canonical_polynomial<float> &);
+template class canonical_polynomial<long double>
+log10(const canonical_polynomial<long double> &);
 
 /************************************************/
 /*                  POW                         */
 /************************************************/
 template <class T>
-Canonical_Polynomial<T> pow(const Canonical_Polynomial<T> &other, const int &exponent){
+canonical_polynomial<T> pow(const canonical_polynomial<T> &other, const int &exponent){
     if(exponent<=1){
         std::cout<<"pow function with integer exponent, integer must be > 1"<<std::endl;
         exit(EXIT_FAILURE);
     }
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    Canonical_Polynomial<T> res(nvar,degree);
+    canonical_polynomial<T> res(nvar,degree);
 
     res = other;
     for(int i=1; i<exponent; i++)
@@ -305,22 +306,23 @@ Canonical_Polynomial<T> pow(const Canonical_Polynomial<T> &other, const int &exp
 
     return res;
 }
-template class Canonical_Polynomial<double>
-pow(const Canonical_Polynomial<double> &, const int &);
-template class Canonical_Polynomial<float>
-pow(const Canonical_Polynomial<float> &, const int &);
-template class Canonical_Polynomial<long double>
-pow(const Canonical_Polynomial<long double> &, const int &);
+template class canonical_polynomial<double>
+pow(const canonical_polynomial<double> &, const int &);
+template class canonical_polynomial<float>
+pow(const canonical_polynomial<float> &, const int &);
+template class canonical_polynomial<long double>
+pow(const canonical_polynomial<long double> &, const int &);
 
 
 
 template <class T>
-Canonical_Polynomial<T> pow(const Canonical_Polynomial<T> &other, const double &exponent){
+canonical_polynomial<T> pow(const canonical_polynomial<T> &other, const double &exponent){
 std::cout<<"NOT IMPLEMENTED"<<std::endl;
+    return canonical_polynomial<T>(0,0);
 }
-template class Canonical_Polynomial<double>
-pow(const Canonical_Polynomial<double> &, const double &);
-template class Canonical_Polynomial<float>
-pow(const Canonical_Polynomial<float> &, const double &);
-template class Canonical_Polynomial<long double>
-pow(const Canonical_Polynomial<long double> &, const double &);
+template class canonical_polynomial<double>
+pow(const canonical_polynomial<double> &, const double &);
+template class canonical_polynomial<float>
+pow(const canonical_polynomial<float> &, const double &);
+template class canonical_polynomial<long double>
+pow(const canonical_polynomial<long double> &, const double &);

@@ -11,35 +11,45 @@ using namespace smart;
 using namespace polynomial;
 
 template < class T >
-std::string Canonical_Polynomial<T>::get_name() const
-{
-    return "Canonical Polynomial";
+canonical_polynomial<T>::canonical_polynomial(const int &vars, const int &order) : base_polynomial<T>("Canonical Polynomial", vars,order){
+
 }
 
+//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
 template < class T >
-std::string Canonical_Polynomial<T>::get_basis_name() const
+canonical_polynomial<T>::canonical_polynomial(const int &vars, const int &order, const int &i)  : base_polynomial<T>("Canonical Polynomial", vars,order,i){
+
+}
+
+//initialize a chebyshev polynomial with only the constant term
+template < class T >
+canonical_polynomial<T>::canonical_polynomial(const int &vars, const int &order, const T &value) : base_polynomial<T>("Canonical Polynomial", vars,order,value){
+
+}
+
+
+template < class T >
+std::string canonical_polynomial<T>::get_basis_name() const
 {
     return "";
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator+(const Canonical_Polynomial<T> &other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator+(const canonical_polynomial<T> &other) const{
 
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
 
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int n = this->get_coeffs().size();
 
     std::vector<T> other_coeffs = other.get_coeffs();
     std::vector<T> coeffs(n);
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
 
     for(int i=0; i<n; i++)
         coeffs[i] = m_coeffs[i] + other_coeffs[i];
@@ -49,22 +59,20 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator+(const Canonical_Polyn
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-(const Canonical_Polynomial<T> &other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator-(const canonical_polynomial<T> &other) const{
 
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int n = this->get_coeffs().size();
 
     std::vector<T> other_coeffs = other.get_coeffs();
     std::vector<T> coeffs(n);
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
 
     for(int i=0; i<n; i++)
         coeffs[i] = m_coeffs[i] - other_coeffs[i];
@@ -76,28 +84,26 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-(const Canonical_Polyn
 //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
 //initialisation of static terms for multiplication
 template <class T>
-std::vector<int> Canonical_Polynomial<T>::m_M(1,0);
+std::vector<int> canonical_polynomial<T>::m_M(1,0);
 template <class T>
-int Canonical_Polynomial<T>::m_Mnvar = 0;
+int canonical_polynomial<T>::m_Mnvar = 0;
 template <class T>
-int Canonical_Polynomial<T>::m_Mdegree = 0;
+int canonical_polynomial<T>::m_Mdegree = 0;
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const Canonical_Polynomial<T> &other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator*(const canonical_polynomial<T> &other) const{
 
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     // use M instead of searching index for faster multiplication
     bool use_M = false;
     if(m_nvar == m_Mnvar && m_degree == m_Mdegree) use_M = true;
 
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
     std::vector<T> res_coeffs(m_coeffs.size());
     std::vector<T> other_coeffs = other.get_coeffs();
     int i_0, j_0, idx_0; //index offsets
@@ -145,16 +151,16 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const Canonical_Polyn
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::inv() const{
+canonical_polynomial<T> canonical_polynomial<T>::inv() const{
 
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
-    std::vector<T> range = Canonical_Polynomial<T>::get_range();
+    canonical_polynomial<T> res(m_nvar,m_degree);
+    std::vector<T> range = canonical_polynomial<T>::get_range();
     T a = range[0];
     T b = range[1];
 
     std::vector<T> inv = approximation_1d(inverse,a,b,m_degree);
     //univariate composition
-    std::vector<Canonical_Polynomial<T> > base = Canonical_Polynomial<T>::evaluate_base(a,b);
+    std::vector<canonical_polynomial<T> > base = canonical_polynomial<T>::evaluate_base(a,b);
     for (int i=0; i<=m_degree; i++){
         res += base[i]*inv[i];
     }
@@ -162,18 +168,16 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::inv() const{
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator/(const Canonical_Polynomial<T> &other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator/(const canonical_polynomial<T> &other) const{
 
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
     res = other.inv();
 
     return res*(*this);
@@ -181,10 +185,10 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator/(const Canonical_Polyn
 
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator+(const T& other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator+(const T& other) const{
 
     std::vector<T> coeffs=this->get_coeffs();
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
 
     coeffs[0] += other;
 
@@ -193,10 +197,10 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator+(const T& other) const
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-(const T& other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator-(const T& other) const{
 
     std::vector<T> coeffs=this->get_coeffs();
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
 
     coeffs[0] -= other;
 
@@ -205,10 +209,10 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-(const T& other) const
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const T& other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator*(const T& other) const{
 
     std::vector<T> coeffs=this->get_coeffs();
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
 
     for(int i=0; i<coeffs.size(); i++)
         coeffs[i] *= other;
@@ -218,10 +222,10 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator*(const T& other) const
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator/(const T& other) const{
+canonical_polynomial<T> canonical_polynomial<T>::operator/(const T& other) const{
 
     std::vector<T> coeffs=this->get_coeffs();
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
 
     for(int i=0; i<coeffs.size(); i++)
         coeffs[i] /= other;
@@ -231,19 +235,19 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator/(const T& other) const
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator+() const{
+canonical_polynomial<T> canonical_polynomial<T>::operator+() const{
 
     std::vector<T> coeffs=this->get_coeffs();
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
     res.set_coeffs(coeffs);
     return res;
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-() const{
+canonical_polynomial<T> canonical_polynomial<T>::operator-() const{
     
     std::vector<T> coeffs=this->get_coeffs();
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
     for (int i=0;i<coeffs.size();i++){
         coeffs[i] = -coeffs[i];
     }
@@ -252,16 +256,14 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::operator-() const{
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator=(const Canonical_Polynomial<T> &other){
+canonical_polynomial<T>& canonical_polynomial<T>::operator=(const canonical_polynomial<T> &other){
 
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
 
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     m_coeffs = other.get_coeffs();
@@ -269,7 +271,7 @@ Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator=(const Canonical_Poly
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator=(const T &other){
+canonical_polynomial<T>& canonical_polynomial<T>::operator=(const T &other){
 
     std::vector<T> coeffs(m_coeffs.size());
     coeffs[0] = other;
@@ -279,63 +281,61 @@ Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator=(const T &other){
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator+=(const Canonical_Polynomial<T> &other){
-    *this = Canonical_Polynomial<T>::operator+(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator+=(const canonical_polynomial<T> &other){
+    *this = canonical_polynomial<T>::operator+(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator-=(const Canonical_Polynomial<T> &other){
-    *this = Canonical_Polynomial<T>::operator-(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator-=(const canonical_polynomial<T> &other){
+    *this = canonical_polynomial<T>::operator-(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator*=(const Canonical_Polynomial<T> &other){
-    *this = Canonical_Polynomial<T>::operator*(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator*=(const canonical_polynomial<T> &other){
+    *this = canonical_polynomial<T>::operator*(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator/=(const Canonical_Polynomial<T> &other){
-    *this = Canonical_Polynomial<T>::operator/(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator/=(const canonical_polynomial<T> &other){
+    *this = canonical_polynomial<T>::operator/(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator+=(const T& other){
-    *this = Canonical_Polynomial<T>::operator+(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator+=(const T& other){
+    *this = canonical_polynomial<T>::operator+(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator-=(const T& other){
-    *this = Canonical_Polynomial<T>::operator-(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator-=(const T& other){
+    *this = canonical_polynomial<T>::operator-(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator*=(const T& other){
-    *this = Canonical_Polynomial<T>::operator*(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator*=(const T& other){
+    *this = canonical_polynomial<T>::operator*(other);
     return *this;
 }
 
 template <class T>
-Canonical_Polynomial<T>& Canonical_Polynomial<T>::operator/=(const T& other){
-    *this = Canonical_Polynomial<T>::operator/(other);
+canonical_polynomial<T>& canonical_polynomial<T>::operator/=(const T& other){
+    *this = canonical_polynomial<T>::operator/(other);
     return *this;
 }
 
 template <class T>
-bool Canonical_Polynomial<T>::operator==(const Canonical_Polynomial<T> &other) const{
+bool canonical_polynomial<T>::operator==(const canonical_polynomial<T> &other) const{
 
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     if(m_coeffs==other.get_coeffs())
@@ -344,32 +344,25 @@ bool Canonical_Polynomial<T>::operator==(const Canonical_Polynomial<T> &other) c
 }
 
 template <class T>  
-bool Canonical_Polynomial<T>::operator!=(const Canonical_Polynomial<T> &other) const{
+bool canonical_polynomial<T>::operator!=(const canonical_polynomial<T> &other) const{
     if(m_nvar!=other.get_nvar()){
-        std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
-    if(Canonical_Polynomial<T>::operator==(other)) return false;
+    if(canonical_polynomial<T>::operator==(other)) return false;
     else return true;
 
 }
 
 //1-d Evaluation method
 template <class T>
-T Canonical_Polynomial<T>::evaluate(const T &x) const {
+T canonical_polynomial<T>::evaluate(const T &x) const {
     if(m_nvar>1){
-        std::cout<<"(evaluate) Dimension of point must correspond to number of variables of polynomial."<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
-    // if (fabs(x)>1){
-    //     std::cout<<"(evaluate) All components of point must belong to [-1,1]."<<std::endl;
-    //     exit(EXIT_FAILURE); 
-    // }
 
     return m_coeffs[0]+horner(x,1);
 
@@ -377,15 +370,13 @@ T Canonical_Polynomial<T>::evaluate(const T &x) const {
 
 //Multivariate Evaluation method
 template <class T>
-T Canonical_Polynomial<T>::evaluate(const std::vector<T> &x) const {
+T canonical_polynomial<T>::evaluate(const std::vector<T> &x) const {
     if(m_nvar!=x.size()){
-        std::cout<<"(evaluate) Dimension of point must correspond to number of variables of polynomial."<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
     for (int i=0;i<m_nvar;i++){
         if (fabs(x[i])>1){
-            std::cout<<"(evaluate) All components of point must belong to [-1,1]."<<std::endl;
-            exit(EXIT_FAILURE); 
+            smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
         }
     }
     
@@ -422,16 +413,16 @@ T Canonical_Polynomial<T>::evaluate(const std::vector<T> &x) const {
 
 //Evaluate canonical base 1, x, x2, x3... in a polynomial. It first map x from [a,b] to [-1,1]
 template <class T>
-std::vector<Canonical_Polynomial<T> > Canonical_Polynomial<T>::evaluate_base(const T &a, const T &b) const{
+std::vector<canonical_polynomial<T> > canonical_polynomial<T>::evaluate_base(const T &a, const T &b) const{
 
-    std::vector<Canonical_Polynomial<T> > v;
+    std::vector<canonical_polynomial<T> > v;
 
     for(int i=0; i<=m_degree; i++){
-        v.push_back(Canonical_Polynomial<T>(m_nvar,m_degree));
+        v.push_back(canonical_polynomial<T>(m_nvar,m_degree));
     }
 
     //mapping the argument from the domain of composition to [-1,1]
-    Canonical_Polynomial<T> mapped(m_nvar,m_degree);
+    canonical_polynomial<T> mapped(m_nvar,m_degree);
     if(b==a)
         mapped.set_coeffs(0,a);
     else
@@ -446,29 +437,26 @@ std::vector<Canonical_Polynomial<T> > Canonical_Polynomial<T>::evaluate_base(con
 }
 
 template <class T>
-Canonical_Polynomial<T> Canonical_Polynomial<T>::composition(const std::vector<Canonical_Polynomial<T> > &other) const{
+canonical_polynomial<T> canonical_polynomial<T>::composition(const std::vector<canonical_polynomial<T> > &other) const{
     if(m_nvar!=other.size()){
-        std::cout<<"Composition is with a vector of polynomial of the same size of nvar"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
     }
 
     for(int i=0; i<m_nvar; i++){
         if(m_nvar!=other[i].get_nvar()){
-            std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-            exit(EXIT_FAILURE);
+            smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
         }
         if(m_degree!=other[i].get_degree()){
-            std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-            exit(EXIT_FAILURE);
+            smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
         }
     }
 
     //allocate memory
-    std::vector<std::vector<Canonical_Polynomial<T> > > base;
+    std::vector<std::vector<canonical_polynomial<T> > > base;
     for(int j=0; j<m_nvar; j++){
-        std::vector<Canonical_Polynomial<T> > v;
+        std::vector<canonical_polynomial<T> > v;
         for(int i=0; i<=m_degree; i++){
-            v.push_back(Canonical_Polynomial<T>(m_nvar,m_degree));
+            v.push_back(canonical_polynomial<T>(m_nvar,m_degree));
         }
         base.push_back(v);
     }
@@ -476,19 +464,19 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::composition(const std::vector<C
     //evaluate all basis
     for(int j=0; j<m_nvar; j++){
         //T range = other[j].get_range();
-        std::vector<Canonical_Polynomial<T> > v = other[j].evaluate_base(-1.0,1.0);
+        std::vector<canonical_polynomial<T> > v = other[j].evaluate_base(-1.0,1.0);
         for(int i=0; i<=m_degree; i++){
             base[j][i] = v[i];
         }
     }
 
     //composing
-    Canonical_Polynomial<T> res(m_nvar,m_degree);
+    canonical_polynomial<T> res(m_nvar,m_degree);
     int count = 0;
     for(int deg=0; deg<=m_degree; deg++){
         for(int i=0; i<m_J[m_nvar][deg]; i++){
             std::vector<int> row = this->get_row(i,deg); //get for example vector (1 0 0) = x, (0 1 0) = y...
-            Canonical_Polynomial<T> prod(m_nvar,m_degree);
+            canonical_polynomial<T> prod(m_nvar,m_degree);
             prod.set_coeffs(0,1.0);
             for(int j=0;j<m_nvar; j++){
                 prod*=base[j][row[j]];
@@ -503,26 +491,25 @@ Canonical_Polynomial<T> Canonical_Polynomial<T>::composition(const std::vector<C
 
 //takes a vector of chebyshev coeffs, changes basis and assigns the object to the result
 template <class T>
-void Canonical_Polynomial<T>::assign_from_chebyshev(const std::vector<T> cheb_coeffs){ //implementation could be WAY more efficient
+void canonical_polynomial<T>::assign_from_chebyshev(const std::vector<T> cheb_coeffs){ //implementation could be WAY more efficient
     
-    Canonical_Polynomial<T> res(m_nvar,m_degree,(T) 0.0);
+    canonical_polynomial<T> res(m_nvar,m_degree,(T) 0.0);
     int ncoeffs=res.get_coeffs().size();
     if (cheb_coeffs.size()!=ncoeffs){
-        std::cout<<"Chebyshev coefficients provided must correspond to size of the algebra"<<std::endl;
-        exit(EXIT_FAILURE);
+        smart_exception(m_name+"Chebyshev coefficients provided must correspond to size of the algebra");
     }
 
-    std::vector <Canonical_Polynomial <T> > term_vector;
+    std::vector <canonical_polynomial <T> > term_vector;
     
     for (int i=0;i<ncoeffs;i++){
-        term_vector.push_back(Canonical_Polynomial<T>(m_nvar,m_degree,(T) cheb_coeffs[i]));
+        term_vector.push_back(canonical_polynomial<T>(m_nvar,m_degree,(T) cheb_coeffs[i]));
     }
 
     for (int v=0;v<m_nvar;v++){
-        Canonical_Polynomial<T> base2(m_nvar,m_degree,(T) 1.0);
-        Canonical_Polynomial<T> base1(m_nvar,m_degree,(int) v);
-        Canonical_Polynomial<T> x(m_nvar,m_degree,(int) v);
-        Canonical_Polynomial<T> term(m_nvar,m_degree);
+        canonical_polynomial<T> base2(m_nvar,m_degree,(T) 1.0);
+        canonical_polynomial<T> base1(m_nvar,m_degree,(int) v);
+        canonical_polynomial<T> x(m_nvar,m_degree,(int) v);
+        canonical_polynomial<T> term(m_nvar,m_degree);
         for (int d=1;d<=m_degree;d++){
             if (d==1)  term=base1;
             else{
@@ -552,8 +539,8 @@ void Canonical_Polynomial<T>::assign_from_chebyshev(const std::vector<T> cheb_co
 
 ////DIRECT INTERPOLATION WITH MATRIX INVERSION
 // template <class T>
-// std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, int degree){
-//     // int n = Canonical_Polynomial<T>::MAX_DEGREE;
+// std::vector<T> canonical_polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, int degree){
+//     // int n = canonical_polynomial<T>::MAX_DEGREE;
 //     int n = degree+2;
 //     Eigen::MatrixXd base_matrix (n+1,n+1);
 //     Eigen::VectorXd y(n+1);
@@ -585,9 +572,9 @@ void Canonical_Polynomial<T>::assign_from_chebyshev(const std::vector<T> cheb_co
 
 ////INTERPOLATION IN CHEBYSHEV BASIS + CHANGE OF BASIS
 template <class T>
-std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, const int degree){
+std::vector<T> canonical_polynomial<T>::approximation_1d(T (*f)(T x), const T a, const T b, const int degree){
     
-    int n = Canonical_Polynomial<T>::MAX_DEGREE;
+    int n = canonical_polynomial<T>::MAX_DEGREE;
     // int deg = degree;
     int deg = std::min((int) (degree*1.5+1), n);//RULE OF THUMB
     std::vector<T> res(deg+1), d(n+1);
@@ -620,11 +607,11 @@ std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a,
 
     //We translate to canonical basis, we take into acount deg+1 Chebyshev
     //terms but we build a Canonical polynomial of degree+1 terms.
-    Canonical_Polynomial<T> result(1,degree,res[0]);
-    Canonical_Polynomial<T> x(1,degree,(int) 0);
-    Canonical_Polynomial<T> base1(1,degree,(int) 0);
-    Canonical_Polynomial<T> base2(1,degree, (T) 1.0);
-    Canonical_Polynomial<T> base(1,degree);
+    canonical_polynomial<T> result(1,degree,res[0]);
+    canonical_polynomial<T> x(1,degree,(int) 0);
+    canonical_polynomial<T> base1(1,degree,(int) 0);
+    canonical_polynomial<T> base2(1,degree, (T) 1.0);
+    canonical_polynomial<T> base(1,degree);
 
     result+= res[1]*x;
     for (int i=2;i<=deg;i++){
@@ -639,16 +626,16 @@ std::vector<T> Canonical_Polynomial<T>::approximation_1d(T (*f)(T x), const T a,
 
 //private routine for 1d evaluation
 template <class T>
-T Canonical_Polynomial<T>::horner(T x, int i) const{
+T canonical_polynomial<T>::horner(T x, int i) const{
     if (i>m_degree) return 0;
     else return x*(m_coeffs[i]+horner(x,i+1));
 }
 
 //initialisation of M
 template <class T>
-void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
+void canonical_polynomial<T>::initialize_M(const int nvar, const int degree){
     
-    Canonical_Polynomial<T> poly(nvar,degree);
+    canonical_polynomial<T> poly(nvar,degree);
     std::vector<int> J=poly.get_J()[nvar];
     std::vector<int> N=poly.get_N()[nvar];
     std::vector<int> M;
@@ -656,7 +643,7 @@ void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
         int max_i=J[deg0];        
         for (int deg1=0; deg1<=degree-deg0; deg1++){ //loop over other of terms of poly1
             int max_j=J[deg1];
-            int deg = deg0+deg1; //order of terms of result
+            //int deg = deg0+deg1; //order of terms of result
             for (int i=0;i<max_i;i++){
                 for (int j=0;j<max_j;j++){
                     //find what term is the result contributing to
@@ -677,12 +664,12 @@ void Canonical_Polynomial<T>::initialize_M(const int nvar, const int degree){
 }
 
 template <class T>
-void Canonical_Polynomial<T>::delete_M(){
+void canonical_polynomial<T>::delete_M(){
     m_M.resize(1);
     m_Mnvar=0;
     m_Mdegree=0;
 }
 
-template class Canonical_Polynomial<double>;
-template class Canonical_Polynomial<float>;
-template class Canonical_Polynomial<long double>;
+template class canonical_polynomial<double>;
+template class canonical_polynomial<float>;
+template class canonical_polynomial<long double>;

@@ -12,47 +12,47 @@ using namespace polynomial;
 
 //TRIGONOMETRIC FUNCTIONS
 template <class T>
-Canonical_Polynomial<T> sin(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> sin(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> cos(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> cos(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> tan(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> tan(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> cot(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> cot(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> asin(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> asin(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> acos(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> acos(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> atan(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> atan(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> acot(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> acot(const canonical_polynomial<T> &other);
 
 // OTHERS
 template <class T>
-Canonical_Polynomial<T> exp(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> exp(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> sqrt(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> sqrt(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> log(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> log(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> log10(const Canonical_Polynomial<T> &other);
+canonical_polynomial<T> log10(const canonical_polynomial<T> &other);
 
 template <class T>
-Canonical_Polynomial<T> pow(const Canonical_Polynomial<T> &other, const int &exponent);
+canonical_polynomial<T> pow(const canonical_polynomial<T> &other, const int &exponent);
 
 template <class T>
-Canonical_Polynomial<T> pow(const Canonical_Polynomial<T> &other, const double &exponent);
+canonical_polynomial<T> pow(const canonical_polynomial<T> &other, const double &exponent);
 
 
 

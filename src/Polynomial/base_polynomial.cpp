@@ -5,13 +5,13 @@
 */
 
 
-#include "Polynomial/polynomial.h"
+#include "Polynomial/base_polynomial.h"
 
 using namespace smart;
 using namespace polynomial;
 
 template <class T>
-Polynomial<T>::Polynomial(const int &nvar, const int &order): m_coeffs(0), m_degree(0), m_nvar(0){
+base_polynomial<T>::base_polynomial(const string &name, const int &nvar, const int &order): m_name(""), m_coeffs(0), m_degree(0), m_nvar(0){
     //allocate memory for coefficients vector
     // if(order > MAX_DEGREE){
     //     std::cout<<"Maximum allowed polynomial degree is 20";
@@ -24,6 +24,8 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order): m_coeffs(0), m_deg
     //save some info
     m_degree = order;
     m_nvar = nvar;
+
+    m_name = name;
 
     m_J.resize(nvar+1);
     m_N.resize(nvar+1);
@@ -38,7 +40,7 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order): m_coeffs(0), m_deg
 }
 
 template <class T>
-Polynomial<T>::Polynomial(const int &nvar, const int &order, const int &i): m_coeffs(0), m_degree(0), m_nvar(0){
+base_polynomial<T>::base_polynomial(const string &name, const int &nvar, const int &order, const int &i): m_name(""), m_coeffs(0), m_degree(0), m_nvar(0){
 
     // if(order > MAX_DEGREE){
     //     std::cout<<"Maximum allowed polynomial degree is 20";
@@ -48,6 +50,8 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const int &i): m_co
     //save some info
     m_degree = order;
     m_nvar = nvar;
+
+    m_name = name;
 
     if (order == 0){
         std::cout<<"cannot assign variables to a polynomial of order 0";
@@ -80,7 +84,7 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const int &i): m_co
 }
 
 template <class T>
-Polynomial<T>::Polynomial(const int &nvar, const int &order, const T &value): m_coeffs(0), m_degree(0), m_nvar(0){
+base_polynomial<T>::base_polynomial(const string &name, const int &nvar, const int &order, const T &value): m_name(""), m_coeffs(0), m_degree(0), m_nvar(0){
 
     // if(order > MAX_DEGREE){
     //     std::cout<<"Maximum allowed polynomial degree is 20";
@@ -90,6 +94,8 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const T &value): m_
     //save some info
     m_degree = order;
     m_nvar = nvar;
+
+    m_name = name;
 
     //allocate memory for coefficients vector
 
@@ -112,7 +118,7 @@ Polynomial<T>::Polynomial(const int &nvar, const int &order, const T &value): m_
 
 //not part of the algebra, private routines
 template <class T>
-void Polynomial<T>::initialize_J()
+void base_polynomial<T>::initialize_J()
 {
     int i,j;
 
@@ -128,7 +134,7 @@ void Polynomial<T>::initialize_J()
 }
 
 template <class T>
-void Polynomial<T>::initialize_N()
+void base_polynomial<T>::initialize_N()
 {
     int i,j;
     //fill N
@@ -142,7 +148,7 @@ void Polynomial<T>::initialize_N()
 }
 
 template <class T>
-int Polynomial<T>::get_idx(const std::vector<int> &k) const
+int base_polynomial<T>::get_idx(const std::vector<int> &k) const
 {
     int i, j, l;
 
@@ -163,7 +169,7 @@ int Polynomial<T>::get_idx(const std::vector<int> &k) const
 }
 
 template <class T>
-std::vector<int> Polynomial<T>::get_row(const int &idx, const int &deg) const
+std::vector<int> base_polynomial<T>::get_row(const int &idx, const int &deg) const
 {
     int i, j, l;
     int idx_tmp = idx;
@@ -190,6 +196,6 @@ std::vector<int> Polynomial<T>::get_row(const int &idx, const int &deg) const
     return k;
 }
 
-template class Polynomial<double>;
-template class Polynomial<float>;
-template class Polynomial<long double>;
+template class base_polynomial<double>;
+template class base_polynomial<float>;
+template class base_polynomial<long double>;

@@ -9,8 +9,8 @@
 ------------------------- Author: Annalisa Riccardi --------------------------
 */
 
-#ifndef POLYNOMIAL_H_
-#define POLYNOMIAL_H_
+#ifndef BASE_POLYNOMIAL_H_
+#define BASE_POLYNOMIAL_H_
 
 #include <iostream>
 #include <vector>
@@ -21,30 +21,31 @@
 #include <iomanip>
 #include "utils.h"
 
+#include "exception.h"
+
 using namespace std;
 
 namespace smart{
 namespace polynomial{
 	template < class T >
-	class Polynomial{
+	class base_polynomial{
 	public:
 
 		static const int MAX_DEGREE = 100;
 		
-		Polynomial(const int &vars, const int &order);
+		base_polynomial(const string &name, const int &vars, const int &order);
 		//initialize a 1 degree univariate chebyshev polynomial of the corresponding variable [x1,x2,...]
-		Polynomial(const int &vars, const int &order, const int &i);
+		base_polynomial(const string &name, const int &vars, const int &order, const int &i);
 		//initialize a chebyshev polynomial with only the constant term
-		Polynomial(const int &vars, const int &order, const T &value);
+		base_polynomial(const string &name, const int &vars, const int &order, const T &value);
 
 		//deconstructor
-		virtual ~Polynomial(){}
+		virtual ~base_polynomial(){}
 
 		//virtual getters
 		virtual std::string get_basis_name() const = 0; //basis identifier like "T" for Chebyshev
-		virtual std::string get_name() const = 0; //name of the derived class like "Chebyshev_Polynomial"
 
-		friend ostream &operator<<(ostream &os, const Polynomial<T> &poly) {
+		friend ostream &operator<<(ostream &os, const base_polynomial<T> &poly) {
 			std::vector<T> coeffs = poly.get_coeffs();
 			int nvar = poly.get_nvar();
 			int idx=0;
@@ -68,6 +69,8 @@ namespace polynomial{
 	public:
        	//getter and setters
 		std::vector<T> get_coeffs() const {return m_coeffs;}
+		std::string get_name(){return m_name;} //name of the derived class like "Chebyshev_Polynomial"
+
 		void set_coeffs(std::vector<T> &coeffs){
 	    		if(m_coeffs.size()!=coeffs.size()){
 				std::cout<<"Coefficients vectors don't have the same lenght"<<std::endl;
@@ -103,6 +106,7 @@ namespace polynomial{
 		std::vector<int> get_row(const int &idx, const int &deg) const;
 
 	protected:
+		string m_name;
 		std::vector<T> m_coeffs;
 		int m_degree;
 		int m_nvar;
@@ -114,4 +118,4 @@ namespace polynomial{
 
 
 
-#endif /* POLYNOMIAL_H_ */
+#endif /* BASE_POLYNOMIAL_H_ */

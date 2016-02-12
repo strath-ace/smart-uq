@@ -3,52 +3,41 @@
 ----------------- e-mail:  carlos.ortega@strath.ac.uk -----------------------
 ----------------------- Author:  Carlos Ortega Absil ------------------------
 */
-#include "Sampling/sampling.h"
-#include "Sampling/initializers.h"
-#include <time.h>
 
+#include "Sampling/sobol.h"
+
+using namespace std;
 using namespace smart;
 using namespace sampling;
 
 /// SOBOL Constructor
-/**
- * @param[in] dim dimension of the hypercube
- * @param[in] count starting point of the sequence. choosing 0 wil add the point x=0
- * @throws value_error if dim not in [1,1111]
-*/
 template <class T>
-sobol<T>::sobol(unsigned int dim, unsigned int count) : m_dim(dim), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
-    if (dim >1111 || dim <1) {
-      std::cout << "This Sobol sequence can have dimensions [1,1111]" << std::endl;
-      exit(EXIT_FAILURE);
-    }
+sobol<T>::sobol(const unsigned int &dim, const unsigned int &count) : base_sampling<T>(dim,"Sobol sampling"), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
+    if (dim >1111 || dim <1)
+        smart_exception(m_name+": Sobol sequence can have dimensions [1,1111]");
   }
 
+/// SOBOL Deconstructor
+template <class T>
+sobol<T>::~sobol(){
+
+}
+
 /// Operator ()
-/**
- * Returns the next point in the sequence
- *
- * @return an std::vector<T> containing the next point
- */
 
 template <class T>
-std::vector<T> sobol<T>::operator()() {
+std::vector<T> sobol<T>::operator()() const{
   std::vector<T> retval(m_dim,0.0);
   signed long long int seed= (signed long long int) m_count;
   i8_sobol(m_dim, &seed, &retval[0]);
   m_count= (unsigned short int) seed;
   return retval;
 }
+
 /// Operator (unsigned int n)
-/**
- * Returns the n-th point in the sequence
- *
- * @param[in] n the point along the sequence to be returned
- * @return an std::vector<T> containing the n-th point
- */
 
 template <class T>
-std::vector<T> sobol<T>::operator()(unsigned int n) {
+std::vector<T> sobol<T>::operator()(const unsigned int &n) const{
   m_count = n;
   signed long long int seed= (signed long long int) m_count;
   std::vector<T> retval(m_dim,0.0);
@@ -58,67 +47,13 @@ std::vector<T> sobol<T>::operator()(unsigned int n) {
 }
 
 
-/// LHS Constructor
-/**
- * @param[in] dim dimension of the hypercube
- * @param[in] number of points to sample
-*/
-
-template <class T>
-lhs<T>::lhs(unsigned int dim, unsigned int npoints) :  m_dim(dim), m_npoints(npoints), m_initialised(false), m_set(), m_next(0) {
-  srand(time(NULL));
-  }
-/// Operator ()
-/**
- * Returns the next point in the sequence
- *
- * @return an std::vector<T> containing the next point
- */
-
-template <class T>
-std::vector<T> lhs<T>::operator()() {
-  std::vector<T> retval(m_dim,0.0);
-  if (!m_initialised){
-    m_set=latin_random(m_dim,m_npoints);
-    m_initialised=true;
-    m_next=0;
-  }
-  for (int i=0;i<m_dim;i++){
-    retval[i]=m_set[m_next+i*m_npoints];
-  }
-  m_next++;
-  return retval;
-}
-/// Operator (unsigned int n)
-/**
- * Returns the n-th point in the sequence
- *
- * @param[in] n the point along the sequence to be returned
- * @return an std::vector<T> containing the n-th point
- */
-
-template <class T>
-std::vector<T> lhs<T>::operator()(unsigned int n) {
-  std::vector<T> retval(m_dim,0.0);
-  m_next = n;
-  if (!m_initialised){
-    m_set=latin_random(m_dim,m_npoints);
-    m_initialised=true;
-  }
-  for (int i=0;i<m_dim;i++){
-    retval[i]=m_set[m_next+i*m_npoints];
-  }
-  m_next++;
-  return retval;
-}
-
 //****************************************************************************
 //****************************************************************************
 //PRIVATE ROUTINES
 
 //****************************************************************************80
 template <class T>
-int sobol<T>::i8_bit_lo0 ( long long int n )
+int sobol<T>::i8_bit_lo0 (long long int n ) const
 
 //****************************************************************************80
 //
@@ -133,7 +68,7 @@ int sobol<T>::i8_bit_lo0 ( long long int n )
 //       0           0     1
 //       1           1     2
 //       2          10     1
-//       3          11     3 
+//       3          11     3
 //       4         100     1
 //       5         101     2
 //       6         110     1
@@ -154,7 +89,7 @@ int sobol<T>::i8_bit_lo0 ( long long int n )
 //
 //  Licensing:
 //
-//    This code is distributed under the GNU LGPL license. 
+//    This code is distributed under the GNU LGPL license.
 //
 //  Modified:
 //
@@ -196,7 +131,7 @@ int sobol<T>::i8_bit_lo0 ( long long int n )
 //****************************************************************************80
 
 template <class T>
-void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] )
+void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] ) const
 
 //****************************************************************************80
 //
@@ -219,7 +154,7 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 //
 //  Licensing:
 //
-//    This code is distributed under the GNU LGPL license. 
+//    This code is distributed under the GNU LGPL license.
 //
 //  Modified:
 //
@@ -245,7 +180,7 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 //
 //    Bennett Fox,
 //    Algorithm 647:
-//    Implementation and Relative Efficiency of Quasirandom 
+//    Implementation and Relative Efficiency of Quasirandom
 //    Sequence Generators,
 //    ACM Transactions on Mathematical Software,
 //    Volume 12, Number 4, pages 362-376, 1986.
@@ -260,10 +195,10 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 //    USSR Computational Mathematics and Mathematical Physics,
 //    Volume 16, pages 236-242, 1977.
 //
-//    Ilya Sobol, YL Levitan, 
-//    The Production of Points Uniformly Distributed in a Multidimensional 
+//    Ilya Sobol, YL Levitan,
+//    The Production of Points Uniformly Distributed in a Multidimensional
 //    Cube (in Russian),
-//    Preprint IPM Akad. Nauk SSSR, 
+//    Preprint IPM Akad. Nauk SSSR,
 //    Number 40, Moscow 1976.
 //
 //  Parameters:
@@ -303,10 +238,10 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 
   long long int m;
   long long int newv;
-  
+
 
   long long int seed_temp;
-  
+
  if ( !m_initialized || dim_num != m_dim_num_save )
  {
     m_initialized = true;
@@ -329,12 +264,13 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 //
     if ( dim_num < 1 || DIM_MAX2 < dim_num )
     {
-      cout << "\n";
-      cout << "I8_SOBOL - Fatal error!\n";
-      cout << "  The spatial dimension DIM_NUM should satisfy:\n";
-      cout << "    1 <= DIM_NUM <= " << DIM_MAX2 << "\n";
-      cout << "  But this input value is DIM_NUM = " << dim_num << "\n";
-      exit ( 1 );
+      std::stringstream message;
+      message << "\n";
+      message << "I8_SOBOL - Fatal error!\n";
+      message << "  The spatial dimension DIM_NUM should satisfy:\n";
+      message << "    1 <= DIM_NUM <= " << DIM_MAX2 << "\n";
+      message << "  But this input value is DIM_NUM = " << dim_num << "\n";
+      smart_exception(m_name+message.str());
     }
 
     m_dim_num_save = dim_num;
@@ -485,13 +421,14 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 //
   if ( m_maxcol < l )
   {
-    cout << "\n";
-    cout << "I8_SOBOL - Fatal error!\n";
-    cout << "  The value of SEED seems to be too large (too many sample points requested!)\n";
-    cout << "  SEED =   " << *seed  << "\n";
-    cout << "  MAXCOL = " << m_maxcol << "\n";
-    cout << "  L =      " << l << "\n";
-    exit ( 2 );
+    std::stringstream message;
+    message << "\n";
+    message << "I8_SOBOL - Fatal error!\n";
+    message << "  The value of SEED seems to be too large (too many sample points requested!)\n";
+    message << "  SEED =   " << *seed  << "\n";
+    message << "  MAXCOL = " << m_maxcol << "\n";
+    message << "  L =      " << l << "\n";
+    smart_exception(m_name+message.str());
   }
 //
 //  Calculate the new components of QUASI.
@@ -513,134 +450,7 @@ void sobol<T>::i8_sobol ( unsigned int dim_num, long long int *seed, T quasi[ ] 
 # undef LOG_MAX
 }
 
-//****************************************************************************80
 
-template <class T>
-unsigned int *lhs<T>::perm_uniform ( unsigned int n)
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    PERM_UNIFORM selects a random permutation of N objects.
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license. 
-//
-//  Modified:
-//
-//    31 October 2008
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Reference:
-//
-//    Albert Nijenhuis, Herbert Wilf,
-//    Combinatorial Algorithms,
-//    Academic Press, 1978, second edition,
-//    ISBN 0-12-519260-6.
-//
-//  Parameters:
-//
-//    Input, int N, the number of objects to be permuted.
-//
-//    Output, int PERM_UNIFORM[N], a permutation of (BASE, BASE+1, ..., BASE+N-1).
-//
-{
-  unsigned int i;
-  unsigned int j;
-  unsigned int k;
-  unsigned int *p;
-  T r;
-
-  p = new unsigned int[n];
- 
-  for ( i = 0; i < n; i++ )
-  {
-    p[i] = i;
-  }
-
-  for ( i = 0; i < n; i++ )
-  {
-    r= ((T) rand()) / ((T) RAND_MAX + 1.0);
-    j = i+ ( unsigned int ) ( r * (T) (n-i));
-    k    = p[i];
-    p[i] = p[j];
-    p[j] = k;
-  }
-  return p;
-}
-
-//****************************************************************************80
-
-template <class T>
-std::vector<T> lhs<T>::latin_random ( unsigned int dim_num, unsigned int point_num)
-
-//****************************************************************************80
-//
-//  Purpose:
-//
-//    LATIN_RANDOM returns points in a Latin Random square.
-//
-//  Discussion:
-//
-//    In each spatial dimension, there will be exactly one
-//    point whose coordinate value lies between consecutive
-//    values in the list:
-//
-//      ( 0, 1, 2, ..., point_num ) / point_num
-//
-//  Licensing:
-//
-//    This code is distributed under the GNU LGPL license. 
-//
-//  Modified:
-//
-//    08 April 2003
-//
-//  Author:
-//
-//    John Burkardt
-//
-//  Parameters:
-//
-//    Input, int DIM_NUM, the spatial dimension.
-//
-//    Input, int POINT_NUM, the number of points.
-//
-//    Output, T X[DIM_NUM,POINT_NUM], the points.
-//
-{
-  unsigned int i;
-  unsigned int j;
-  unsigned int k;
-  unsigned int *perm;
-  T r;
-  std::vector<T> x(dim_num*point_num,0.0);
-//
-//  For spatial dimension I, 
-//    pick a random permutation of 1 to POINT_NUM,
-//    force the corresponding I-th components of X to lie in the
-//    interval ( PERM[J]-1, PERM[J] ) / POINT_NUM.
-//
-  k = 0;
-  for ( i = 0; i < dim_num; i++ )
-  {
-    perm= perm_uniform ( point_num );
-
-    for ( j = 0; j < point_num; j++ )
-    {
-      r= ((T) rand()) / ((T) RAND_MAX + 1.0);
-      x[k] = ( ( ( T ) perm[j] ) + r ) / ( ( T ) point_num );
-      k = k + 1;
-    }
-    delete [] perm;
-  }
-  return x;
-}
 
 //****************************************************************************
 //****************************************************************************
@@ -649,6 +459,3 @@ template class sobol<double>;
 template class sobol<float>;
 template class sobol<long double>;
 
-template class lhs<double>;
-template class lhs<float>;
-template class lhs<long double>;

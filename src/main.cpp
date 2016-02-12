@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "smartuq.h"
 using namespace std;
 
 int main(){

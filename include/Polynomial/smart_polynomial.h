@@ -3,12 +3,13 @@
  *            Recursive inclusion of the SMART-UQ headers                     *
  ******************************************************************************/
 
-#ifndef SMART_SMARTUQ_H
-#define SMART_SMARTUQ_H
+#ifndef SMART_SMART_POLYNOMIAL_H
+#define SMART_SMART_POLYNOMIAL_H
 
-#include "Polynomial/smart_polynomial.h"
-#include "Sampling/smart_sampling.h"
-#include "Dynamics/smart_dynamics.h"
-#include "Integrators/smart_integrators.h"
+#include "base_polynomial.h"
+#include "chebyshev.h"
+#include "chebyshev_functions.h"
+#include "canonical.h"
+#include "canonical_functions.h"
 
-#endif /* SMART_SMARTUQ_H */
+#endif /* SMART_SMART_POLYNOMIAL_H */

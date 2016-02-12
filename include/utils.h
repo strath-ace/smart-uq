@@ -43,11 +43,11 @@ inline int combination(int n, int k)
 }
 
 
-inline void rep(std::vector<std::vector<int> > &res, const std::vector<int> &values, std::vector<int> &item, int count){
+inline void rep(std::vector<std::vector<int> > &res, const std::vector<int> &values, std::vector<int> &item, unsigned int count){
     if (count < item.size()){
-        for (int i = 0; i < values.size(); i++) {
+        for (unsigned int i = 0; i < values.size(); i++) {
             item[count] = values[i];
-            int tmp_count = count + 1;
+            unsigned int tmp_count = count + 1;
             rep(res, values, item, tmp_count);
         }
     }else{
