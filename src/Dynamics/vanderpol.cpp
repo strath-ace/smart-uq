@@ -5,7 +5,7 @@ using namespace smart;
 using namespace dynamics;
 
 template < class T >
-vanderpol<T>::vanderpol(const T &mu=.5) : base_dynamics("Lotka-Volterra dynamical system"), m_mu(mu)
+vanderpol<T>::vanderpol(const T &mu=.5) : base_dynamics("Van der Pol dynamical system"), m_mu(mu)
 {
 
 }

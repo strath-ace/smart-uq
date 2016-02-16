@@ -3,5 +3,6 @@
 
 #include "base_integrator.h"
 #include "euler.h"
+#include "rk4.h"
 
 #endif // SMART_INTEGRATORS_H
