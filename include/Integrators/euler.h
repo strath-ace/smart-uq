@@ -11,16 +11,20 @@ namespace smart
         /**
          * @brief The euler class
          */
-        class euler: public base_integrator
+        template < class T >
+        class euler: public base_integrator<T>
         {
 
-        public:
+        private:
+            using base_integrator<T>::m_name;
+            using base_integrator<T>::m_dyn;
 
+        public:
             /**
              * @brief euler
              * @param dyn
              */
-            euler(const dynamics::base_dynamics *dyn);
+            euler(const dynamics::base_dynamics<T> *dyn);
 
             /**
               * @brief ~euler
@@ -36,7 +40,7 @@ namespace smart
              * @param xfinal
              * @return
              */
-            int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<double> x0, std::vector<double> xfinal) const;
+            int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const;
 	
         };
 

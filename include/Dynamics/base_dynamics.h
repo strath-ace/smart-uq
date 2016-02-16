@@ -3,16 +3,18 @@
 
 #include <vector>
 #include "exception.h"
+#include "Polynomial/base_polynomial.h"
 
 namespace smart
 {
     namespace dynamics {
 
         /**
-         * @brief The base_dynamics class is an abstract class. Any dynamics added to the toolbox needs to inherit from it and implement the method evaluate()
+         * @brief The base_dynamics class is a template abstract class. Any dynamics added to the toolbox needs to inherit from it and implement the method evaluate()
          *
          * The base_dynamics class is an abstract class. Any dynamical system added to the toolbox need to extend this class and implement the method evaluate.
          */
+        template < class T >
         class base_dynamics
         {
 

@@ -4,15 +4,18 @@
 using namespace smart;
 using namespace integrator;
 
-euler::euler(const dynamics::base_dynamics *dyn) : base_integrator("Euler Explicit integration scheme", dyn)
+template < class T >
+euler<T>::euler(const dynamics::base_dynamics<T> *dyn) : base_integrator<T>("Euler Explicit integration scheme", dyn)
 {
 }
 
-euler::~euler(){
+template < class T >
+euler<T>::~euler(){
 
 }
 
-int euler::integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<double> x0, std::vector<double> xfinal) const{
+template < class T >
+int euler<T>::integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const{
 
 	// sanity checks
     	if(ti<0 || tend<0)

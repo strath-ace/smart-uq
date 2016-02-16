@@ -11,6 +11,7 @@ namespace smart
         /**
          * @brief The base_integrator class
          */
+        template < class T >
         class base_integrator
         {
 
@@ -21,7 +22,7 @@ namespace smart
              * @param name
              * @param dyn
              */
-            base_integrator(const std::string &name, const dynamics::base_dynamics *dyn);
+            base_integrator(const std::string &name, const dynamics::base_dynamics<T> *dyn);
 
             /**
              * @brief ~base_integrator
@@ -37,7 +38,7 @@ namespace smart
              * @param xfinal
              * @return
              */
-            virtual int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<double> x0, std::vector<double> xfinal) const = 0;
+            virtual int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const = 0;
 
             /**
              * @brief get_name
@@ -48,7 +49,7 @@ namespace smart
 
         protected:
             std::string m_name;
-	    const dynamics::base_dynamics *m_dyn;	
+            const dynamics::base_dynamics<T> *m_dyn;
         };
 
     }
