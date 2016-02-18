@@ -32,8 +32,6 @@ int rk4<T>::integrate(const double &ti, const double &tend, const int &nsteps, c
 	x = x0;
 
 	for(int i=0; i<nsteps+1; i++){
-		m_dyn->evaluate(ti+i*h, x, dx);
-
 		//* Evaluate k1 = f(x).
 		m_dyn->evaluate(ti+i*h, x, k1);
 

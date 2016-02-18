@@ -5,7 +5,7 @@ using namespace smart;
 using namespace dynamics;
 
 template < class T >
-akp<T>::akp(const int &dim=2, const std::vector<T> &force=0) : base_dynamics("Accelerated Kepler Problem"), m_dim(dim), m_force(force)
+akp<T>::akp(const int &dim, const std::vector<T> &force) : base_dynamics<T>("Accelerated Kepler Problem"), m_dim(dim), m_force(force)
 {
     if(force.size()==0)
         m_force = std::vector<T>(dim);

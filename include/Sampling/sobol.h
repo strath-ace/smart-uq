@@ -12,7 +12,7 @@
 ----------------------- Author: Carlos Ortega Absil -------------------------
 */
 
-#include "initializers.h"
+#include "constants.h"
 #include "base_sampling.h"
 #include <sstream>
 

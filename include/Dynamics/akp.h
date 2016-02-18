@@ -24,7 +24,7 @@ namespace smart
              * @param dim dimension of the problem (2 and 3 allowed)
              * @param force constant force along each direction
              */
-            akp(const int &dim=2, const std::vector<T> &force=0);
+            akp(const int &dim=2, const std::vector<T> &force=std::vector<T>());
 
             /**
               * @brief ~akp

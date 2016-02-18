@@ -245,21 +245,16 @@ void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] )
  if ( !m_initialized || dim_num != m_dim_num_save )
  {
     m_initialized = true;
-    long long int polyb[DIM_MAX2];
-    initialize_polyb(polyb);
 
-    for ( i = 0; i < DIM_MAX2; i++ )
+    for (i = 0; i < DIM_MAX2; i++ )
     {
-      poly[i]=polyb[i];
-      v[i][0]=1;
-      for ( j = 1; j < LOG_MAX; j++ )
+      poly[i]=smart::constants::smart_polyb[i];
+      for (j = 1; j < LOG_MAX; j++ )
       {
-        v[i][j] = 0;
+        v[i][j] = smart::constants::smart_v[i][j];
       }
     }
-//
-//  Initialize (part of) V
-    initialize_v(v);
+
 //  Check parameters.
 //
     if ( dim_num < 1 || DIM_MAX2 < dim_num )
