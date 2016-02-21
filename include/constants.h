@@ -4,6 +4,8 @@
 namespace smart{
     namespace constants{
 
+        static const int MAX_POLYNOMIAL_ALGEBRA_SIZE = 1000000;
+
         static const long long int smart_polyb[1111] =
         {
             1,    3,    7,   11,   13,   19,   25,   37,   59,   47,

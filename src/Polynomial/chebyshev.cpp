@@ -9,130 +9,29 @@
 
 
 using namespace smart;
-using namespace polynomial;
+using namespace polynomial_algebra;
 
+/******************************/
+/*CONSTRUCTORS                */
+/******************************/
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order) : base_polynomial<T>("Chebyshev Polynomial", vars,order){
-
-}
-
-template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i)  : base_polynomial<T>("Chebyshev Polynomial", vars,order,i){
-
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order) : polynomial<T>(vars,order){
+    m_name="Chebyshev Polynomial";
 }
 
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const T &value) : base_polynomial<T>("Chebyshev Polynomial", vars,order,value){
-
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i) : polynomial<T>(vars,order,i){
+    m_name="Chebyshev Polynomial";
 }
-
 
 template < class T >
-std::string chebyshev_polynomial<T>::get_basis_name() const
-{
-    return "T";
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const T &value) : polynomial<T>(vars,order,value){
+    m_name="Chebyshev Polynomial";
 }
 
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator+(const chebyshev_polynomial<T> &other) const{
-
-    if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
-    }
-
-    if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
-    }
-
-    int n = this->get_coeffs().size();
-
-    std::vector<T> other_coeffs = other.get_coeffs();
-    std::vector<T> coeffs(n);
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-
-    for(int i=0; i<n; i++)
-        coeffs[i] = m_coeffs[i] + other_coeffs[i];
-
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator-(const chebyshev_polynomial<T> &other) const{
-
-    if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
-    }
-    if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
-    }
-
-    int n = this->get_coeffs().size();
-
-    std::vector<T> other_coeffs = other.get_coeffs();
-    std::vector<T> coeffs(n);
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-
-    for(int i=0; i<n; i++)
-        coeffs[i] = m_coeffs[i] - other_coeffs[i];
-
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-// //OPERATOR* OVERLOADING FOR DIRECT MULTIPLICATION
-// template <class T>
-// chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const chebyshev_polynomial<T> &other) const{
-    
-//     if(m_nvar!=other.get_nvar()){
-//         std::cout<<"Polynomials don't have the same number of variables. They don't belong to the same Algebra"<<std::endl;
-//         exit(EXIT_FAILURE);
-//     }
-//     if(m_degree!=other.get_degree()){
-//         std::cout<<"Polynomials don't have the same order. They don't belong to the same Algebra"<<std::endl;
-//         exit(EXIT_FAILURE);
-//     }
-
-//     chebyshev_polynomial<T> res(m_nvar,m_degree);
-//     std::vector<T> res_coeffs(combination(m_nvar,m_degree));
-//     double nvariations = pow(2,m_nvar);
-//     std::vector<T> other_coeffs = other.get_coeffs();
-//     for(int i=0; i<=m_degree; i++){//loop over subset degree i of poly1
-//         for(int j=0; j<=other.get_degree(); j++){//loop over subset degree j of poly2
-//             //if((i+j)<=m_degree){
-//                 for(int idx1=0; idx1<m_J[m_nvar][i]; idx1++){//index over elements with degree i in poly1
-//                     for(int idx2=0; idx2<m_J[m_nvar][j]; idx2++){//index over elements with degree j in poly2
-//                         int sub_idx1=0, sub_idx2=0, sub_idx3=0;
-//                         if(i>0) sub_idx2=m_N[m_nvar][i-1];
-//                         if(j>0) sub_idx3=m_N[m_nvar][j-1];
-//                         if(fabs(m_coeffs[sub_idx2+idx1])>ZERO && fabs(other_coeffs[sub_idx3+idx2])>ZERO){
-//                             std::vector<int> v1 = this->get_row(idx1,i);
-//                             std::vector<int> v2 = this->get_row(idx2,j);
-//                             std::vector<int> v3(m_nvar);
-//                             for(int iter=0; iter<nvariations; iter++){
-//                                 for(int k=0; k<m_nvar; k++){
-//                                     v3[k] = std::fabs(v1[k]+m_t[iter][k]*v2[k]);
-//                                 }
-//                                 int deg3 = std::accumulate(v3.begin(),v3.end(),0);
-//                                 if(deg3<=m_degree){
-//                                     int pos = res.get_idx(v3);
-//                                     sub_idx1 = 0;
-//                                     if(deg3>0) sub_idx1=m_N[m_nvar][deg3-1];
-//                                     res_coeffs[sub_idx1 + pos] +=
-//                                         (1.0/nvariations)*(m_coeffs[sub_idx2+idx1]*other_coeffs[sub_idx3+idx2]);
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             //}
-//         }
-//     }
-
-//     res.set_coeffs(res_coeffs);
-//     return res;
-// }
-
+/******************************/
+/*ARITHMETICS OPERATOR        */
+/******************************/
 //OPERATOR* OVERLOADING FOR DCT-BASED MULTIPLICATION
 //Author : Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
 //Note: the indexing, scaling, etc. operations could be suppressed with 1-var polynomials for a performance gain
@@ -213,7 +112,7 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const chebyshev_polyn
         if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
         else res.set_coeffs(i,0.0);
     }
-    
+
     // deallocate and return
     dct_free(dct01);
     return res;
@@ -223,63 +122,6 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const chebyshev_polyn
     return direct_multiplication(*this,other);
 
     #endif
-}
-
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::inv(const chebyshev_polynomial<T> &other) const{
-    int nvar =  other.get_nvar();
-    int degree = other.get_degree();
-    chebyshev_polynomial<T> res(nvar,degree);
-
-    //chebyshev expansion of sin in [a,b]
-    //    std::vector<T> coeffs = other.get_coeffs();
-    std::vector<T> range = other.get_range();
-    T a, b;
-
-    //    //computing value of other in zero
-    //    T value = 0.0;
-    //    int count = 0;
-    //    for(int deg=0; deg<=degree; deg++){
-    //        for(int i=0; i<m_J[nvar][deg]; i++){
-    //            std::vector<int> row = get_row(i,deg); //get for example vector (1 0 0) = x, (0 1 0) = y...
-    //            int prod = 1;
-    //            for(int j=0;j<m_nvar; j++){
-    //                if(row[j]%2 == 0){
-    //                    if(row[j]%4 != 0)
-    //                        prod*= -1.0;
-    //                }
-    //                else prod *= 0.0;
-    //            }
-    //            value += coeffs[count]*prod;
-    //            count++;
-    //        }
-    //    }
-
-    //    T one = 1.0;
-    //    if(value>0){
-    //        a = min(one,range[1]);
-    //        b = max(one,range[1]);
-    //    }
-    //    else if(value<0){
-    //        a = max(-one,range[0]);
-    //        b = min(-one,range[0]);
-    //    }
-    //    else{
-    //        std::cout<<"Inverting a function with a zero in the interval [-1,1]."<<std::endl;
-    //        exit(EXIT_FAILURE);
-    //    }
-
-    a = range[0];
-    b = range[1];
-    std::vector<T> cheb_inv = cheb_approximation(inverse,a,b);
-    //univariate composition
-    std::vector<chebyshev_polynomial<T> > base = evaluate_base(other, a,b);
-    for (int i=0; i<=degree; i++){
-        res += base[i]*cheb_inv[i];
-    }
-
-    return res;
 }
 
 template <class T>
@@ -299,357 +141,35 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::operator/(const chebyshev_polyn
 }
 
 template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator+(const T& other) const{
-
-    std::vector<T> coeffs=this->get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-
-    coeffs[0] += other;
-
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator-(const T& other) const{
-
-    std::vector<T> coeffs=this->get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-
-    coeffs[0] -= other;
-
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const T& other) const{
-
-    std::vector<T> coeffs=this->get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-
-    for(int i=0; i<coeffs.size(); i++)
-        coeffs[i] *= other;
-
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator/(const T& other) const{
-
-    std::vector<T> coeffs=this->get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-
-    for(int i=0; i<coeffs.size(); i++)
-        coeffs[i] /= other;
-
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator+() const{
-
-    std::vector<T> coeffs=this->get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::operator-() const{
-    
-    std::vector<T> coeffs=this->get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-    for (int i=0;i<coeffs.size();i++){
-        coeffs[i]= -coeffs[i];
-    }
-    res.set_coeffs(coeffs);
-    return res;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator=(const chebyshev_polynomial<T> &other){
-
-    if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
-    }
-
-    if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
-    }
-
-    m_coeffs = other.get_coeffs();
-    return *this;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator=(const T &other){
-
-    std::vector<T> coeffs(m_coeffs.size());
-    coeffs[0] = other;
-
-    m_coeffs = coeffs;
-    return *this;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator+=(const chebyshev_polynomial<T> &other){
-    *this = chebyshev_polynomial<T>::operator+(other);
-    return *this;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator-=(const chebyshev_polynomial<T> &other){
-    *this = chebyshev_polynomial<T>::operator-(other);
-    return *this;
-}
-
-template <class T>	
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator*=(const chebyshev_polynomial<T> &other){
-    *this = chebyshev_polynomial<T>::operator*(other);
-    return *this;
-}
-
-template <class T>
 chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator/=(const chebyshev_polynomial<T> &other){
     *this = chebyshev_polynomial<T>::operator/(other);
     return *this;
 }
 
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator+=(const T& other){
-    *this = chebyshev_polynomial<T>::operator+(other);
-    return *this;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator-=(const T& other){
-    *this = chebyshev_polynomial<T>::operator-(other);
-    return *this;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator*=(const T& other){
-    *this = chebyshev_polynomial<T>::operator*(other);
-    return *this;
-}
-
-template <class T>
-chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator/=(const T& other){
-    *this = chebyshev_polynomial<T>::operator/(other);
-    return *this;
-}
-
-template <class T>
-bool chebyshev_polynomial<T>::operator==(const chebyshev_polynomial<T> &other) const{
-
-    if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
-    }
-    if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
-    }
-
-    if(m_coeffs==other.get_coeffs())
-        return true;
-    return false;
-}
-
-template <class T>	
-bool chebyshev_polynomial<T>::operator!=(const chebyshev_polynomial<T> &other) const{
-
-    if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
-    }
-    if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
-    }
-
-    if(chebyshev_polynomial<T>::operator==(other)) return false;
-    else return true;
-
-}
-
-//1-d Evaluation method
-//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
-template <class T>
-T chebyshev_polynomial<T>::evaluate(const T &x) const {
-    if(m_nvar>1){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
-    }
-    if (fabs(x)>1){
-        smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
-    }
-
-    return m_coeffs[0]+x*clenshaw(x,1)-clenshaw(x,2);
-}
-
-//Multivariate Evaluation method
-//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
-template <class T>
-T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
-    if(m_nvar!=x.size()){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
-    }
-    for (int i=0;i<m_nvar;i++){
-        if (fabs(x[i])>1){
-            smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
-        }
-    }
-
-    //evaluate the bases
-    std::vector < std::vector <T> > base;
-    base.resize(m_nvar);
-    for (int i=0; i<m_nvar;i++){
-        base[i].resize(m_degree+1);
-        base[i][0]=1.0;
-        if (m_degree>0) base[i][1]=x[i];
-        for (int j=2; j<=m_degree; j++){
-            base[i][j]=2.0*x[i]*base[i][j-1]-base[i][j-2];
-        }
-    }
-
-    //construct the full polynomial value
-    T res = 0;
-    int idx=0;
-    for(int deg=0; deg<=m_degree; deg++){
-        for(int i=0; i<m_J[m_nvar][deg]; i++){
-            T prod = 1.0;
-            if (fabs(m_coeffs[idx])>ZERO){
-                std::vector<int> row = this->get_row(i,deg);
-                for(int j=0;j<m_nvar; j++){
-                    prod*=base[j][row[j]];
-                }
-                res += m_coeffs[idx]*prod;
-            }
-            idx++;
-        }
-    }
-
-    return res;
-}
-
-//evaluate chebyshev base t0(x), t1(x), t2(x) in a polynomial. It first map x from [a,b] to [-1,1]
-template <class T>
-std::vector<chebyshev_polynomial<T> > chebyshev_polynomial<T>::evaluate_base(const chebyshev_polynomial<T> &other, const T &a, const T &b){
-
+template < class T >
+chebyshev_polynomial<T> chebyshev_polynomial<T>::inv(const chebyshev_polynomial<T> &other) const{
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
+    chebyshev_polynomial<T> res(nvar,degree);
 
-    std::vector<chebyshev_polynomial<T> > v;
+    std::vector<T> range = other.get_range();
+    T a, b;
 
-    for(int i=0; i<=degree; i++){
-        v.push_back(chebyshev_polynomial<T>(nvar,degree));
+    a = range[0];
+    b = range[1];
+    std::vector<T> cheb_inv = approximation(inverse,a,b);
+    //univariate composition
+    std::vector<chebyshev_polynomial<T> > base = evaluate_base1D(other, a,b);
+    for (int i=0; i<=degree; i++){
+        res += base[i]*cheb_inv[i];
     }
-
-    //mapping the argument from the domain of composition to [-1,1]
-    chebyshev_polynomial<T> mapped(nvar,degree);
-    if(b==a)
-        mapped.set_coeffs(0,a);
-    else
-        mapped = (2.0*other-(a+b))/(b-a);
-
-    v[0] = 1.0;
-    v[1] = mapped;
-
-    for (int i=2; i<=degree; i++){
-        v[i] = 2.0 * mapped * v[i-1] - v[i-2];
-    }
-
-    return v;
-}
-
-template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::composition(const std::vector<chebyshev_polynomial<T> > &other) const{
-    if(m_nvar!=other.size()){
-        smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
-    }
-
-    for(int i=0; i<m_nvar; i++){
-        if(m_nvar!=other[i].get_nvar()){
-            smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
-        }
-        if(m_degree!=other[i].get_degree()){
-            smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
-        }
-    }
-
-    //allocate memory
-    std::vector<std::vector<chebyshev_polynomial<T> > > base;
-    for(int j=0; j<m_nvar; j++){
-        std::vector<chebyshev_polynomial<T> > v;
-        for(int i=0; i<=m_degree; i++){
-            v.push_back(chebyshev_polynomial<T>(m_nvar,m_degree));
-        }
-        base.push_back(v);
-    }
-
-    //evaluate all basis
-    for(int j=0; j<m_nvar; j++){
-        //T range = other[j].get_range();
-        std::vector<chebyshev_polynomial<T> > v = evaluate_base(other[j],-1.0,1.0);
-        for(int i=0; i<=m_degree; i++)
-            base[j][i] = v[i];
-    }
-
-    //composing
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
-    int count = 0;
-    for(int deg=0; deg<=m_degree; deg++){
-        for(int i=0; i<m_J[m_nvar][deg]; i++){
-            std::vector<int> row = this->get_row(i,deg); //get for example vector (1 0 0) = x, (0 1 0) = y...
-            chebyshev_polynomial<T> prod(m_nvar,m_degree);
-            prod.set_coeffs(0,1.0);
-            for(int j=0;j<m_nvar; j++){
-                prod*=base[j][row[j]];
-            }
-            res += m_coeffs[count]*prod;
-            count++;
-        }
-    }
-
-    return res;
-}
-
-template <class T>
-std::vector<T> chebyshev_polynomial<T>::cheb_approximation(T (*f)(T x), const T a, const T b){
-    int n = chebyshev_polynomial<T>::MAX_DEGREE;
-    std::vector<T> res(n+1), d(n+1);
-    T fac;
-    T pi = 3.141592653589793;
-    T t;
-    T total;
-    T y;
-
-    for (int k = 0; k <= n; k++)
-    {
-        t = cos(pi*(k+0.5)/(n+1)); //zeros Ti
-        y = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
-        d[k] = f(y); //evaluate function
-    }
-
-    fac = 2.0/(n+1);
-
-    for (int j = 0; j <= n; j++)
-    {
-        total = 0.0;
-        for (int k = 0; k <= n; k++)
-        {
-            total = total+d[k]*cos( (pi*j)*( (k+ 0.5)/(n+1) ) );
-        }
-        res[j] = fac*total;
-    }
-
-    res[0] = res[0]/2.0;
 
     return res;
 }
 
 // DIRECT MULTIPLICATION
 template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T> :: direct_multiplication(const chebyshev_polynomial<T> &x0, const chebyshev_polynomial<T> &x1){
+chebyshev_polynomial<T> chebyshev_polynomial<T> :: direct_multiplication(const chebyshev_polynomial<T> &x0, const chebyshev_polynomial<T> &x1) const{
     if(x0.get_nvar()!=x1.get_nvar()){
         smart_exception("Direct multiplication: Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
@@ -702,15 +222,314 @@ chebyshev_polynomial<T> chebyshev_polynomial<T> :: direct_multiplication(const c
     return res;
 }
 
-// private routine for direct multiplication
+/******************************/
+/*EVALUATION & COMPOSITION    */
+/******************************/
+
+//evaluate chebyshev base t0(x), t1(x), t2(x) in a polynomial. It first map x from [a,b] to [-1,1]
 template <class T>
+std::vector<chebyshev_polynomial<T> > chebyshev_polynomial<T>::evaluate_base1D(const chebyshev_polynomial<T> &other, const T &a, const T &b) const{
+    if(b<a)
+        smart_exception(m_name+"base evaluation is a range [a,b] where b<a");
+
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+
+    std::vector<chebyshev_polynomial<T> > v;
+
+    for(int i=0; i<=degree; i++){
+        v.push_back(chebyshev_polynomial<T>(nvar,degree));
+    }
+
+    //mapping the argument from the domain of composition to [-1,1]
+    chebyshev_polynomial<T> mapped(nvar,degree);
+    if(b==a)
+        mapped.set_coeffs(0,a);
+    else
+        mapped = (2.0*other-(a+b))/(b-a);
+
+    v[0] = 1.0;
+    v[1] = mapped;
+
+    for (int i=2; i<=degree; i++){
+        v[i] = 2.0 * mapped * v[i-1] - v[i-2];
+    }
+
+    return v;
+}
+
+template < class T >
+std::vector<T> chebyshev_polynomial<T>::evaluate_base1D(const T &other, const T &a, const T &b) const{
+        if(b<a)
+            smart_exception(m_name+"base evaluation is a range [a,b] where b<a");
+
+        std::vector<T> v(m_degree+1);
+
+        //mapping the argument from the domain of composition to [-1,1]
+        if(b==a)
+            other=a;
+        else
+            other = (2.0*other-(a+b))/(b-a);
+
+        v[0] = 1.0;
+        v[1] = other;
+
+        for (int i=2; i<=m_degree; i++){
+            v[i] = 2.0 * other * v[i-1] - v[i-2];
+        }
+
+        return v;
+}
+
+template <class T>
+chebyshev_polynomial<T> chebyshev_polynomial<T>::composition(const std::vector<chebyshev_polynomial<T> > &other) const{
+    if(m_nvar!=other.size()){
+        smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
+    }
+
+    for(int i=0; i<m_nvar; i++){
+        if(m_nvar!=other[i].get_nvar()){
+            smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        }
+        if(m_degree!=other[i].get_degree()){
+            smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        }
+    }
+
+    //allocate memory
+    std::vector<std::vector<chebyshev_polynomial<T> > > base;
+    for(int j=0; j<m_nvar; j++){
+        std::vector<chebyshev_polynomial<T> > v;
+        for(int i=0; i<=m_degree; i++){
+            v.push_back(chebyshev_polynomial<T>(m_nvar,m_degree));
+        }
+        base.push_back(v);
+    }
+
+    //evaluate all basis
+    for(int j=0; j<m_nvar; j++){
+        //T range = other[j].get_range();
+        std::vector<chebyshev_polynomial<T> > v = evaluate_base1D(other[j],-1.0,1.0);
+        for(int i=0; i<=m_degree; i++)
+            base[j][i] = v[i];
+    }
+
+    //composing
+    chebyshev_polynomial<T> res(m_nvar,m_degree);
+    int count = 0;
+    for(int deg=0; deg<=m_degree; deg++){
+        for(int i=0; i<m_J[m_nvar][deg]; i++){
+            std::vector<int> row = this->get_row(i,deg); //get for example vector (1 0 0) = x, (0 1 0) = y...
+            chebyshev_polynomial<T> prod(m_nvar,m_degree);
+            prod.set_coeffs(0,1.0);
+            for(int j=0;j<m_nvar; j++){
+                prod*=base[j][row[j]];
+            }
+            res += m_coeffs[count]*prod;
+            count++;
+        }
+    }
+
+    return res;
+}
+
+//Multivariate Evaluation method
+//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
+template <class T>
+T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
+    if(m_nvar!=x.size()){
+        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
+    }
+    for (int i=0;i<m_nvar;i++){
+        if (fabs(x[i])>1){
+            smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
+        }
+    }
+
+    //evaluate the bases
+    std::vector < std::vector <T> > base;
+    base.resize(m_nvar);
+    for (int i=0; i<m_nvar;i++){
+        base[i].resize(m_degree+1);
+        base[i][0]=1.0;
+        if (m_degree>0) base[i][1]=x[i];
+        for (int j=2; j<=m_degree; j++){
+            base[i][j]=2.0*x[i]*base[i][j-1]-base[i][j-2];
+        }
+    }
+
+    //construct the full polynomial value
+    T res = 0;
+    int idx=0;
+    for(int deg=0; deg<=m_degree; deg++){
+        for(int i=0; i<m_J[m_nvar][deg]; i++){
+            T prod = 1.0;
+            if (fabs(m_coeffs[idx])>ZERO){
+                std::vector<int> row = this->get_row(i,deg);
+                for(int j=0;j<m_nvar; j++){
+                    prod*=base[j][row[j]];
+                }
+                res += m_coeffs[idx]*prod;
+            }
+            idx++;
+        }
+    }
+
+    return res;
+}
+
+/******************************/
+/*BASIS MANIPULATION          */
+/******************************/
+
+template < class T >
+std::vector<T> chebyshev_polynomial<T>::to_monomial_basis() const{
+
+    polynomial<T> res(m_nvar,m_degree,(T) 0.0);
+    int ncoeffs=res.get_coeffs().size();
+    if (m_coeffs.size()!=ncoeffs){
+        smart_exception(m_name+"Chebyshev coefficients provided must correspond to size of the algebra");
+    }
+
+    std::vector <polynomial <T> > term_vector;
+
+    for (int i=0;i<ncoeffs;i++){
+        term_vector.push_back(polynomial<T>(m_nvar,m_degree,(T) m_coeffs[i]));
+    }
+
+    for (int v=0;v<m_nvar;v++){
+        polynomial<T> base2(m_nvar,m_degree,(T) 1.0);
+        polynomial<T> base1(m_nvar,m_degree,(int) v);
+        polynomial<T> x(m_nvar,m_degree,(int) v);
+        polynomial<T> term(m_nvar,m_degree);
+        for (int d=1;d<=m_degree;d++){
+            if (d==1)  term=base1;
+            else{
+                term=2.0*x*base1-base2;
+                base2=base1;
+                base1=term;
+            }
+            //term is the chebyshev term of order d in variable v. Now we multiply by it the necessary terms in term_vector
+            int coeff_idx=m_N[m_nvar][d-1];
+            for(int deg=d; deg<=m_degree; deg++){
+                for(int i=0; i<m_J[m_nvar][deg]; i++){
+                    std::vector<int> row = res.get_row(i,deg);
+                    if (row[v]==d) term_vector[coeff_idx]*=term;
+                    coeff_idx+=1;
+                }
+            }
+        }
+    }
+
+    for (int i=0;i<ncoeffs;i++){
+        res+=term_vector[i];
+    }
+
+    return res.get_coeffs();
+
+}
+
+template < class T >
+std::vector<T> chebyshev_polynomial<T>::to_monomial_basis(const std::vector<T> &coeffs) const{
+    //We translate to canonical basis, we take into acount deg+1 Chebyshev
+    //terms but we build a Canonical polynomial of degree+1 terms.
+    polynomial<T> result(1,m_degree,coeffs[0]);
+    polynomial<T> x(1,m_degree,(int) 0);
+    polynomial<T> base1(1,m_degree,(int) 0);
+    polynomial<T> base2(1,m_degree, (T) 1.0);
+    polynomial<T> base(1,m_degree);
+
+    result+= coeffs[1]*x;
+    for (int i=2;i<coeffs.size();i++){
+        base=2.0*x*base1-base2;
+        base2=base1;
+        base1=base;
+        result+=coeffs[i]*base;
+    }
+
+    return result.get_coeffs();
+}
+
+template < class T >
+void chebyshev_polynomial<T>::from_monomial_basis(const std::vector<T> &coeffs) const{
+
+}
+
+template < class T >
+std::string chebyshev_polynomial<T>::get_basis_name() const{
+    return "C";
+}
+
+/******************************/
+/*APPROXIMATION               */
+/******************************/
+template < class T >
+std::vector<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), const T &a, const T &b){
+
+    int n = chebyshev_polynomial<T>::MAX_DEGREE;
+    std::vector<T> res(n+1), d(n+1);
+    T fac;
+    T pi = 3.141592653589793;
+    T t;
+    T total;
+    T y;
+
+    for (int k = 0; k <= n; k++)
+    {
+        t = cos(pi*(k+0.5)/(n+1)); //zeros Ti
+        y = ((1.0+t)*b + (1.0-t)*a)/2.0; //mapped zeros
+        d[k] = f(y); //evaluate function
+    }
+
+    fac = 2.0/(n+1);
+
+    for (int j = 0; j <= n; j++)
+    {
+        total = 0.0;
+        for (int k = 0; k <= n; k++)
+        {
+            total = total+d[k]*cos( (pi*j)*( (k+ 0.5)/(n+1) ) );
+        }
+        res[j] = fac*total;
+    }
+
+    res[0] = res[0]/2.0;
+
+    return res;
+
+}
+
+template < class T >
+chebyshev_polynomial<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), const chebyshev_polynomial<T> &other){
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+    chebyshev_polynomial<T> res(nvar,degree);
+
+    //chebyshev expansion of sin in [a,b]
+    std::vector<T> range = other.get_range();
+
+    //approximate sin [-range,range]
+    std::vector<T> cheb_approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1]);
+    //univariate composition
+    std::vector<chebyshev_polynomial<T> > base = chebyshev_polynomial<T>::evaluate_base1D(other,range[0],range[1]);
+    for (int i=0; i<=degree; i++){
+        res += base[i]*cheb_approx[i];
+    }
+
+    return res;
+}
+
+/******************************/
+/*PRIVATE ROUTINES            */
+/******************************/
+template < class T >
 void chebyshev_polynomial<T>::initialize_t(){
 
     m_t.resize(pow(2,m_nvar));
     for(int i=0; i<m_nvar; i++){
         m_t[i].resize(2);
     }
-    
+
     std::vector<int> values(2);
     values[0] = -1;
     values[1] = 1;
@@ -718,14 +537,6 @@ void chebyshev_polynomial<T>::initialize_t(){
     variations(values,m_nvar, m_t);
 
 }
-
-// private routine for evaluation
-template <class T>
-T chebyshev_polynomial<T>::clenshaw(T x, int n) const{
-    if (n>m_degree) return 0;
-    else return m_coeffs[n]+2*x*clenshaw(x,n+1)-clenshaw(x,n+2);
-}
-
  
 template class chebyshev_polynomial<double>;
 template class chebyshev_polynomial<float>;

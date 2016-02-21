@@ -12,7 +12,7 @@
 #ifndef CHEBYSHEV_POLYNOMIAL_H_
 #define CHEBYSHEV_POLYNOMIAL_H_
 
-#include "base_polynomial.h"
+#include "polynomial.h"
 #include "config.h"
 
 #ifdef CHEBYSHEV_DCT_MULTIPLICATION
@@ -22,23 +22,21 @@
 using namespace std;
 
 namespace smart{
-namespace polynomial{
+namespace polynomial_algebra{
 	template < class T >
-	class chebyshev_polynomial: public base_polynomial <T> {
+    class chebyshev_polynomial: public polynomial <T> {
 	
 	// // for class template inheritance
 	private:
-	using base_polynomial<T>::m_name;
-	using base_polynomial<T>::m_coeffs;
-	using base_polynomial<T>::m_degree;
-	using base_polynomial<T>::m_nvar;
-	using base_polynomial<T>::m_J;
-	using base_polynomial<T>::m_N;
-
+    using polynomial<T>::m_name;
+    using polynomial<T>::m_coeffs;
+    using polynomial<T>::m_degree;
+    using polynomial<T>::m_nvar;
+    using polynomial<T>::m_J;
+    using polynomial<T>::m_N;
 
 	public:
-		static const int MAX_DEGREE = 100;
-
+        static const int MAX_DEGREE=100;
 		/**
 		 * @brief chebyshev_polynomial
 		 * @param vars
@@ -60,158 +58,170 @@ namespace polynomial{
 		 */
 		chebyshev_polynomial(const int &vars, const int &order, const T &value);
 
-		// arithmetic operators
-		/**
-		 * @brief operator +
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator+(const chebyshev_polynomial<T> &other) const;
-		/**
-		 * @brief operator -
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator-(const chebyshev_polynomial<T> &other) const;
-		/**
-		 * @brief operator *
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator*(const chebyshev_polynomial<T> &other) const;
-		/**
-		 * @brief operator /
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator/(const chebyshev_polynomial<T> &other) const;
-		/**
-		 * @brief operator +
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator+(const T& other) const;
-		/**
-		 * @brief operator -
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator-(const T& other) const;
-		/**
-		 * @brief operator *
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator*(const T& other) const;
-		/**
-		 * @brief operator /
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator/(const T& other) const;
+        /******************************/
+        /*ARITHMETIC OPERATIONS (+-*) */
+        /******************************/
+        /**
+         * @brief operator +
+         * @param other
+         * @return
+         */
+         chebyshev_polynomial<T> operator+(const chebyshev_polynomial<T> &other) const{return polynomial<T>::operator +(other);}
+        /**
+         * @brief operator -
+         * @param other
+         * @return
+         */
+         chebyshev_polynomial<T> operator-(const chebyshev_polynomial<T> &other) const{return polynomial<T>::operator -(other);}
+        /**
+         * @brief operator *
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> operator*(const chebyshev_polynomial<T> &other) const;
+        /**
+         * @brief operator /
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> operator/(const chebyshev_polynomial<T> &other) const;
+        /**
+         * @brief operator +
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> operator+(const T& other) const{return polynomial<T>::operator +(other);}
+        /**
+         * @brief operator -
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> operator-(const T& other) const{return polynomial<T>::operator -(other);}
+        /**
+         * @brief operator *
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> operator*(const T& other) const{return polynomial<T>::operator *(other);}
+        /**
+         * @brief operator /
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> operator/(const T& other) const{return polynomial<T>::operator /(other);}
 
-		//unary
-		/**
-		 * @brief operator +
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator+() const;
-		/**
-		 * @brief operator -
-		 * @return
-		 */
-		chebyshev_polynomial<T> operator-() const;
+        /******************************/
+        /*UNARY OPERATORS             */
+        /******************************/
+        /**
+         * @brief operator +
+         * @return
+         */
+        chebyshev_polynomial<T> operator+() const{return polynomial<T>::operator +();}
+        /**
+         * @brief operator -
+         * @return
+         */
+        chebyshev_polynomial<T> operator-() const{return polynomial<T>::operator -();}
 
-		//assignment operator
-		/**
-		 * @brief operator =
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator=(const chebyshev_polynomial<T> &other);
-		/**
-		 * @brief operator =
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator=(const T &other);
+        /******************************/
+        /*ASSIGNEMENT (with operators)*/
+        /******************************/
+        /**
+         * @brief operator =
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator=(const chebyshev_polynomial<T> &other){polynomial<T>::operator =(other); return *this;}
+        /**
+         * @brief operator =
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator=(const T &other){polynomial<T>::operator =(other); return *this;}
 
-		//arithmetic operation and assignment
-		/**
-		 * @brief operator +=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator+=(const chebyshev_polynomial<T> &other);
-		/**
-		 * @brief operator -=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator-=(const chebyshev_polynomial<T> &other);
-		/**
-		 * @brief operator *=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator*=(const chebyshev_polynomial<T> &other);
-		/**
-		 * @brief operator /=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator/=(const chebyshev_polynomial<T> &other);
-		/**
-		 * @brief operator +=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator+=(const T& other);
-		/**
-		 * @brief operator -=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator-=(const T& other);
-		/**
-		 * @brief operator *=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator*=(const T& other);
-		/**
-		 * @brief operator /=
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T>& operator/=(const T& other);
+        /**
+         * @brief operator +=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator+=(const chebyshev_polynomial<T> &other){polynomial<T>::operator +=(other); return *this;}
+        /**
+         * @brief operator -=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator-=(const chebyshev_polynomial<T> &other){polynomial<T>::operator -=(other); return *this;}
+        /**
+         * @brief operator *=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator*=(const chebyshev_polynomial<T> &other){polynomial<T>::operator *=(other); return *this;}
+        /**
+         * @brief operator /=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator/=(const chebyshev_polynomial<T> &other);
+        /**
+         * @brief operator +=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator+=(const T& other){polynomial<T>::operator +=(other); return *this;}
+        /**
+         * @brief operator -=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator-=(const T& other){polynomial<T>::operator -=(other); return *this;}
+        /**
+         * @brief operator *=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator*=(const T& other){polynomial<T>::operator *=(other); return *this;}
+        /**
+         * @brief operator /=
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T>& operator/=(const T& other){polynomial<T>::operator /=(other); return *this;}
 
-		//polynomial comparison (certainly) i.e. the comparison is true for every coefficient in the polynomial
-		/**
-		 * @brief operator ==
-		 * @param other
-		 * @return
-		 */
-		bool operator==(const chebyshev_polynomial<T> &other) const;
-		/**
-		 * @brief operator !=
-		 * @param other
-		 * @return
-		 */
-		bool operator!=(const chebyshev_polynomial<T> &other) const;
+        /******************************/
+        /*COMPARISON                  */
+        /******************************/
+        /**
+         * @brief operator ==
+         * @param other
+         * @return
+         */
+        bool operator==(const chebyshev_polynomial<T> &other) const{return polynomial<T>::operator ==(other);}
+        /**
+         * @brief operator !=
+         * @param other
+         * @return
+         */
+        bool operator!=(const chebyshev_polynomial<T> &other) const{return polynomial<T>::operator !=(other);}
 
-		/**
+        /******************************/
+        /*I/O OPERATOR                */
+        /******************************/
+        /**
+         * @brief operator <<
+         * @param os
+         * @param poly
+         * @return
+         */
+        friend ostream &operator<<(ostream &os, const chebyshev_polynomial<T> &poly){return polynomial<T>::operator <<(os,poly);}
+
+        /**
 		 * @brief inv
 		 * @param other
 		 * @return
 		 */
 		chebyshev_polynomial<T> inv(const chebyshev_polynomial<T> &other) const;
-		/**
-		 * @brief composition
-		 * @param other
-		 * @return
-		 */
-		chebyshev_polynomial<T> composition(const std::vector<chebyshev_polynomial<T> > &other) const;
 
 		/**
 		 * @brief direct_multiplication
@@ -219,29 +229,32 @@ namespace polynomial{
 		 * @param x1
 		 * @return
 		 */
-		static chebyshev_polynomial<T> direct_multiplication(const chebyshev_polynomial<T> &x0, const chebyshev_polynomial<T> &x1);
+        chebyshev_polynomial<T> direct_multiplication(const chebyshev_polynomial<T> &x0, const chebyshev_polynomial<T> &x1) const;
 
-		/**
-		 * @brief evaluate_base
-		 * @param other
-		 * @param a
-		 * @param b
-		 * @return
-		 */
-		static std::vector<chebyshev_polynomial<T> > evaluate_base(const chebyshev_polynomial<T> &other, const T &a, const T &b);
-		/**
-		 * @brief cheb_approximation
-		 * @param a
-		 * @param b
-		 * @return
-		 */
-		static std::vector<T> cheb_approximation(T (*f)(T x), const T a, const T b);
-
-		/**
-		 * @brief get_basis_name
-		 * @return
-		 */
-		std::string get_basis_name() const;
+    public:
+        /******************************/
+        /*EVALUATION & COMPOSITION    */
+        /******************************/
+        /**
+         * @brief evaluate_1Dbase
+         * @param other
+         * @param a
+         * @param b
+         * @return
+         */
+        std::vector<chebyshev_polynomial<T> > evaluate_base1D(const chebyshev_polynomial<T> &other, const T &a, const T &b) const;
+        /**
+         * @brief evaluate_1Dbase
+         * @param other
+         * @return
+         */
+        std::vector<T> evaluate_base1D(const T &other, const T &a, const T &b) const;
+        /**
+         * @brief composition
+         * @param other
+         * @return
+         */
+        chebyshev_polynomial<T> composition(const std::vector<chebyshev_polynomial<T> > &other) const;
 
 		/**
 		 * @brief evaluate
@@ -249,20 +262,60 @@ namespace polynomial{
 		 * @return
 		 */
 		T evaluate(const std::vector<T> &x) const;
-		/**
-		 * @brief evaluate
-		 * @param x
-		 * @return
-		 */
-		T evaluate(const T &x) const;
-	
-	private:
-		void initialize_t();
+
+    public:
+        /******************************/
+        /*CHANGE of BASIS             */
+        /******************************/
+        /**
+         * @brief to_monomial_basis
+         * @return
+         */
+        std::vector<T> to_monomial_basis() const;
+        /**
+         * @brief to_monomial_basis
+         * @param coeffs
+         * @return
+         */
+        std::vector<T> to_monomial_basis(const std::vector<T> &coeffs) const;
+        /**
+         * @brief from_monomial_basis
+         * @param coeffs
+         */
+        void from_monomial_basis(const std::vector<T> &coeffs) const;
+
+        /**
+         * @brief get_basis_name
+         * @return
+         */
+        std::string get_basis_name() const;
+
+        /******************************/
+        /*APPROXIMATION               */
+        /******************************/
+        /**
+         * @brief cheb_approximation
+         * @param a
+         * @param b
+         * @return
+         */
+        static std::vector<T> approximation(T (*f)(T x), const T &a, const T &b);
+
+        /**
+         * @brief cheb_approximation
+         * @param a
+         * @param b
+         * @param other
+         * @return
+         */
+        static chebyshev_polynomial<T> approximation(T (*f)(T x), const chebyshev_polynomial<T> &other);
+
+    private:
+        void initialize_t();
 		std::vector<std::vector<int> > get_t() const {return m_t;}
 		std::vector<std::vector<int> > m_t;
 
-	private:
-		T clenshaw(T x, int n) const;
+
 
 	};
 	
