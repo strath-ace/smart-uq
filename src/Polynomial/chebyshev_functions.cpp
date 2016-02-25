@@ -1,7 +1,7 @@
 #include "Polynomial/chebyshev_functions.h"
 
 using namespace smart;
-using namespace polynomial_algebra;
+using namespace polynomial;
 
 /************************************************/
 /*                  SIN                         */
