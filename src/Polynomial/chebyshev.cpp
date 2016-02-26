@@ -532,6 +532,9 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::composition(const std::vector<c
     }
 
     for(int i=0; i<m_nvar; i++){
+        if(m_manipulated_to_monomial != other[i].is_manipulated_to_monomial()){
+            smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        }
         if(m_nvar!=other[i].get_nvar()){
             smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
         }
@@ -643,6 +646,11 @@ T chebyshev_polynomial<T>::evaluate(const T &x) const {
 template < class T >
 void chebyshev_polynomial<T>::to_monomial_basis(){
 
+    if(m_manipulated_to_monomial)
+        smart_exception(m_name+"The transformation to monomial bases has been called when the base is already monomial.");
+
+    m_manipulated_to_monomial=true;
+
     chebyshev_polynomial<T> res(m_nvar,m_degree,(T) 0.0);
     int ncoeffs=res.get_coeffs().size();
     if (m_coeffs.size()!=ncoeffs){
@@ -690,6 +698,11 @@ void chebyshev_polynomial<T>::to_monomial_basis(){
 
 template < class T >
 void chebyshev_polynomial<T>::from_monomial_basis(){
+    if(!m_manipulated_to_monomial)
+        smart_exception(m_name+"The transformation from monomial bases has been called when the base is not in monomial.");
+
+    m_manipulated_to_monomial=false;
+
 
 }
 

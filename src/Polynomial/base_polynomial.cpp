@@ -130,6 +130,26 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
 }
 
+template <class T>
+void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<T> &y) const{
+    if(x.size()==0)
+        smart_exception(m_name+"for polynomial interpolation non empty nodal values need to be provided");
+    if(x.size()!=y.size())
+        smart_exception(m_name+"for polynomial interpolation, the number of nodes and nodal values need to be the same");
+    if(x[0].size()!=m_nvar)
+        smart_exception(m_name+"the number of variables is not the same as in the algebra");
+
+    int npoints = x.size();
+    int ncoeffs = m_coeffs.size();
+
+    if(npoints<ncoeffs)
+        smart_exception(m_name+"the number of interpolation point need to be equal or greater than the size of the algebra");
+
+    Eigen::MatrixXd base_matrix (npoints,ncoeffs);
+}
+
+
+
 /******************************/
 /*Monomial multiplication     */
 /******************************/

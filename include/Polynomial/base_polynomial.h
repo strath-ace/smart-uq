@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <numeric>
 #include <iomanip>
+#include <Eigen/Core>
 #include "exception.h"
 #include "constants.h"
 #include "utils.h"
@@ -57,17 +58,6 @@ namespace polynomial{
 
         virtual ~base_polynomial();
 
-        /******************************************/
-        /*ARITHMETIC OPERATIONS subroutines (*)   */
-        /******************************************/
-        /**
-         * @brief monomial_multiplication
-         * @param poly_coeffs
-         * @param other_coeffs
-         * @param res_coeffs
-         */
-        void monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly) const;
-
         /******************************/
         /*I/O OPERATOR                */
         /******************************/
@@ -78,6 +68,10 @@ namespace polynomial{
          * @return
          */
         friend ostream &operator<<(ostream &os, const base_polynomial<T> &poly) {
+
+            if(poly.is_manipulated_to_monomial())
+                poly.from_monomial_basis();
+
             std::vector<T> coeffs = poly.get_coeffs();
             int nvar = poly.get_nvar();
             int idx=0;
@@ -111,7 +105,7 @@ namespace polynomial{
         virtual T evaluate(const T &x) const;
 
         /******************************/
-        /* CHNGE TO MONOMIAL BASIS    */
+        /* CHANGE TO MONOMIAL BASIS   */
         /******************************/
         /**
          * @brief to_monomial_basis
@@ -124,6 +118,15 @@ namespace polynomial{
          */
         virtual void from_monomial_basis();
 
+        /******************************/
+        /*INTERPOLATION               */
+        /******************************/
+        /**
+         * @brief interpolation
+         * @param x
+         * @param y
+         */
+        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y) const;
 
     public:
         //getter and setters
@@ -184,7 +187,10 @@ namespace polynomial{
                 range[1] += constant;
                 return range;
         }
-
+        /**
+         * @brief is_manipulated_to_monomial
+         * @return
+         */
         bool is_manipulated_to_monomial() const {return m_manipulated_to_monomial;}
 
     private:
@@ -196,6 +202,17 @@ namespace polynomial{
         void delete_M();
 
     protected:
+        /******************************************/
+        /*ARITHMETIC OPERATIONS subroutines (*)   */
+        /******************************************/
+        /**
+         * @brief monomial_multiplication
+         * @param poly_coeffs
+         * @param other_coeffs
+         * @param res_coeffs
+         */
+        void monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly) const;
+
         std::vector<std::vector<int> > get_J() const {return m_J;}
         std::vector<std::vector<int> > get_N() const {return m_N;}
         std::vector<int> get_row(const int &idx, const int &deg) const;

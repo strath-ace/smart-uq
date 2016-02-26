@@ -9,5 +9,7 @@
 #include "base_polynomial.h"
 #include "chebyshev.h"
 #include "chebyshev_functions.h"
+#include "taylor.h"
+#include "taylor_functions.h"
 
 #endif /* SMART_SMART_POLYNOMIAL_H */
