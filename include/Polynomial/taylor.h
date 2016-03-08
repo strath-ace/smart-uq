@@ -228,7 +228,7 @@ namespace polynomial{
          * @param other
          * @return
          */
-        static std::vector<taylor_polynomial<T> > evaluate_base1D(const taylor_polynomial<T> &other);
+        std::vector<taylor_polynomial<T> > evaluate_base1D(const taylor_polynomial<T> &other);
 
         /**
          * @brief composition
@@ -289,9 +289,6 @@ namespace polynomial{
          * @return
          */
         static std::vector<T> approximation(T (*f)(T x), const T &x0);
-
-    private:
-        T horner(T x, int i) const;
 
         };
 

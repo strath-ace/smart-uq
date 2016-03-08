@@ -304,7 +304,7 @@ namespace polynomial{
          * @param b
          * @return
          */
-        static std::vector<T> approximation(T (*f)(T x), const T &a, const T &b);
+        static std::vector<T> approximation(T (*f)(T x), const T &a, const T &b, const T &deg = chebyshev_polynomial<T>::MAX_DEGREE);
 
         /**
          * @brief cheb_approximation

@@ -115,7 +115,7 @@ taylor_polynomial<T> taylor_polynomial<T>::operator*(const taylor_polynomial<T> 
     }
 
     taylor_polynomial<T> res(m_nvar,m_degree);
-    res.monomial_multiplication(*this,other,res);
+    base_polynomial<T>::monomial_multiplication(*this,other,res);
 
     return res;
 }
@@ -378,11 +378,9 @@ std::vector<taylor_polynomial<T> > taylor_polynomial<T>::evaluate_base1D(const t
         v.push_back(taylor_polynomial<T>(nvar,degree));
     }
 
-    v[0] = 1.0;
+    for(int i=0;i<=degree;i++)
+        base_polynomial<T>::evaluate_base1D_monomial(i,other,v[i]);
 
-    for (int i=1; i<=degree; i++){
-        v[i] = other * v[i-1];
-    }
     return v;
 }
 
@@ -444,41 +442,7 @@ void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > 
 
 template <class T>
 std::vector<T> taylor_polynomial<T>::evaluate_basis(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
-
-    if(m_nvar!=x.size()){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
-    }
-
-    //evaluate the bases
-    std::vector < std::vector <T> > base;
-    base.resize(m_nvar);
-    for (int i=0; i<m_nvar;i++){
-        base[i].resize(m_degree+1);
-        base[i][0]=1.0;
-        for (int j=1; j<=m_degree; j++){
-            base[i][j]=x[i]*base[i][j-1];
-        }
-    }
-
-    //construct the full polynomial value
-    std::vector<T> res(m_coeffs.size());
-    int idx=0;
-    for(int deg=0; deg<=m_degree; deg++){
-        for(int i=0; i<m_J[m_nvar][deg]; i++){
-            T prod = 1.0;
-            if (fabs(m_coeffs[idx])>ZERO){
-                std::vector<int> row = this->get_row(i,deg);
-                for(int j=0;j<m_nvar; j++){
-                    prod*=base[j][row[j]];
-                }
-                res[idx] = prod;
-            }
-            idx++;
-        }
-    }
-
-    return res;
-
+    return this->evaluate_basis_monomial(x);
 }
 
 //Multivariate Evaluation method
@@ -503,7 +467,7 @@ T taylor_polynomial<T>::evaluate(const T &x) const {
         smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
 
-    return m_coeffs[0]+horner(x,1);
+    return m_coeffs[0]+this->horner(x,1);
 
 }
 
@@ -560,12 +524,7 @@ std::vector<T> taylor_polynomial<T>::approximation(T (*f)(T x), const T &x0){
     return std::vector<T>();
 }
 
-//private routine for 1d evaluation
-template <class T>
-T taylor_polynomial<T>::horner(T x, int i) const{
-    if (i>m_degree) return 0;
-    else return x*(m_coeffs[i]+horner(x,i+1));
-}
+
 
 template class taylor_polynomial<double>;
 template class taylor_polynomial<float>;

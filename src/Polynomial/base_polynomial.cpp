@@ -237,16 +237,16 @@ int base_polynomial<T>::m_Mnvar = 0;
 template <class T>
 int base_polynomial<T>::m_Mdegree = 0;
 template <class T>
-void base_polynomial<T>::monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly) const{
+void base_polynomial<T>::monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly){
 
     if(!x1.m_manipulated_to_monomial || !x2.m_manipulated_to_monomial){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_exception("One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(x1.get_nvar()!=x2.get_nvar() || x1.get_nvar()!=res_poly.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_exception("Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(x1.get_degree()!=x2.get_degree() || x1.get_degree()!=res_poly.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_exception("Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int degree = x1.get_degree();
@@ -425,6 +425,72 @@ void base_polynomial<T>::delete_M(){
     m_Mdegree=0;
 }
 
+template <class T>
+void base_polynomial<T>::evaluate_base1D_monomial(const int &index, const base_polynomial<T> &other, base_polynomial<T>  &out){
+
+    if(index==0){
+        std::vector<T> out_coeffs = out.get_coeffs();
+        out_coeffs[0] = 1.0;
+        for(int i=1; i<out_coeffs.size(); i++)
+            out_coeffs[i] = 0.0;
+    }
+    else if(index==1){
+        std::vector<T> other_coeffs = other.get_coeffs();
+        out.set_coeffs(other_coeffs);
+    }
+    else{
+        for(int i=2; i<index; i++){
+            std::vector<T> other_coeffs = other.get_coeffs();
+            out.set_coeffs(other_coeffs);
+            monomial_multiplication(out,other,out);
+        }
+    }
+}
+
+template <class T>
+std::vector<T> base_polynomial<T>::evaluate_basis_monomial(const std::vector<T> &x) const{
+
+    if(m_nvar!=x.size()){
+        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
+    }
+
+    //evaluate the bases
+    std::vector < std::vector <T> > base;
+    base.resize(m_nvar);
+    for (int i=0; i<m_nvar;i++){
+        base[i].resize(m_degree+1);
+        base[i][0]=1.0;
+        for (int j=1; j<=m_degree; j++){
+            base[i][j]=x[i]*base[i][j-1];
+        }
+    }
+
+    //construct the full polynomial value
+    std::vector<T> res(m_coeffs.size());
+    int idx=0;
+    for(int deg=0; deg<=m_degree; deg++){
+        for(int i=0; i<m_J[m_nvar][deg]; i++){
+            T prod = 1.0;
+            if (fabs(m_coeffs[idx])>ZERO){
+                std::vector<int> row = this->get_row(i,deg);
+                for(int j=0;j<m_nvar; j++){
+                    prod*=base[j][row[j]];
+                }
+                res[idx] = prod;
+            }
+            idx++;
+        }
+    }
+
+    return res;
+}
+
+//private routine for 1d evaluation
+template <class T>
+T base_polynomial<T>::horner(T x, int i) const{
+    if (i>m_degree) return 0;
+    else return x*(m_coeffs[i]+horner(x,i+1));
+}
 
 template class base_polynomial<double>;
 template class base_polynomial<float>;

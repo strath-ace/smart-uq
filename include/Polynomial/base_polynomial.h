@@ -239,7 +239,18 @@ namespace polynomial{
          * @param other_coeffs
          * @param res_coeffs
          */
-        void monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly) const;
+        static void monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly);
+
+        /******************************/
+        /* EVALUATION IN MONOMIAL     */
+        /******************************/
+        static void evaluate_base1D_monomial(const int &index, const base_polynomial<T> &other, base_polynomial<T>  &out);
+
+        //multivariate for reals
+        std::vector<T> evaluate_basis_monomial(const std::vector<T> &x) const;
+
+        //univariate for reals
+        T horner(T x, int i) const;
 
         std::vector<std::vector<int> > get_J() const {return m_J;}
         std::vector<std::vector<int> > get_N() const {return m_N;}
