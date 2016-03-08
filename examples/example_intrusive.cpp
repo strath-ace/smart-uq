@@ -24,9 +24,12 @@ int main(){
         param[i].to_monomial_basis();
     }
 
+    x0[0].initialize_M(17,4);
+
     dynamics::twobody<chebyshev_polynomial<double> > dyn(param);
     integrator::rk4<chebyshev_polynomial<double> > integrator(&dyn);
 
     integrator.integrate(0,6000,100,x0,xf);
 
+    x0[0].delete_M();
 }

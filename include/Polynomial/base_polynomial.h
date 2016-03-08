@@ -220,13 +220,14 @@ namespace polynomial{
          */
         bool is_manipulated_to_monomial() const {return m_manipulated_to_monomial;}
 
+        //Matrix need for fast monomial multiplication
+        void initialize_M(const int &nvar, const int &degree);
+        void delete_M();
+
     private:
         //Matrix needed for the multivariate polynomial ordering
         void initialize_J();
         void initialize_N();
-        //Matrix need for fast monomial multiplication
-        void initialize_M(const int &nvar, const int &degree);
-        void delete_M();
 
     protected:
         /******************************************/
@@ -253,6 +254,7 @@ namespace polynomial{
         mutable bool m_manipulated_to_monomial;
 
         std::vector<std::vector<int> > m_J, m_N;
+
         static std::vector<int> m_M;
         static int m_Mnvar, m_Mdegree;
 	};
