@@ -12,11 +12,18 @@ std::string base_integrator<T>::get_name() const{
     return m_name;
 }
 
+template < class T >
+base_integrator<T>::~base_integrator(){
+
+}
+
 
 template class base_integrator<double>;
 template class base_integrator<float>;
 template class base_integrator<long double>;
-template class base_integrator<polynomial::base_polynomial<double> >;
-template class base_integrator<polynomial::base_polynomial<float> >;
-template class base_integrator<polynomial::base_polynomial<long double> >;
-
+template class base_integrator<polynomial::chebyshev_polynomial<double> >;
+template class base_integrator<polynomial::chebyshev_polynomial<float> >;
+template class base_integrator<polynomial::chebyshev_polynomial<long double> >;
+template class base_integrator<polynomial::taylor_polynomial<double> >;
+template class base_integrator<polynomial::taylor_polynomial<float> >;
+template class base_integrator<polynomial::taylor_polynomial<long double> >;

@@ -20,6 +20,8 @@
 #include <numeric>
 #include <iomanip>
 #include <Eigen/Core>
+#include <Eigen/LU>
+#include <Eigen/SVD>
 #include "exception.h"
 #include "constants.h"
 #include "utils.h"
@@ -55,6 +57,15 @@ namespace polynomial{
          * @param value
          */
         base_polynomial(const int &vars, const int &order, const T &value);
+        /**
+         * @brief base_polynomial
+         * @param vars
+         * @param order
+         * @param i
+         * @param a
+         * @param b
+         */
+        base_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b);
 
         virtual ~base_polynomial();
 
@@ -96,13 +107,24 @@ namespace polynomial{
         /******************************/
         /*EVALUATION                  */
         /******************************/
-        virtual T evaluate(const std::vector<T> &x) const;
         /**
          * @brief evaluate
          * @param x
          * @return
          */
-        virtual T evaluate(const T &x) const;
+        virtual std::vector<T> evaluate_basis(const std::vector<T> &x) const = 0;
+        /**
+         * @brief evaluate
+         * @param x
+         * @return
+         */
+        virtual T evaluate(const std::vector<T> &x) const = 0;
+        /**
+         * @brief evaluate
+         * @param x
+         * @return
+         */
+        virtual T evaluate(const T &x) const = 0;
 
         /******************************/
         /* CHANGE TO MONOMIAL BASIS   */
@@ -111,12 +133,12 @@ namespace polynomial{
          * @brief to_monomial_basis
          * @return
          */
-        virtual void to_monomial_basis();
+        virtual void to_monomial_basis() = 0;
         /**
          * @brief from_monomial_basis
          * @param coeffs
          */
-        virtual void from_monomial_basis();
+        virtual void from_monomial_basis() = 0;
 
         /******************************/
         /*INTERPOLATION               */
@@ -126,7 +148,12 @@ namespace polynomial{
          * @param x
          * @param y
          */
-        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y) const;
+        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y);
+
+        /******************************/
+        /*MAPPING                     */
+        /******************************/
+        virtual void map(const int &idx, const std::vector<T> &a, const std::vector<T> &b) = 0;
 
     public:
         //getter and setters
@@ -139,7 +166,7 @@ namespace polynomial{
          * @brief get_basis_name
          * @return
          */
-        virtual std::string get_basis_name() const;
+        virtual std::string get_basis_name() const = 0;
         /**
          * @brief get_coeffs
          * @return

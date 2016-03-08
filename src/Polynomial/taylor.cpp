@@ -33,8 +33,14 @@ taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const
 }
 
 template < class T >
-taylor_polynomial<T>::~taylor_polynomial(){
+taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b) : base_polynomial<T>(vars,order,i,a,b){
+    m_name="Taylor Polynomial";
     m_manipulated_to_monomial = true;
+}
+
+
+template < class T >
+taylor_polynomial<T>::~taylor_polynomial(){
 }
 
 /******************************/
@@ -381,7 +387,7 @@ std::vector<taylor_polynomial<T> > taylor_polynomial<T>::evaluate_base1D(const t
 }
 
 template <class T>
-taylor_polynomial<T> taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > &other) const{
+void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > &other) {
     if(m_nvar!=other.size()){
         smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
     }
@@ -433,12 +439,11 @@ taylor_polynomial<T> taylor_polynomial<T>::composition(const std::vector<taylor_
         }
     }
 
-    return res;
+    (*this) = res;
 }
 
-//Multivariate Evaluation method
 template <class T>
-T taylor_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
+std::vector<T> taylor_polynomial<T>::evaluate_basis(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
 
     if(m_nvar!=x.size()){
         smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
@@ -456,7 +461,7 @@ T taylor_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct 
     }
 
     //construct the full polynomial value
-    T res = 0;
+    std::vector<T> res(m_coeffs.size());
     int idx=0;
     for(int deg=0; deg<=m_degree; deg++){
         for(int i=0; i<m_J[m_nvar][deg]; i++){
@@ -466,11 +471,26 @@ T taylor_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct 
                 for(int j=0;j<m_nvar; j++){
                     prod*=base[j][row[j]];
                 }
-                res += m_coeffs[idx]*prod;
+                res[idx] = prod;
             }
             idx++;
         }
     }
+
+    return res;
+
+}
+
+//Multivariate Evaluation method
+template <class T>
+T taylor_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
+
+    std::vector<T> basis = evaluate_basis(x);
+
+    //construct the full polynomial value
+    T res = 0;
+    for(int i=0;i<m_coeffs.size(); i++)
+        res+=m_coeffs[i]*basis[i];
 
     return res;
 
@@ -486,6 +506,28 @@ T taylor_polynomial<T>::evaluate(const T &x) const {
     return m_coeffs[0]+horner(x,1);
 
 }
+
+
+template < class T >
+void taylor_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
+
+    if(b.size() != a.size())
+        smart_exception(m_name+"mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
+
+    std::vector<taylor_polynomial<T> > mapped_vars;
+
+    // construct polynomial, x1, x2, x3,...
+    for(int i=0; i<m_nvar; i++){
+        if(b[i]<=a[i])
+            smart_exception(m_name+"mapping of polynomial variable from [-1,1] to [a,b] with b<=a");
+        mapped_vars.push_back(taylor_polynomial<T>(m_nvar, m_degree,i));
+        mapped_vars[i] = (b[i]-a[i])/2.0 * mapped_vars[i] + (b[i]+a[i])/2.0;
+    }
+
+    composition(mapped_vars);
+
+}
+
 
 /******************************/
 /*BASIS MANIPULATION          */

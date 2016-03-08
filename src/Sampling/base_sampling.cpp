@@ -18,3 +18,6 @@ base_sampling<T>::~base_sampling(){
 
 }
 
+template class base_sampling<double>;
+template class base_sampling<float>;
+template class base_sampling<long double>;

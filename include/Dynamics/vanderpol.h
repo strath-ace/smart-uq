@@ -37,7 +37,7 @@ namespace smart
              * @param[out] dstate derivative of the states at time t
              * @return
              */
-            int evaluate(const double &t, const std::vector<double> &state, std::vector<double> &dstate) const;
+            int evaluate(const double &t, const std::vector<T> &state, std::vector<T> &dstate) const;
 
         private:
             T m_mu;

@@ -28,7 +28,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. Youcan incur in memory issues");
+        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -68,7 +68,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. Youcan incur in memory issues");
+        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -107,7 +107,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. Youcan incur in memory issues");
+        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -130,8 +130,57 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
 }
 
+template < class T >
+base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
+    m_manipulated_to_monomial(false), m_J(0), m_N(0){
+
+    if(vars<0){
+        smart_exception(m_name+"Polynomials need to have a positive number of variables");
+    }
+    if(order<=0){
+        smart_exception(m_name+"Polynomials need to have a positive order");
+    }
+    if(i<0 || i>=vars){
+        smart_exception(m_name+"First order Polynomial constructor need a variable index between [0,nvars-1]");
+    }
+
+    //allocate memory for coefficients vector
+
+    int n = combination(vars,order);
+
+    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
+    }
+
+    m_coeffs.resize(n);
+    m_coeffs[i+1] = (b-a)/2.0;
+    m_coeffs[0] = (b+a)/2.0;
+
+    //save some info
+    m_degree = order;
+    m_nvar = vars;
+
+    m_J.resize(vars+1);
+    m_N.resize(vars+1);
+    for(int i=0; i<=vars; i++){
+        m_J[i].resize(order+1);
+        m_N[i].resize(order+1);
+    }
+
+    initialize_J();
+    initialize_N();
+
+}
+
+
 template <class T>
-void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<T> &y) const{
+base_polynomial<T>::~base_polynomial(){
+
+}
+
+
+template <class T>
+void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<T> &y){
     if(x.size()==0)
         smart_exception(m_name+"for polynomial interpolation non empty nodal values need to be provided");
     if(x.size()!=y.size())
@@ -145,7 +194,34 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
     if(npoints<ncoeffs)
         smart_exception(m_name+"the number of interpolation point need to be equal or greater than the size of the algebra");
 
+    Eigen::VectorXd Y(npoints);
     Eigen::MatrixXd base_matrix (npoints,ncoeffs);
+    Eigen::VectorXd coe(ncoeffs);
+
+    //building matrix H
+    for(int i=0; i<npoints; i++){
+        base_matrix(i,0)=1.0;
+        std::vector<T> basis = evaluate_basis(x[i]);
+        for (int j=1;j<ncoeffs;j++){
+            base_matrix(i,j)=basis[j];
+        }
+        Y[i] = y[i];
+    }
+
+    // solve by inversion, faster when we want a lot of representations
+    if(npoints==ncoeffs){
+        Eigen::MatrixXd base_inv (npoints,ncoeffs);
+        base_inv=base_matrix.inverse();
+        coe = base_inv*Y;
+    }
+    else //solve by Least Square
+        coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Y);
+
+    std::vector<T> final_coeffs(ncoeffs);
+    for(int i=0; i<ncoeffs; i++) final_coeffs[i] = coe[i];
+
+    set_coeffs(final_coeffs);
+
 }
 
 
@@ -315,9 +391,8 @@ int base_polynomial<T>::get_idx(const std::vector<int> &k) const{
 template <class T>
 void base_polynomial<T>::initialize_M(const int &nvar, const int &degree){
 
-    base_polynomial<T> poly(nvar,degree);
-    std::vector<int> J=poly.get_J()[nvar];
-    std::vector<int> N=poly.get_N()[nvar];
+    std::vector<int> J=get_J()[nvar];
+    std::vector<int> N=get_N()[nvar];
     std::vector<int> M;
     for (int deg0=0; deg0<=degree; deg0++){ //loop over order of terms of poly0
         int max_i=J[deg0];
@@ -327,12 +402,12 @@ void base_polynomial<T>::initialize_M(const int &nvar, const int &degree){
             for (int i=0;i<max_i;i++){
                 for (int j=0;j<max_j;j++){
                     //find what term is the result contributing to
-                    std::vector<int> row0=poly.get_row(i,deg0);
-                    std::vector<int> row1=poly.get_row(j,deg1);
+                    std::vector<int> row0=get_row(i,deg0);
+                    std::vector<int> row1=get_row(j,deg1);
                     std::vector<int> row(nvar);
                     for (int k=0;k<nvar;k++) row[k]=row0[k]+row1[k];
                     //store it to avoid computing it in every multiplication
-                    M.push_back(poly.get_idx(row));
+                    M.push_back(get_idx(row));
                 }
             }
         }

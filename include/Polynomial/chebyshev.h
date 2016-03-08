@@ -58,6 +58,15 @@ namespace polynomial{
          * @param value
          */
         chebyshev_polynomial(const int &vars, const int &order, const T &value);
+        /**
+         * @brief chebyshev_polynomial
+         * @param vars
+         * @param order
+         * @param i
+         * @param a
+         * @param b
+         */
+        chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b);
 
 
         ~chebyshev_polynomial();
@@ -242,8 +251,14 @@ namespace polynomial{
          * @param other
          * @return
          */
-        chebyshev_polynomial<T> composition(const std::vector<chebyshev_polynomial<T> > &other) const;
+        void composition(const std::vector<chebyshev_polynomial<T> > &other);
 
+	/**
+	* @brief evaluate_basis
+	* @param x
+	* @return
+	*/
+	std::vector<T> evaluate_basis(const std::vector<T> &x) const;
 	/**
 	* @brief evaluate
 	* @param x
@@ -256,6 +271,8 @@ namespace polynomial{
 	 * @return
 	 */
 	T evaluate(const T &x) const;
+
+	virtual void map(const int &idx, const std::vector<T> &a, const std::vector<T> &b);
 
     public:
         /******************************/

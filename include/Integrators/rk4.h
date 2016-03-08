@@ -27,7 +27,7 @@ namespace smart
             rk4(const dynamics::base_dynamics<T> *dyn);
 
             /**
-              * @brief ~euler
+              * @brief ~rk4
               */
             ~rk4();
 

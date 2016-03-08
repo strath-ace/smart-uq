@@ -22,43 +22,59 @@ int rk4<T>::integrate(const double &ti, const double &tend, const int &nsteps, c
                 smart_exception(m_name+": initial time and final time must be greater or equal to 0");
         if(tend<ti)
                 smart_exception(m_name+": final time must be greater than initial time");
-        if(x0.size() != xfinal.size())
-                smart_exception(m_name+": initial state must have the same size as final state");
 
-        std::vector<double> x(x0.size()), xtemp(x0.size()), k1(x0.size()), k2(x0.size()), k3(x0.size()), k4(x0.size());
+        xfinal.clear();
 
-	unsigned int n = x0.size();
+        unsigned int n = x0.size();
+        std::vector<T> x(x0), xtemp(x0), k1, k2, k3, k4;
+
 	double h = (tend-ti)/nsteps;
-	x = x0;
 
 	for(int i=0; i<nsteps+1; i++){
+		double t1, t2, t3, t4;
+		t1 = ti + i*h;
+		t2 = t1 + h/2.0;
+		t3 = t1 + h/2.0;
+		t4 = ti + (i+1)*h;
+
 		//* Evaluate k1 = f(x).
-		m_dyn->evaluate(ti+i*h, x, k1);
+		m_dyn->evaluate(t1, x, k1);
 
 		//* Evaluate k2 = f(x+h/2*k1),
 		for(int j=0; j<n; j++)
 		    xtemp[j] = x[j]+k1[j]*h/2.0;
-		m_dyn->evaluate(ti+i*h, xtemp, k2);
+		m_dyn->evaluate(t2, xtemp, k2);
 
 		//* Evaluate k3 = f(x+h/2*k2),
 		for(int j=0; j<n; j++)
 		    xtemp[j] = x[j]+k2[j]*h/2.0;
-		m_dyn->evaluate(ti+i*h, xtemp, k3);
+		m_dyn->evaluate(t3, xtemp, k3);
 
 		//* Evaluate k4 = f(x+h*k3),
 		for(int j=0; j<n; j++)
 		    xtemp[j] = x[j]+k3[j]*h;
-		m_dyn->evaluate(ti+i*h, xtemp, k4);
+		m_dyn->evaluate(t4, xtemp, k4);
 
-		//* Return x(t+h) computed from second-order Runge Kutta.
+		//* Return x(t+h) computed from fourth-order Runge Kutta.
 		for(int j=0; j<n; j++)
 		    x[j] += (k1[j]+2.0*k2[j]+2.0*k3[j]+k4[j])*h/6.0;
 
 	}
 
-	xfinal = x;
+	for(int i=0; i<x0.size(); i++)
+	    xfinal.push_back(x[i]);
 
 	return 0;
 }
 
 
+
+template class rk4<double>;
+template class rk4<float>;
+template class rk4<long double>;
+template class rk4<polynomial::chebyshev_polynomial<double> >;
+template class rk4<polynomial::chebyshev_polynomial<float> >;
+template class rk4<polynomial::chebyshev_polynomial<long double> >;
+template class rk4<polynomial::taylor_polynomial<double> >;
+template class rk4<polynomial::taylor_polynomial<float> >;
+template class rk4<polynomial::taylor_polynomial<long double> >;

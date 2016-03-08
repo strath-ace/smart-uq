@@ -54,8 +54,8 @@ endif(FFTW_LIBRARY AND (FFTWF_LIBRARY AND FFTWL_LIBRARY))
 file(GLOB SRC
   "${SRC_PATH}/Sampling/*.cpp"
   "${SRC_PATH}/Polynomial/*.cpp"
-#  "${SRC_PATH}/Dynamics/*.cpp"
-#  "${SRC_PATH}/Integrators/*.cpp"	
+  "${SRC_PATH}/Dynamics/*.cpp"
+  "${SRC_PATH}/Integrators/*.cpp"
 )
 
 set(MAIN_SRC
@@ -65,8 +65,8 @@ set(MAIN_SRC
 file(GLOB TEST_SRC
   "${TEST_SRC_PATH}/Sampling/*.cpp"
   "${TEST_SRC_PATH}/Polynomial/*.cpp"
-#  "${TEST_SRC_PATH}/Dynamics/*.cpp"
-#  "${TEST_SRC_PATH}/Integrators/*.cpp"
+  "${TEST_SRC_PATH}/Dynamics/*.cpp"
+  "${TEST_SRC_PATH}/Integrators/*.cpp"
 )
 
 # Set CMake build-type. If it not supplied by the user, the default built type is "Release".

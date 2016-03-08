@@ -9,10 +9,10 @@ namespace smart
     namespace dynamics {
 
         /**
-         * @brief The euler class
+         * @brief The twobody class
          */
         template < class T >
-        class akp: public base_dynamics<T>
+        class twobody: public base_dynamics<T>
         {
 
         private:
@@ -20,16 +20,14 @@ namespace smart
 
         public:
             /**
-             * @brief akp
-             * @param dim dimension of the problem (2 and 3 allowed)
-             * @param force constant force along each direction
+             * @brief twobody
              */
-            akp(const int &dim=2, const std::vector<T> &force=std::vector<T>());
+            twobody(const std::vector<T> &param = std::vector<T>(10), const double &t_scale=1, const double &r_scale=1, const double &m_scale=1);
 
             /**
-              * @brief ~akp
+              * @brief ~twobody
               */
-            ~akp();
+            ~twobody();
 
             /**
              * @brief Function to evaluate the dinamics at a given instant of time and a given state.
@@ -38,11 +36,14 @@ namespace smart
              * @param[out] dstate derivative of the states at time t
              * @return
              */
-            int evaluate(const double &t, const std::vector<double> &state, std::vector<double> &dstate) const;
+            int evaluate(const double &t, const std::vector<T> &state, std::vector<T> &dstate) const;
 
         private:
-            int m_dim;
-            std::vector<T> m_force;
+            mutable std::vector<T> m_param;
+            double m_t_scale;
+            double m_r_scale;
+            double m_m_scale;
+
         };
 
     }

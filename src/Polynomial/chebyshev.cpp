@@ -30,6 +30,11 @@ chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order,
 }
 
 template < class T >
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b) : base_polynomial<T>(vars,order,i,a,b){
+    m_name="Chebyshev Polynomial";
+}
+
+template < class T >
 chebyshev_polynomial<T>::~chebyshev_polynomial(){
 
 }
@@ -526,7 +531,7 @@ std::vector<chebyshev_polynomial<T> > chebyshev_polynomial<T>::evaluate_base1D(c
 }
 
 template <class T>
-chebyshev_polynomial<T> chebyshev_polynomial<T>::composition(const std::vector<chebyshev_polynomial<T> > &other) const{
+void chebyshev_polynomial<T>::composition(const std::vector<chebyshev_polynomial<T> > &other){
     if(m_nvar!=other.size()){
         smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
     }
@@ -577,13 +582,11 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::composition(const std::vector<c
         }
     }
 
-    return res;
+    (*this) = res;
 }
 
-//Multivariate Evaluation method
-//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
 template <class T>
-T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
+std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) const{
     if(m_nvar!=x.size()){
         smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
@@ -592,6 +595,7 @@ T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most dire
             smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
         }
     }
+
 
     //evaluate the bases
     std::vector < std::vector <T> > base;
@@ -605,8 +609,9 @@ T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most dire
         }
     }
 
-    //construct the full polynomial value
-    T res = 0;
+
+    //evaluate the full polynomial bases
+    std::vector<T> res(m_coeffs.size());
     int idx=0;
     for(int deg=0; deg<=m_degree; deg++){
         for(int i=0; i<m_J[m_nvar][deg]; i++){
@@ -616,11 +621,26 @@ T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most dire
                 for(int j=0;j<m_nvar; j++){
                     prod*=base[j][row[j]];
                 }
-                res += m_coeffs[idx]*prod;
+                res[idx] = prod;
             }
             idx++;
         }
     }
+
+    return res;
+}
+
+//Multivariate Evaluation method
+//Author: Carlos Ortega Absil (carlos.ortega@strath.ac.uk)
+template <class T>
+T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
+
+    std::vector<T> basis = evaluate_basis(x);
+
+    //construct the full polynomial value
+    T res = 0;
+    for(int i=0;i<m_coeffs.size(); i++)
+        res+=m_coeffs[i]*basis[i];
 
     return res;
 }
@@ -709,6 +729,26 @@ void chebyshev_polynomial<T>::from_monomial_basis(){
 template < class T >
 std::string chebyshev_polynomial<T>::get_basis_name() const{
     return "C";
+}
+
+template < class T >
+void chebyshev_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
+
+    if(b.size() != a.size())
+        smart_exception(m_name+"mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
+
+    std::vector<chebyshev_polynomial<T> > mapped_vars;
+
+    // construct polynomial, x1, x2, x3,...
+    for(int i=0; i<m_nvar; i++){
+        if(b[i]<=a[i])
+            smart_exception(m_name+"mapping of polynomial variable from [-1,1] to [a,b] with b<=a");
+        mapped_vars.push_back(chebyshev_polynomial<T>(m_nvar, m_degree,i));
+        mapped_vars[i] = (b[i]-a[i])/2.0 * mapped_vars[i] + (b[i]+a[i])/2.0;
+    }
+
+    composition(mapped_vars);
+
 }
 
 /******************************/

@@ -9,7 +9,7 @@ namespace smart
     namespace dynamics {
 
         /**
-         * @brief The euler class
+         * @brief The lotka volterra problem class
          */
         template < class T >
         class lotkavolterra: public base_dynamics<T>
@@ -21,7 +21,7 @@ namespace smart
         public:
             /**
              * @brief lotkavolterra
-             * @param param constant force along the y (or z) direction
+             * @param param
              */
             lotkavolterra(const std::vector<T> &param=std::vector<T>(4,1));
 
@@ -37,7 +37,7 @@ namespace smart
              * @param[out] dstate derivative of the states at time t
              * @return
              */
-            int evaluate(const double &t, const std::vector<double> &state, std::vector<double> &dstate) const;
+            int evaluate(const double &t, const std::vector<T> &state, std::vector<T> &dstate) const;
 
         private:
             std::vector<T> m_param;

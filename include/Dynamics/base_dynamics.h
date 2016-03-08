@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "exception.h"
-#include "Polynomial/base_polynomial.h"
+#include "Polynomial/smart_polynomial.h"
 
 namespace smart
 {
@@ -27,6 +27,7 @@ namespace smart
              * @param name dynamical system name
              */
             base_dynamics(const std::string &name);
+
             virtual ~base_dynamics();
 
             /**
@@ -36,7 +37,7 @@ namespace smart
              * @param[out] dstate derivative of the states at time t
              * @return
              */
-            virtual int evaluate(const double &t, const std::vector<double> &state, std::vector<double> &dstate) const = 0;
+            virtual int evaluate(const double &t, const std::vector<T> &state, std::vector<T> &dstate) const = 0;
 
             /**
              * @brief get_name
