@@ -80,7 +80,7 @@ namespace polynomial{
          */
         friend ostream &operator<<(ostream &os, const base_polynomial<T> &poly) {
 
-            if(poly.is_manipulated_to_monomial())
+            if(poly.is_monomial_base())
                 poly.from_monomial_basis();
 
             std::vector<T> coeffs = poly.get_coeffs();
@@ -215,10 +215,10 @@ namespace polynomial{
                 return range;
         }
         /**
-         * @brief is_manipulated_to_monomial
+         * @brief is_monomial_base
          * @return
          */
-        bool is_manipulated_to_monomial() const {return m_manipulated_to_monomial;}
+        bool is_monomial_base() const {return m_monomial_base;}
 
         //Matrix need for fast monomial multiplication
         void initialize_M(const int &nvar, const int &degree);
@@ -262,7 +262,7 @@ namespace polynomial{
         std::vector<T> m_coeffs;
         int m_degree;
         int m_nvar;
-        mutable bool m_manipulated_to_monomial;
+        mutable bool m_monomial_base;
 
         std::vector<std::vector<int> > m_J, m_N;
 

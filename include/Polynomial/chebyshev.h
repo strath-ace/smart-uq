@@ -34,30 +34,30 @@ namespace polynomial{
 	using base_polynomial<T>::m_nvar;
 	using base_polynomial<T>::m_J;
 	using base_polynomial<T>::m_N;
-	using base_polynomial<T>::m_manipulated_to_monomial;
+    using base_polynomial<T>::m_monomial_base;
 
-	public:
+    public:
         static const int MAX_DEGREE=100;
         /**
          * @brief chebyshev_polynomial
          * @param vars
          * @param order
          */
-        chebyshev_polynomial(const int &vars, const int &order);
+        chebyshev_polynomial(const int &vars, const int &order, const bool &monomial=false);
         /**
          * @brief chebyshev_polynomial
          * @param vars
          * @param order
          * @param i
          */
-        chebyshev_polynomial(const int &vars, const int &order, const int &i);
+        chebyshev_polynomial(const int &vars, const int &order, const int &i, const bool &monomial=false);
         /**
          * @brief chebyshev_polynomial
          * @param vars
          * @param order
          * @param value
          */
-        chebyshev_polynomial(const int &vars, const int &order, const T &value);
+        chebyshev_polynomial(const int &vars, const int &order, const T &value, const bool &monomial=false);
         /**
          * @brief chebyshev_polynomial
          * @param vars
@@ -66,7 +66,7 @@ namespace polynomial{
          * @param a
          * @param b
          */
-        chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b);
+        chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b, const bool &monomial=false);
 
 
         ~chebyshev_polynomial();

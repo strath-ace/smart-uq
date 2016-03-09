@@ -16,7 +16,7 @@ using namespace polynomial;
 /**************/
 template < class T >
 base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_manipulated_to_monomial(false), m_J(0), m_N(0){
+    m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
         smart_exception(m_name+"Polynomials need to have a positive number of variables");
@@ -51,7 +51,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("
 
 template < class T >
 base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int &i): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_manipulated_to_monomial(false), m_J(0), m_N(0){
+    m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
         smart_exception(m_name+"Polynomials need to have a positive number of variables");
@@ -93,7 +93,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
 
 template < class T >
 base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &value): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_manipulated_to_monomial(false), m_J(0), m_N(0){
+    m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
         smart_exception(m_name+"Polynomials need to have a positive number of variables");
@@ -132,7 +132,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
 template < class T >
 base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_manipulated_to_monomial(false), m_J(0), m_N(0){
+    m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
         smart_exception(m_name+"Polynomials need to have a positive number of variables");
@@ -239,7 +239,7 @@ int base_polynomial<T>::m_Mdegree = 0;
 template <class T>
 void base_polynomial<T>::monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly){
 
-    if(!x1.m_manipulated_to_monomial || !x2.m_manipulated_to_monomial){
+    if(!x1.m_monomial_base || !x2.m_monomial_base){
         smart_exception("One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(x1.get_nvar()!=x2.get_nvar() || x1.get_nvar()!=res_poly.get_nvar()){

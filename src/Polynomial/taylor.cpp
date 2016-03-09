@@ -17,25 +17,25 @@ using namespace polynomial;
 template < class T >
 taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order) : base_polynomial<T>(vars,order){
     m_name="Taylor Polynomial";
-    m_manipulated_to_monomial = true;
+    m_monomial_base = true;
 }
 
 template < class T >
 taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const int &i) : base_polynomial<T>(vars,order,i){
     m_name="Taylor Polynomial";
-    m_manipulated_to_monomial = true;
+    m_monomial_base = true;
 }
 
 template < class T >
 taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const T &value) : base_polynomial<T>(vars,order,value){
     m_name="Taylor Polynomial";
-    m_manipulated_to_monomial = true;
+    m_monomial_base = true;
 }
 
 template < class T >
 taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b) : base_polynomial<T>(vars,order,i,a,b){
     m_name="Taylor Polynomial";
-    m_manipulated_to_monomial = true;
+    m_monomial_base = true;
 }
 
 
@@ -49,7 +49,7 @@ taylor_polynomial<T>::~taylor_polynomial(){
 template < class T >
 taylor_polynomial<T> taylor_polynomial<T>::operator+(const taylor_polynomial<T> &other) const{
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -77,7 +77,7 @@ taylor_polynomial<T> taylor_polynomial<T>::operator+(const taylor_polynomial<T> 
 template < class T >
 taylor_polynomial<T> taylor_polynomial<T>::operator-(const taylor_polynomial<T> &other) const{
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -104,7 +104,7 @@ taylor_polynomial<T> taylor_polynomial<T>::operator-(const taylor_polynomial<T> 
 template <class T>
 taylor_polynomial<T> taylor_polynomial<T>::operator*(const taylor_polynomial<T> &other) const{
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -123,7 +123,7 @@ taylor_polynomial<T> taylor_polynomial<T>::operator*(const taylor_polynomial<T> 
 template <class T>
 taylor_polynomial<T> taylor_polynomial<T>::operator/(const taylor_polynomial<T> &other) const{
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -222,7 +222,7 @@ taylor_polynomial<T> taylor_polynomial<T>::operator-() const{
 template <class T>
 taylor_polynomial<T>& taylor_polynomial<T>::operator=(const taylor_polynomial<T> &other){
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -328,7 +328,7 @@ taylor_polynomial<T> taylor_polynomial<T>::inv(const taylor_polynomial<T> &other
 template <class T>
 bool taylor_polynomial<T>::operator==(const taylor_polynomial<T> &other) const{
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -346,7 +346,7 @@ bool taylor_polynomial<T>::operator==(const taylor_polynomial<T> &other) const{
 template <class T>
 bool taylor_polynomial<T>::operator!=(const taylor_polynomial<T> &other) const{
 
-    if(m_manipulated_to_monomial != other.is_manipulated_to_monomial()){
+    if(m_monomial_base != other.is_monomial_base()){
         smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
@@ -391,7 +391,7 @@ void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > 
     }
 
     for(int i=0; i<m_nvar; i++){
-        if(m_manipulated_to_monomial != other[i].is_manipulated_to_monomial()){
+        if(m_monomial_base != other[i].is_monomial_base()){
             smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
         }
         if(m_nvar!=other[i].get_nvar()){
@@ -499,14 +499,14 @@ void taylor_polynomial<T>::map(const int &idx, const std::vector<T> &a, const st
 
 template < class T >
 void taylor_polynomial<T>::to_monomial_basis(){
-    if(m_manipulated_to_monomial)
+    if(m_monomial_base)
         smart_exception(m_name+"The transformation to monomial bases has been called when the base is already monomial.");
 }
 
 
 template < class T >
 void taylor_polynomial<T>::from_monomial_basis(){
-    if(m_manipulated_to_monomial)
+    if(m_monomial_base)
         smart_exception(m_name+"The transformation from monomial bases has been called when the base is not monomial.");
 }
 

@@ -30,7 +30,7 @@ namespace polynomial{
 	using base_polynomial<T>::m_nvar;
 	using base_polynomial<T>::m_J;
 	using base_polynomial<T>::m_N;
-	using base_polynomial<T>::m_manipulated_to_monomial;
+    using base_polynomial<T>::m_monomial_base;
 
         public:
         static const int MAX_DEGREE=100;
