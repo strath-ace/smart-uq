@@ -866,7 +866,7 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), cons
    if (other.is_manipulated_to_monomial()){
 
        //approximate sin in [a,b] with increased degree (two-step truncation to enhance precision)
-       int deg = std::min((int) (degree*1.5+1), n);
+       int deg = std::min((int) (degree*1.5+1), chebyshev_polynomial<T>::MAX_DEGREE);
        std::vector<T> cheb_approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1],deg);
 
        // Translation to canonical basis, taking into acount deg+1 terms from cheb_approx but building a monom_approx of degree+1 terms.
