@@ -863,41 +863,41 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), cons
     std::vector<T> approx(degree+1);
 
 
-//    if (other.is_manipulated_to_monomial()){
+   if (other.is_manipulated_to_monomial()){
 
-//        //approximate sin in [a,b] with increased degree (two-step truncation to enhance precision)
-//        int deg = std::min((int) (degree*1.5+1), n);
-//        std::vector<T> cheb_approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1],deg);
+       //approximate sin in [a,b] with increased degree (two-step truncation to enhance precision)
+       int deg = std::min((int) (degree*1.5+1), n);
+       std::vector<T> cheb_approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1],deg);
 
-//        // Translation to canonical basis, taking into acount deg+1 terms from cheb_approx but building a monom_approx of degree+1 terms.
-//        // Hence rewriting code instead of calling to_monomial(), to avoid the computation of worthless terms of order > degree.
+       // Translation to canonical basis, taking into acount deg+1 terms from cheb_approx but building a monom_approx of degree+1 terms.
+       // Hence rewriting code instead of calling to_monomial(), to avoid the computation of worthless terms of order > degree.
 
-//        Canonical_Polynomial<T> monom_approx(1,degree,(T) cheb_approx[0]);
-//        Canonical_Polynomial<T> x(1,degree,(int) 0);
-//        Canonical_Polynomial<T> cheb_base1(1,degree,(int) 0);
-//        Canonical_Polynomial<T> cheb_base2(1,degree, (T) 1.0);
-//        Canonical_Polynomial<T> cheb_base(1,degree);
+       chebyshev_polynomial<T> monom_approx(1,degree,(T) cheb_approx[0]);
+       chebyshev_polynomial<T> x(1,degree,(int) 0);
+       chebyshev_polynomial<T> cheb_base1(1,degree,(int) 0);
+       chebyshev_polynomial<T> cheb_base2(1,degree, (T) 1.0);
+       chebyshev_polynomial<T> cheb_base(1,degree);
 
-//        monom_approx.to_monomial_basis();
-//        x.to_monomial_basis();
-//        cheb_base1.to_monomial_basis();
-//        cheb_base2.to_monomial_basis();
-//        cheb_base.to_monomial_basis();
+       monom_approx.to_monomial_basis();
+       x.to_monomial_basis();
+       cheb_base1.to_monomial_basis();
+       cheb_base2.to_monomial_basis();
+       cheb_base.to_monomial_basis();
 
-//        monom_approx+= cheb_approx[1]*x;
-//        for (int i=2;i<=deg;i++){
-//            cheb_base=2.0*x*cheb_base1-cheb_base2;
-//            cheb_base2=cheb_base1;
-//            cheb_base1=cheb_base;
-//            monom_approx+=cheb_approx[i]*cheb_base;
-//        }
+       monom_approx+= cheb_approx[1]*x;
+       for (int i=2;i<=deg;i++){
+           cheb_base=2.0*x*cheb_base1-cheb_base2;
+           cheb_base2=cheb_base1;
+           cheb_base1=cheb_base;
+           monom_approx+=cheb_approx[i]*cheb_base;
+       }
 
-//        approx = monom_approx.get_coeffs();
-//    }
-//    else{
-//        //approximate sin in [a,b]
-//        approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1],degree);
-//    }
+       approx = monom_approx.get_coeffs();
+   }
+   else{
+       //approximate sin in [a,b]
+       approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1],degree);
+   }
 
     //univariate composition
     std::vector<chebyshev_polynomial<T> > base = evaluate_base1D(other,range[0],range[1]);
