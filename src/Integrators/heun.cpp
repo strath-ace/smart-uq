@@ -15,7 +15,7 @@ heun<T>::~heun(){
 }
 
 template < class T >
-int heun<T>::integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const{
+int heun<T>::integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const{
 
         // sanity checks
         if(ti<0 || tend<0)
@@ -31,7 +31,7 @@ int heun<T>::integrate(const double &ti, const double &tend, const int &nsteps, 
 
 	double h = (tend-ti)/nsteps;
 
-	for(int i=0; i<nsteps+1; i++){
+    for(int i=0; i<nsteps; i++){
 		m_dyn->evaluate(ti+i*h, x, dx);
 
 		for(size_t j=0; j<size; j++){

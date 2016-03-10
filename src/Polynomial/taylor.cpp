@@ -368,7 +368,7 @@ bool taylor_polynomial<T>::operator!=(const taylor_polynomial<T> &other) const{
 
 //evaluate chebyshev base t0(x), t1(x), t2(x) in a polynomial. It first map x from [a,b] to [-1,1]
 template <class T>
-std::vector<taylor_polynomial<T> > taylor_polynomial<T>::evaluate_base1D(const taylor_polynomial<T> &other){
+std::vector<taylor_polynomial<T> > taylor_polynomial<T>::evaluate_base1D(const taylor_polynomial<T> &other, const T &a, const T &b){
     int nvar = other.get_nvar();
     int degree = other.get_degree();
 
@@ -378,10 +378,20 @@ std::vector<taylor_polynomial<T> > taylor_polynomial<T>::evaluate_base1D(const t
         v.push_back(taylor_polynomial<T>(nvar,degree));
     }
 
-    for(int i=0;i<=degree;i++)
-        base_polynomial<T>::evaluate_base1D_monomial(i,other,v[i]);
+    //mapping the argument from the domain of composition to [-1,1]
+    taylor_polynomial<T> mapped(m_nvar,m_degree);
+    if(b==a)
+        mapped.set_coeffs(0,a);
+    else
+        mapped = (2.0*(*this)-(a+b))/(b-a);
 
+    v[0] = 1.0;
+
+    for (int i=1; i<=m_degree; i++){
+        v[i] = mapped * v[i-1];
+    }
     return v;
+
 }
 
 template <class T>
@@ -415,7 +425,7 @@ void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > 
     //evaluate all basis
     for(int j=0; j<m_nvar; j++){
         //T range = other[j].get_range();
-        std::vector<taylor_polynomial<T> > v = evaluate_base1D(other[j]);
+        std::vector<taylor_polynomial<T> > v = evaluate_base1D(other[j], -1.0, 1.0);
         for(int i=0; i<=m_degree; i++){
             base[j][i] = v[i];
         }

@@ -15,7 +15,7 @@ rk4<T>::~rk4(){
 }
 
 template < class T >
-int rk4<T>::integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const{
+int rk4<T>::integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const{
 
         // sanity checks
         if(ti<0 || tend<0)
@@ -30,7 +30,7 @@ int rk4<T>::integrate(const double &ti, const double &tend, const int &nsteps, c
 
 	double h = (tend-ti)/nsteps;
 
-	for(int i=0; i<nsteps+1; i++){
+    for(int i=0; i<nsteps; i++){
 		double t1, t2, t3, t4;
 		t1 = ti + i*h;
 		t2 = t1 + h/2.0;

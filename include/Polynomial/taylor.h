@@ -228,7 +228,7 @@ namespace polynomial{
          * @param other
          * @return
          */
-        std::vector<taylor_polynomial<T> > evaluate_base1D(const taylor_polynomial<T> &other);
+        std::vector<taylor_polynomial<T> > evaluate_base1D(const taylor_polynomial<T> &other, const T &a, const T &b);
 
         /**
          * @brief composition

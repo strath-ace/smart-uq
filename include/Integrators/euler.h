@@ -40,7 +40,7 @@ namespace smart
              * @param xfinal
              * @return
              */
-            int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const;
+            int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const;
 	
         };
 

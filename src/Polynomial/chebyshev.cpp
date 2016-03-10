@@ -516,20 +516,23 @@ std::vector<chebyshev_polynomial<T> > chebyshev_polynomial<T>::evaluate_base1D(c
     for(int i=0; i<=degree; i++){
         v.push_back(chebyshev_polynomial<T>(nvar,degree,other.is_monomial_base()));
     }
+    
+    chebyshev_polynomial<T> mapped(nvar,degree,other.is_monomial_base());
+    if(b==a)
+        mapped.set_coeffs(0,a);
+    else
+        mapped = (2.0*(other)-(a+b))/(b-a);
+
+    v[0] = 1.0;
 
     if(other.is_monomial_base()){
-        for(int i=0;i<=degree;i++)
-            base_polynomial<T>::evaluate_base1D_monomial(i,other,v[i]);
+        for (int i=1; i<=degree; i++){
+            v[i] = mapped * v[i-1];
+        }
+        return v;
     }
-    else{
-        //mapping the argument from the domain of composition to [-1,1]
-        chebyshev_polynomial<T> mapped(nvar,degree);
-        if(b==a)
-            mapped.set_coeffs(0,a);
-        else
-            mapped = (2.0*other-(a+b))/(b-a);
 
-        v[0] = 1.0;
+    else{
         v[1] = mapped;
 
         for (int i=2; i<=degree; i++){
