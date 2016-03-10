@@ -362,12 +362,14 @@ namespace polynomial{
 
 	template < class T>
 	static chebyshev_polynomial<T> operator/(const T left, const chebyshev_polynomial<T> right){
-		return chebyshev_polynomial<T>(right.get_nvar(), right.get_degree(), left, right.is_monomial_base())/right;
+//        return chebyshev_polynomial<T>(right.get_nvar(), right.get_degree(), left, right.is_monomial_base())/right;
+        return left*right.inv(right);
 	}
 
 	template < class T>
 	static chebyshev_polynomial<T> operator/(const int left, const chebyshev_polynomial<T> right){
-		return chebyshev_polynomial<T>(right.get_nvar(), right.get_degree(), (T) left, right.is_monomial_base())/right;
+//		return chebyshev_polynomial<T>(right.get_nvar(), right.get_degree(), (T) left, right.is_monomial_base())/right;
+        return left*right.inv(right);
 	}
 }}
 
