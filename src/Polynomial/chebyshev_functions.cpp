@@ -178,7 +178,7 @@ chebyshev_polynomial<T> pow(const chebyshev_polynomial<T> &other, const int &exp
     }
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
-    chebyshev_polynomial<T> res(nvar,degree);
+    chebyshev_polynomial<T> res(nvar,degree,other.is_monomial_base());
 
     res = other;
     for(int i=1; i<exponent; i++)

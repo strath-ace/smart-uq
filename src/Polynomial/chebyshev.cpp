@@ -317,6 +317,7 @@ chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator=(const chebyshev_poly
     }
 
     m_coeffs = other.get_coeffs();
+    m_monomial_base=other.is_monomial_base();
     return *this;
 }
 
