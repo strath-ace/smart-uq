@@ -19,16 +19,16 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("
     m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
-        smart_exception(m_name+"Polynomials need to have a positive number of variables");
+        smart_throw(m_name+": Polynomials need to have a positive number of variables");
     }
     if(order<0){
-        smart_exception(m_name+"Polynomials need to have a positive order");
+        smart_throw(m_name+": Polynomials need to have a positive order");
     }
 
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
+        smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -54,13 +54,13 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
     m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
-        smart_exception(m_name+"Polynomials need to have a positive number of variables");
+        smart_throw(m_name+": Polynomials need to have a positive number of variables");
     }
     if(order<=0){
-        smart_exception(m_name+"Polynomials need to have a positive order");
+        smart_throw(m_name+": Polynomials need to have a positive order");
     }
     if(i<0 || i>=vars){
-        smart_exception(m_name+"First order Polynomial constructor need a variable index between [0,nvars-1]");
+        smart_throw(m_name+": First order Polynomial constructor need a variable index between [0,nvars-1]");
     }
 
     //allocate memory for coefficients vector
@@ -68,7 +68,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
+        smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -96,10 +96,10 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
     m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
-        smart_exception(m_name+"Polynomials need to have a positive number of variables");
+        smart_throw(m_name+": Polynomials need to have a positive number of variables");
     }
     if(order<=0){
-        smart_exception(m_name+"Polynomials need to have a positive order");
+        smart_throw(m_name+": Polynomials need to have a positive order");
     }
 
     //allocate memory for coefficients vector
@@ -107,7 +107,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
+        smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -135,13 +135,13 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
     m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
-        smart_exception(m_name+"Polynomials need to have a positive number of variables");
+        smart_throw(m_name+": Polynomials need to have a positive number of variables");
     }
     if(order<=0){
-        smart_exception(m_name+"Polynomials need to have a positive order");
+        smart_throw(m_name+": Polynomials need to have a positive order");
     }
     if(i<0 || i>=vars){
-        smart_exception(m_name+"First order Polynomial constructor need a variable index between [0,nvars-1]");
+        smart_throw(m_name+": First order Polynomial constructor need a variable index between [0,nvars-1]");
     }
 
     //allocate memory for coefficients vector
@@ -149,7 +149,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
     int n = combination(vars,order);
 
     if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_exception(m_name+"The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
+        smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
     m_coeffs.resize(n);
@@ -182,17 +182,17 @@ base_polynomial<T>::~base_polynomial(){
 template <class T>
 void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<T> &y){
     if(x.size()==0)
-        smart_exception(m_name+"for polynomial interpolation non empty nodal values need to be provided");
+        smart_throw(m_name+": for polynomial interpolation non empty nodal values need to be provided");
     if(x.size()!=y.size())
-        smart_exception(m_name+"for polynomial interpolation, the number of nodes and nodal values need to be the same");
+        smart_throw(m_name+": for polynomial interpolation, the number of nodes and nodal values need to be the same");
     if(x[0].size()!=m_nvar)
-        smart_exception(m_name+"the number of variables is not the same as in the algebra");
+        smart_throw(m_name+": the number of variables is not the same as in the algebra");
 
     int npoints = x.size();
     int ncoeffs = m_coeffs.size();
 
     if(npoints<ncoeffs)
-        smart_exception(m_name+"the number of interpolation point need to be equal or greater than the size of the algebra");
+        smart_throw(m_name+": the number of interpolation point need to be equal or greater than the size of the algebra");
 
     Eigen::VectorXd Y(npoints);
     Eigen::MatrixXd base_matrix (npoints,ncoeffs);
@@ -240,13 +240,13 @@ template <class T>
 void base_polynomial<T>::monomial_multiplication(const base_polynomial<T> &x1, const base_polynomial<T> &x2, base_polynomial<T> &res_poly){
 
     if(!x1.m_monomial_base || !x2.m_monomial_base){
-        smart_exception("One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw("One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(x1.get_nvar()!=x2.get_nvar() || x1.get_nvar()!=res_poly.get_nvar()){
-        smart_exception("Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw("Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(x1.get_degree()!=x2.get_degree() || x1.get_degree()!=res_poly.get_degree()){
-        smart_exception("Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw("Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int degree = x1.get_degree();
@@ -451,7 +451,7 @@ template <class T>
 std::vector<T> base_polynomial<T>::evaluate_basis_monomial(const std::vector<T> &x) const{
 
     if(m_nvar!=x.size()){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
+        smart_throw(m_name+": (evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
 
     //evaluate the bases

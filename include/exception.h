@@ -10,6 +10,13 @@
 #include <iostream>
 #include <string>
 
+#define _EXCEPTION_QUOTEME(x) #x
+#define EXCEPTION_QUOTEME(x) _EXCEPTION_QUOTEME(x)
+#define EXCEPTION_EXCTOR(s) ((std::string(__FILE__ "," EXCEPTION_QUOTEME(__LINE__) ": ") + s) + ".")
+#define EX_THROW(s) (throw smart_exception(EXCEPTION_EXCTOR(s)))
+
+#define smart_throw(s) EX_THROW(s)
+
 #ifdef NDEBUG
         #define smart_assert(condition){ \
             if(!(condition)) { \

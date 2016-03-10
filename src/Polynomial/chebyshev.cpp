@@ -49,13 +49,13 @@ template < class T >
 chebyshev_polynomial<T> chebyshev_polynomial<T>::operator+(const chebyshev_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int n = this->get_coeffs().size();
@@ -77,13 +77,13 @@ template < class T >
 chebyshev_polynomial<T> chebyshev_polynomial<T>::operator-(const chebyshev_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int n = this->get_coeffs().size();
@@ -107,13 +107,13 @@ template <class T>
 chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const chebyshev_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     //perform multiplication in monomial base
@@ -208,13 +208,13 @@ template <class T>
 chebyshev_polynomial<T> chebyshev_polynomial<T>::operator/(const chebyshev_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     chebyshev_polynomial<T> res(m_nvar,m_degree,other.is_monomial_base());
@@ -307,13 +307,13 @@ template <class T>
 chebyshev_polynomial<T>& chebyshev_polynomial<T>::operator=(const chebyshev_polynomial<T> &other){
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     m_coeffs = other.get_coeffs();
@@ -405,10 +405,10 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::inv(const chebyshev_polynomial<
 template <class T>
 chebyshev_polynomial<T> chebyshev_polynomial<T> :: direct_multiplication(const chebyshev_polynomial<T> &x0, const chebyshev_polynomial<T> &x1) const{
     if(x0.get_nvar()!=x1.get_nvar()){
-        smart_exception("Direct multiplication: Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw("Direct multiplication: Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(x0.get_degree()!=x1.get_degree()){
-        smart_exception("Direct multiplication: Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw("Direct multiplication: Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     chebyshev_polynomial<T> res(x0.get_nvar(),x0.get_degree());
@@ -465,13 +465,13 @@ template <class T>
 bool chebyshev_polynomial<T>::operator==(const chebyshev_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     if(m_coeffs==other.get_coeffs() && m_monomial_base==other.is_monomial_base())
@@ -483,13 +483,13 @@ template <class T>
 bool chebyshev_polynomial<T>::operator!=(const chebyshev_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     if(chebyshev_polynomial<T>::operator==(other)) return false;
@@ -506,7 +506,7 @@ bool chebyshev_polynomial<T>::operator!=(const chebyshev_polynomial<T> &other) c
 template <class T>
 std::vector<chebyshev_polynomial<T> > chebyshev_polynomial<T>::evaluate_base1D(const chebyshev_polynomial<T> &other, const T &a, const T &b) {
     if(b<a)
-        smart_exception("Base evaluation is in range [a,b] where b<a");
+        smart_throw("Base evaluation is in range [a,b] where b<a");
 
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
@@ -543,18 +543,18 @@ std::vector<chebyshev_polynomial<T> > chebyshev_polynomial<T>::evaluate_base1D(c
 template <class T>
 void chebyshev_polynomial<T>::composition(const std::vector<chebyshev_polynomial<T> > &other){
     if(m_nvar!=other.size()){
-        smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
+        smart_throw(m_name+": Composition is with a vector of polynomial of the same size of nvar");
     }
 
     for(int i=0; i<m_nvar; i++){
         if(m_monomial_base != other[i].is_monomial_base()){
-            smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+            smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
         }
         if(m_nvar!=other[i].get_nvar()){
-            smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+            smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
         }
         if(m_degree!=other[i].get_degree()){
-            smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+            smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
         }
     }
 
@@ -598,11 +598,11 @@ void chebyshev_polynomial<T>::composition(const std::vector<chebyshev_polynomial
 template <class T>
 std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) const{
     if(m_nvar!=x.size()){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
+        smart_throw(m_name+": (evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
     for (int i=0;i<m_nvar;i++){
         if (fabs(x[i])>1){
-            smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
+            smart_throw(m_name+": (evaluate) All components of point must belong to [-1,1].");
         }
     }
 
@@ -664,10 +664,10 @@ T chebyshev_polynomial<T>::evaluate(const std::vector<T> &x) const { //most dire
 template <class T>
 T chebyshev_polynomial<T>::evaluate(const T &x) const {
     if(m_nvar>1){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
+        smart_throw(m_name+": (evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
     if (fabs(x)>1){
-        smart_exception(m_name+"(evaluate) All components of point must belong to [-1,1].");
+        smart_throw(m_name+": (evaluate) All components of point must belong to [-1,1].");
     }
 
     if(m_monomial_base){
@@ -685,7 +685,7 @@ template < class T >
 void chebyshev_polynomial<T>::to_monomial_basis(){
 
     if(m_monomial_base)
-        smart_exception(m_name+"The transformation to monomial bases has been called when the base is already monomial.");
+        smart_throw(m_name+": The transformation to monomial bases has been called when the base is already monomial.");
 
     m_monomial_base=true;
 
@@ -744,7 +744,7 @@ void chebyshev_polynomial<T>::to_monomial_basis(){
 template < class T >
 void chebyshev_polynomial<T>::from_monomial_basis(){
     if(!m_monomial_base)
-        smart_exception(m_name+"The transformation from monomial bases has been called when the base is not in monomial.");
+        smart_throw(m_name+": The transformation from monomial bases has been called when the base is not in monomial.");
 
     m_monomial_base=false;
 
@@ -793,14 +793,14 @@ template < class T >
 void chebyshev_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
 
     if(b.size() != a.size())
-        smart_exception(m_name+"mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
+        smart_throw(m_name+": mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
 
     std::vector<chebyshev_polynomial<T> > mapped_vars;
 
     // construct polynomial, x1, x2, x3,...
     for(int i=0; i<m_nvar; i++){
         if(b[i]<=a[i])
-            smart_exception(m_name+"mapping of polynomial variable from [-1,1] to [a,b] with b>=a");
+            smart_throw(m_name+": mapping of polynomial variable from [-1,1] to [a,b] with b>=a");
         mapped_vars.push_back(chebyshev_polynomial<T>(m_nvar, m_degree,i, m_monomial_base));
         mapped_vars[i] = (b[i]-a[i])/2.0 * mapped_vars[i] + (b[i]+a[i])/2.0;
     }
