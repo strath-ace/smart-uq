@@ -56,11 +56,11 @@ int twobody<T>::evaluate(const double &t, const std::vector<T> &state, std::vect
     T tmp_3D =  mu/pow(r, 3);
 
     // atmospheric model
-    T rho = m_param[4]*exp(-(r-radius_earth-900000)/m_param[5]);
+    T rho = m_param[4]*exp(-(r-radius_earth-900000/m_r_scale)/m_param[5]);
 
     //relative velocity
-    T rel_v_x = sstate[3]-7.2921150*pow(10,-5)*sstate[1];
-    T rel_v_y = sstate[4]+7.2921150*pow(10,-5)*sstate[0];
+    T rel_v_x = sstate[3]-7.2921150*m_t_scale*pow(10,-5)*sstate[1];
+    T rel_v_y = sstate[4]+7.2921150*m_t_scale*pow(10,-5)*sstate[0];
     T mod_rel_v = sqrt(rel_v_x*rel_v_x+rel_v_y*rel_v_y+sstate[5]*sstate[5]);
 
     //drag computation

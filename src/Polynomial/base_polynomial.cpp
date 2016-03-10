@@ -425,27 +425,27 @@ void base_polynomial<T>::delete_M(){
     m_Mdegree=0;
 }
 
-template <class T>
-void base_polynomial<T>::evaluate_base1D_monomial(const int &index, const base_polynomial<T> &other, base_polynomial<T>  &out){
+// template <class T>
+// void base_polynomial<T>::evaluate_base1D_monomial(const int &index, const base_polynomial<T> &other, base_polynomial<T>  &out){
 
-    if(index==0){
-        std::vector<T> out_coeffs = out.get_coeffs();
-        out_coeffs[0] = 1.0;
-        for(int i=1; i<out_coeffs.size(); i++)
-            out_coeffs[i] = 0.0;
-    }
-    else if(index==1){
-        std::vector<T> other_coeffs = other.get_coeffs();
-        out.set_coeffs(other_coeffs);
-    }
-    else{
-        for(int i=2; i<index; i++){
-            std::vector<T> other_coeffs = other.get_coeffs();
-            out.set_coeffs(other_coeffs);
-            monomial_multiplication(out,other,out);
-        }
-    }
-}
+//     if(index==0){
+//         std::vector<T> out_coeffs = out.get_coeffs();
+//         out_coeffs[0] = 1.0;
+//         for(int i=1; i<out_coeffs.size(); i++)
+//             out_coeffs[i] = 0.0;
+//     }
+//     else if(index==1){
+//         std::vector<T> other_coeffs = other.get_coeffs();
+//         out.set_coeffs(other_coeffs);
+//     }
+//     else{
+//         for(int i=2; i<index; i++){
+//             std::vector<T> other_coeffs = other.get_coeffs();
+//             out.set_coeffs(other_coeffs);
+//             monomial_multiplication(out,other,out);
+//         }
+//     }
+// }
 
 template <class T>
 std::vector<T> base_polynomial<T>::evaluate_basis_monomial(const std::vector<T> &x) const{

@@ -244,7 +244,7 @@ namespace polynomial{
         /******************************/
         /* EVALUATION IN MONOMIAL     */
         /******************************/
-        static void evaluate_base1D_monomial(const int &index, const base_polynomial<T> &other, base_polynomial<T>  &out);
+        // static void evaluate_base1D_monomial(const int &index, const base_polynomial<T> &other, base_polynomial<T>  &out);
 
         //multivariate for reals
         std::vector<T> evaluate_basis_monomial(const std::vector<T> &x) const;

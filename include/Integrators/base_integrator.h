@@ -38,7 +38,7 @@ namespace smart
              * @param xfinal
              * @return
              */
-            virtual int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> x0, std::vector<T> xfinal) const = 0;
+            virtual int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const = 0;
 
             /**
              * @brief get_name

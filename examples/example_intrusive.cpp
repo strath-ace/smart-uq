@@ -1,4 +1,5 @@
 #include "../include/smartuq.h"
+#include <fstream>
 
 using namespace smart;
 
@@ -72,16 +73,6 @@ int main(){
     unc_p[8] = 0.0001;
     unc_p[9] = 0.0001;
 
-    // LARGE UNCERTAINTY REGION
-    unc_x[0] = 10000;
-    unc_x[1] = 10000;
-    unc_x[2] = 10000;
-    unc_x[3] = 50;
-    unc_x[4] = 50;
-    unc_x[5] = 50;
-    unc_x[6] = 10;
-
-
     for(int i=0; i<nvar; i++){
         ranges_x.push_back(std::vector<double>(2));
         ranges_x[i][0] = x[i]-unc_x[i];
@@ -102,18 +93,38 @@ int main(){
         param.push_back(chebyshev_polynomial<double>(nvar+nparam,poly_degree,i+7,ranges_p[i][0], ranges_p[i][1], true));
     }
 
+    clock_t begin, end;
+    begin=clock();
     x0[0].initialize_M(17,4);
+    std::vector<std::vector<double> > coeffs_all;
 
     dynamics::twobody<chebyshev_polynomial<double> > dyn(param);
     integrator::rk4<chebyshev_polynomial<double> > integrator(&dyn);
 
     deltat = 1000;
-    for(int i=0; i<tend/deltat; i++){
+    for(int i=0; i+1<tend/deltat; i++){
         tf += deltat;
         integrator.integrate(tstart,tf,100,x0,xf);
         x0 = xf;
         tstart=tf;
+        for(int j=0; j<nvar; j++){
+            std::vector<double> coeffs = xf[j].get_coeffs();
+            coeffs_all.push_back(coeffs);
+        }
     }
 
+    end=clock();
+    double time_akp = (double (end-begin))/CLOCKS_PER_SEC;
+    cout << "time elapsed : " << time_akp << endl << endl;
     x0[0].delete_M();
+
+    std::ofstream file;
+    file.open ("twobodyproblem.txt");
+    for(unsigned int k=0; k<coeffs_all.size(); k++){
+        for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
+            file << setprecision(16) << coeffs_all[k][kk] << " ";
+        file << "\n";
+    }
+    file << "\n\n\n\n";
+    file.close();
 }
