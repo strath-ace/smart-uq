@@ -22,7 +22,7 @@ namespace smart
             /**
              * @brief twobody
              */
-            twobody(const std::vector<T> &param = std::vector<T>(10), const double &t_scale=1, const double &r_scale=1, const double &m_scale=1);
+            twobody(const std::vector<T> &param = std::vector<T>(10), const double &t_scale=1, const double &r_scale=1);
 
             /**
               * @brief ~twobody
