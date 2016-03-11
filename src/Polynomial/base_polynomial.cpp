@@ -1,8 +1,13 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /*
----------------- Copyright (C) 2015 University of Strathclyde-----------------
------------------- e-mail: carlos.ortega@strath.ac.uk ------------------------
---------------------------- Author: Carlos Ortega ----------------------------
+------------Copyright (C) 2016 University of Strathclyde--------------
+------------ e-mail: annalisa.riccardi@strath.ac.uk ------------------
+------------ e-mail: carlos.ortega@strath.ac.uk ----------------------
+--------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
+
 
 #include "Polynomial/base_polynomial.h"
 
@@ -226,7 +231,7 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
 
 
 template <class T>
-void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs){
+void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs) const{
     if(x.size()==0)
         smart_throw(m_name+": for polynomial interpolation non empty nodal values need to be provided");
     if(x.size()!=y.size())
