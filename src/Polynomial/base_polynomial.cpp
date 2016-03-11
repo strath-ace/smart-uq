@@ -185,13 +185,16 @@ base_polynomial<T>::~base_polynomial(){
 
 
 template <class T>
-void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<T> &y){
+void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<T> &y, std::vector<std::vector<T> > &H){
     if(x.size()==0)
         smart_throw(m_name+": for polynomial interpolation non empty nodal values need to be provided");
     if(x.size()!=y.size())
         smart_throw(m_name+": for polynomial interpolation, the number of nodes and nodal values need to be the same");
     if(x[0].size()!=m_nvar)
         smart_throw(m_name+": the number of variables is not the same as in the algebra");
+
+    for(unsigned int i=0;i<H.size();i++)
+        H[i].clear();
 
     int npoints = x.size();
     int ncoeffs = m_coeffs.size();
@@ -218,6 +221,13 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
         Eigen::MatrixXd base_inv (npoints,ncoeffs);
         base_inv=base_matrix.inverse();
         coe = base_inv*Y;
+
+        for(int i=0;i<npoints;i++){
+            std::vector<T> row(npoints);
+            for(int j=0;j<npoints;j++)
+                row[j]=base_inv(i,j);
+            H.push_back(row);
+        }
     }
     else //solve by Least Square
         coe = base_matrix.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Y);
@@ -227,11 +237,12 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
 
     set_coeffs(final_coeffs);
 
+
 }
 
 
 template <class T>
-void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs) const{
+void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &H, std::vector<std::vector<T> > &res_coeffs) const{
     if(x.size()==0)
         smart_throw(m_name+": for polynomial interpolation non empty nodal values need to be provided");
     if(x.size()!=y.size())
@@ -240,6 +251,9 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
         smart_throw(m_name+": the number of variables is not the same as in the algebra");
 
     res_coeffs.clear();
+
+    for(unsigned int i=0;i<H.size();i++)
+        H[i].clear();
 
     int npoints = x.size();
     int ncoeffs = m_coeffs.size();
@@ -273,6 +287,13 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
             for(int j=0;j<ncoeffs;j++)
                 coeffs[j] = coe[j];
             res_coeffs.push_back(coeffs);
+
+            for(int i=0;i<npoints;i++){
+                std::vector<T> row(npoints);
+                for(int j=0;j<npoints;j++)
+                    row[j]=base_inv(i,j);
+                H.push_back(row);
+            }
         }
     }
     else{ //solve by Least Square
@@ -290,6 +311,34 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
     return;
 
 }
+
+template <class T>
+void base_polynomial<T>::solve(const std::vector<std::vector<T> > &H, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs) const{
+
+
+    int nrows_H = H.size();
+    if(nrows_H==0)
+        smart_throw(m_name+": solving linear system, the number of rows of the matrix is zero");
+    int ncolumns_H = H[0].size();
+    if(ncolumns_H!=y.size())
+        smart_throw(m_name+": cannot solve linear system, matrix-vector dimensions mismatch");
+
+    int nvars = y[0].size();
+
+    res_coeffs.clear();
+    for(int i=0;i<nrows_H;i++)
+        res_coeffs.push_back(std::vector<T>(nvars,0.0));
+
+    for(int i=0;i<nvars;i++){
+        for(int j=0; j<nrows_H; j++){
+            for(int k=0;k<ncolumns_H; k++){
+                res_coeffs[j][i]+= H[j][k]*y[k][i];
+            }
+        }
+    }
+
+}
+
 
 /******************************/
 /*Monomial multiplication     */

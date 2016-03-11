@@ -107,7 +107,7 @@ int main(){
     begin=clock();
 
     // construct LHS sampling
-    std::vector<std::vector<double> > LHS;
+    std::vector<std::vector<double> > LHS, H;
     for(int i=0;i<nsamples;i++){
         std::vector<double> sample=lhs_gen();
         LHS.push_back(sample);
@@ -140,7 +140,11 @@ int main(){
 
         // perform interpolation. For efficiency reason the function that interpolate multiple outputs is used
         // poly will evaluate according to its base
-        poly.interpolation(LHS,y,res_coeffs);
+        if(H.size()==0)
+            poly.interpolation(LHS,y,H,res_coeffs);
+        else{
+            poly.solve(H,y,res_coeffs);
+        }
 
         for(int i=0;i<nvar;i++)
             coeffs_all.push_back(res_coeffs[i]);

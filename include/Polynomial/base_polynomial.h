@@ -149,14 +149,22 @@ namespace polynomial{
          * @param x
          * @param y
          */
-        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y);
+        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y, std::vector<std::vector<T> > &H);
 
         /**
          * @brief interpolation
          * @param x
          * @param y
          */
-        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs) const;
+        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &H, std::vector<std::vector<T> > &res_coeffs) const;
+
+        /**
+         * @brief solve
+         * @param H
+         * @param y
+         * @param res_coeffs
+         */
+        void solve(const std::vector<std::vector<T> > &H, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs) const;
 
         /******************************/
         /*MAPPING                     */
