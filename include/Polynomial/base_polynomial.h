@@ -24,7 +24,8 @@
 #include <Eigen/SVD>
 #include "exception.h"
 #include "constants.h"
-#include "utils.h"
+#include "wrapper.h"
+#include "../Math/smart_math.h"
 
 using namespace std;
 
