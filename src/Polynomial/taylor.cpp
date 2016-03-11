@@ -302,7 +302,7 @@ taylor_polynomial<T>& taylor_polynomial<T>::operator/=(const T& other){
 template < class T >
 taylor_polynomial<T> taylor_polynomial<T>::inv(const taylor_polynomial<T> &other) const{
 
-         std::vector <T> coeffs = this -> get_coeffs(); // p = c + n(x)
+         std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
          T c = coeffs[0];
 
          if (fabs(c)<ZERO){

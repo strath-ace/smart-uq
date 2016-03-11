@@ -59,8 +59,7 @@ int main(){
     x[1] = 0; //y
     x[2] = 0; //z
     x[3] = 0; //v_x
-    // x[4] = 2*M_PI*sma/period / (r_scale/t_scale); //v_y
-    x[4] = sqrt(1/x[0]);
+    x[4] = 2*M_PI*sma/period / (r_scale/t_scale); //v_y
     x[5] = 0; //v_z
     x[6] = 2000 / m_scale; //m
 

@@ -44,7 +44,7 @@ int twobody<T>::evaluate(const double &t, const std::vector<T> &state, std::vect
     //constant parameters
     double radius_earth = 6378*pow(10,3) / m_r_scale;
     double mu_earth = 398600.4415*pow(10,9) / (pow(m_r_scale,3)/pow(m_t_scale,2));
-    double omega_earth = 7.2921150*pow(10,-5) / (1.0/m_t_scale);
+    double omega_earth = 7.2921150*pow(10,-5) * m_t_scale;
     double H0_atmosphere = 900000 / m_r_scale;
 
     //precomputations
