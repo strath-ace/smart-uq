@@ -44,8 +44,8 @@ int main(){
     double t_scale = scale_problem ? 806.78 : 1.0; //TU_Earth
 
     //initialisation ranges and constants terms
-    double sma = 7378*pow(10,3) / r_scale;
-    double period = 2.0*M_PI/pow(sma * r_scale,-3.0/2.0)/sqrt(398600.4415*pow(10,9)) / t_scale;
+    double sma = 1.156764;//7378*pow(10,3) / r_scale;
+    double period = 2.0*M_PI/pow(sma,-3.0/2.0);//2.0*M_PI/pow(sma * r_scale,-3.0/2.0)/sqrt(398600.4415*pow(10,9)) / t_scale;
     double tstart = 0;
     double tf = 0;
     double deltat = 0;
@@ -55,11 +55,11 @@ int main(){
     std::vector<double> x(nvar), p(nparam), unc_x(nvar), unc_p(nparam);
 
     //initialisation: nominal initial states
-    x[0] = 7338*pow(10,3) / r_scale; //x
+    x[0] = 1.1505;//7338*pow(10,3) / r_scale; //x
     x[1] = 0; //y
     x[2] = 0; //z
     x[3] = 0; //v_x
-    x[4] = 2*M_PI*sma/period / (r_scale/t_scale); //v_y
+    x[4] = sqrt(1/x[0]);//2*M_PI*sma/period / (r_scale/t_scale); //v_y
     x[5] = 0; //v_z
     x[6] = 2000 / m_scale; //m
 
