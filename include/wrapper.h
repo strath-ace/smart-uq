@@ -1,67 +1,19 @@
-#ifndef UTILS_H
-#define UTILS_H
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/*
+------------Copyright (C) 2016 University of Strathclyde--------------
+------------ e-mail: annalisa.riccardi@strath.ac.uk ------------------
+------------ e-mail: carlos.ortega@strath.ac.uk ----------------------
+--------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
+*/
 
-#include <vector>
-#include <cmath>
-#include "config.h"
+#ifndef WRAPPER_H
+#define WRAPPER_H
 
 #ifdef CHEBYSHEV_DCT_MULTIPLICATION
 #include <fftw3.h>
 #endif
-
-const double ZERO = 1e-15;
-
-template <class T>
-T inverse(T x){
-    if(fabs(x)<=ZERO){
-        std::cout<<"ERROR: Division by zero."<<std::endl;
-        throw std::exception();
-        //exit(EXIT_FAILURE);
-    }
-    return 1.0/x;
-}
-
-//MATH STUFFS
-inline int factorial(int n)
-{
-    return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
-}
-
-inline int combination(int n, int k)
-{
-    int max = std::max(n,k);
-    int min = std::min(n,k);
-    int res = 1;
-    int j = 1;
-
-    while(j<=min){
-        res *= max+j;
-        j++;
-    }
-
-    return res/factorial(min);
-}
-
-
-inline void rep(std::vector<std::vector<int> > &res, const std::vector<int> &values, std::vector<int> &item, unsigned int count){
-    if (count < item.size()){
-        for (unsigned int i = 0; i < values.size(); i++) {
-            item[count] = values[i];
-            unsigned int tmp_count = count + 1;
-            rep(res, values, item, tmp_count);
-        }
-    }else{
-        res.push_back(item);
-    }
-}
-
-
-inline void variations(const std::vector<int> values, const int k, std::vector<std::vector<int> > &res){
-    res.clear();
-
-    std::vector<int> item(k);
-    rep(res, values, item, 0);
-}
 
 // RELATED TO THE DCT-BASED MULTIPLICATION
 #ifdef CHEBYSHEV_DCT_MULTIPLICATION
@@ -160,60 +112,6 @@ void dct_do(int nvar, int* dct_degree, T*& dct) {
     dct_do_impl<T,sizeof(T)>()(nvar,dct_degree,dct);
 }
 #endif //CHEBYSHEV_DCT_MULTIPLICATION
-//LAPACK METHOD
-//    std::vector<T> coeffs = other.get_coeffs();
-//    int n = coeffs.size();
-//    int nrhs = 1;
-//    double B[n][n];
-//    double b[1][n];
-//    int lda = n;
-//    int ldb = n;
-//    int ipiv[n];
-//    int info;
-
-//    for(int i=0; i<n; i++){
-//        b[0][i] = 0.0;
-//        for(int j=0; j<=i; j++){
-//            if(j==0){//first row and first diagonal
-//                B[i][0] = coeffs[i];
-//                B[j][i] =  B[i][j];
-//            }
-//            else if (i==j){//diagonal
-//                if(2*i < n)
-//                    B[i][i] = 2.0*coeffs[0]+coeffs[2*i];
-//                else
-//                    B[i][i] = 2.0*coeffs[0];
-//            }
-//            else{//lower diagonal
-//                if((i+j)<n)
-//                    B[i][j] = coeffs[fabs(i-j)]+coeffs[i+j];
-//                else
-//                    B[i][j] = coeffs[fabs(i-j)];
-//                B[j][i] =  B[i][j];
-//            }
-//        }
-//    }
-
-//    b[0][0] = 2.0;
-
-//    dgesv_(&n, &nrhs, &B[0][0], &lda, ipiv, &b[0][0], &ldb, &info);
-
-//    // Check for success
-//    if(info == 0)
-//    {
-//       std::vector<T> res_coeffs(n);
-//       for(int i=0; i<n; i++)
-//           res_coeffs[i] = b[0][i];
-//       res_coeffs[0] /= 2.0;
-//       res.set_coeffs(res_coeffs);
-//    }
-//    else
-//    {
-//       // Write an error message
-//       std::cout << "LAPACK dgesv returned error " << info << "\n";
-//       exit(EXIT_FAILURE);
-//    }
 
 
-
-#endif // UTILS_H
+#endif // WRAPPERS_H

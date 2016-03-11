@@ -1,3 +1,14 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/*
+------------Copyright (C) 2016 University of Strathclyde--------------
+------------ e-mail: annalisa.riccardi@strath.ac.uk ------------------
+------------ e-mail: carlos.ortega@strath.ac.uk ----------------------
+--------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
+*/
+
+
 #include "../include/smartuq.h"
 #include <fstream>
 
@@ -85,15 +96,11 @@ int main(){
         ranges_p[i][1] = p[i]+unc_p[i];
     }
 
-    std::vector<chebyshev_polynomial<double> > poly;
-    for(int j=0; j<nvar; j++){//allocate polynomials
-        poly.push_back(chebyshev_polynomial<double>(nvar+nparam,poly_degree));
-    }
+    chebyshev_polynomial<double> poly(nvar+nparam,poly_degree);
+
     sampling::lhs<double> lhs_gen(nvar+nparam,nsamples);
 
     //initialise dynamics and integrator
-    dynamics::twobody<double> dyn(param);
-    integrator::rk4<double> integrator(&dyn);
     std::vector<std::vector<double> > coeffs_all;
 
     clock_t begin,end;
@@ -102,29 +109,41 @@ int main(){
     // construct LHS sampling
     std::vector<std::vector<double> > LHS;
     for(int i=0;i<nsamples;i++){
-        std::vector<double> x0=lhs_gen();
-        LHS.push_back(x0);
+        std::vector<double> sample=lhs_gen();
+        LHS.push_back(sample);
     }
 
     deltat = 1000;
     for(int i=0; i<tend/deltat; i++){
         std::vector<std::vector<double> > y;
+        std::vector<std::vector<double> > res_coeffs;
         tf += deltat;
 
+        // perform nsamples forward integrations
         for(int i=0;i<nsamples;i++){
-            x0 = LHS[i];
-            std::vector<double> xf;
-            integrator.integrate(tstart,tf,100,x0,xf);
-            y.push_back(xf);
+            std::vector<double> LHS_p, LHS_x;
+            // separate states from parameters in the LHS sampling
+            for(int j=0;j<nvar+nparam; j++){
+                if(j<7)
+                    LHS_x.push_back(LHS[i][j]);
+                else
+                    LHS_p.push_back(LHS[i][j]);
+            }
+
+            dynamics::twobody<double> dyn(LHS_p);
+            integrator::rk4<double> integrator(&dyn);
+
+            std::vector<double> y_tmp;
+            integrator.integrate(tstart,tf,100,LHS_x,y_tmp);
+            y.push_back(y_tmp);
         }
 
-        for(int j=0; j<nvar; j++){
-            std::vector<double> res(nsamples);
-            for(int k=0; k<nsamples; k++)
-                res[k] = y[k][j];
-            poly[j].interpolation(LHS,res);
-            coeffs_all.push_back(poly[j].get_coeffs());
-        }
+        // perform interpolation. For efficiency reason the function that interpolate multiple outputs is used
+        // poly will evaluate according to its base
+        poly.interpolation(LHS,y,res_coeffs);
+
+        for(int i=0;i<nvar;i++)
+            coeffs_all.push_back(res_coeffs[i]);
 
         x0 = xf;
         tstart=tf;
