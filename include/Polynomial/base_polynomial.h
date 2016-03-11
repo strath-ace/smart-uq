@@ -144,11 +144,18 @@ namespace polynomial{
         /*INTERPOLATION               */
         /******************************/
         /**
-         * @brief interpolation
+         * @brief interpolation TODO: Least Square is solved for every Y vector. No efficient implementation of saving internal Eigne matrices has been implemented
          * @param x
          * @param y
          */
         void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y);
+
+        /**
+         * @brief interpolation
+         * @param x
+         * @param y
+         */
+        void interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &res_coeffs);
 
         /******************************/
         /*MAPPING                     */

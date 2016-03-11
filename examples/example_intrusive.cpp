@@ -95,7 +95,7 @@ int main(){
 
     clock_t begin, end;
     begin=clock();
-    x0[0].initialize_M(17,4);
+    x0[0].initialize_M(nvar+nparam,poly_degree);
     std::vector<std::vector<double> > coeffs_all;
 
     dynamics::twobody<chebyshev_polynomial<double> > dyn(param);
