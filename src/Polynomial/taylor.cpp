@@ -50,13 +50,13 @@ template < class T >
 taylor_polynomial<T> taylor_polynomial<T>::operator+(const taylor_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int n = this->get_coeffs().size();
@@ -78,13 +78,13 @@ template < class T >
 taylor_polynomial<T> taylor_polynomial<T>::operator-(const taylor_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     int n = this->get_coeffs().size();
@@ -105,13 +105,13 @@ template <class T>
 taylor_polynomial<T> taylor_polynomial<T>::operator*(const taylor_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     taylor_polynomial<T> res(m_nvar,m_degree);
@@ -124,13 +124,13 @@ template <class T>
 taylor_polynomial<T> taylor_polynomial<T>::operator/(const taylor_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     taylor_polynomial<T> res(m_nvar,m_degree);
@@ -223,13 +223,13 @@ template <class T>
 taylor_polynomial<T>& taylor_polynomial<T>::operator=(const taylor_polynomial<T> &other){
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     m_coeffs = other.get_coeffs();
@@ -302,7 +302,7 @@ taylor_polynomial<T> taylor_polynomial<T>::inv(const taylor_polynomial<T> &other
          T c = coeffs[0];
 
          if (fabs(c)<ZERO){
-             smart_exception(m_name+"Division by zero occurred");
+             smart_throw(m_name+": Division by zero occurred");
          }
 
          taylor_polynomial<T> times(m_nvar,m_degree); // times = -n/c
@@ -329,13 +329,13 @@ template <class T>
 bool taylor_polynomial<T>::operator==(const taylor_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     if(m_coeffs==other.get_coeffs())
@@ -347,13 +347,13 @@ template <class T>
 bool taylor_polynomial<T>::operator!=(const taylor_polynomial<T> &other) const{
 
     if(m_monomial_base != other.is_monomial_base()){
-        smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+        smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
     }
     if(m_nvar!=other.get_nvar()){
-        smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
     }
     if(m_degree!=other.get_degree()){
-        smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+        smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
     }
 
     if(taylor_polynomial<T>::operator==(other)) return false;
@@ -397,18 +397,18 @@ std::vector<taylor_polynomial<T> > taylor_polynomial<T>::evaluate_base1D(const t
 template <class T>
 void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > &other) {
     if(m_nvar!=other.size()){
-        smart_exception(m_name+"Composition is with a vector of polynomial of the same size of nvar");
+        smart_throw(m_name+": Composition is with a vector of polynomial of the same size of nvar");
     }
 
     for(int i=0; i<m_nvar; i++){
         if(m_monomial_base != other[i].is_monomial_base()){
-            smart_exception(m_name+"One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
+            smart_throw(m_name+": One of the two polynomials has not been transformed to monomial base. They do not belong to the same Algebra");
         }
         if(m_nvar!=other[i].get_nvar()){
-            smart_exception(m_name+"Polynomials don't have the same number of variables. They don't belong to the same Algebra");
+            smart_throw(m_name+": Polynomials don't have the same number of variables. They don't belong to the same Algebra");
         }
         if(m_degree!=other[i].get_degree()){
-            smart_exception(m_name+"Polynomials don't have the same order. They don't belong to the same Algebra");
+            smart_throw(m_name+": Polynomials don't have the same order. They don't belong to the same Algebra");
         }
     }
 
@@ -474,7 +474,7 @@ T taylor_polynomial<T>::evaluate(const std::vector<T> &x) const { //most direct 
 template <class T>
 T taylor_polynomial<T>::evaluate(const T &x) const {
     if(m_nvar>1){
-        smart_exception(m_name+"(evaluate) Dimension of point must correspond to number of variables of polynomial.");
+        smart_throw(m_name+": (evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
 
     return m_coeffs[0]+this->horner(x,1);
@@ -486,14 +486,14 @@ template < class T >
 void taylor_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
 
     if(b.size() != a.size())
-        smart_exception(m_name+"mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
+        smart_throw(m_name+": mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
 
     std::vector<taylor_polynomial<T> > mapped_vars;
 
     // construct polynomial, x1, x2, x3,...
     for(int i=0; i<m_nvar; i++){
         if(b[i]<=a[i])
-            smart_exception(m_name+"mapping of polynomial variable from [-1,1] to [a,b] with b<=a");
+            smart_throw(m_name+": mapping of polynomial variable from [-1,1] to [a,b] with b<=a");
         mapped_vars.push_back(taylor_polynomial<T>(m_nvar, m_degree,i));
         mapped_vars[i] = (b[i]-a[i])/2.0 * mapped_vars[i] + (b[i]+a[i])/2.0;
     }
@@ -510,14 +510,14 @@ void taylor_polynomial<T>::map(const int &idx, const std::vector<T> &a, const st
 template < class T >
 void taylor_polynomial<T>::to_monomial_basis(){
     if(m_monomial_base)
-        smart_exception(m_name+"The transformation to monomial bases has been called when the base is already monomial.");
+        smart_throw(m_name+": The transformation to monomial bases has been called when the base is already monomial.");
 }
 
 
 template < class T >
 void taylor_polynomial<T>::from_monomial_basis(){
     if(m_monomial_base)
-        smart_exception(m_name+"The transformation from monomial bases has been called when the base is not monomial.");
+        smart_throw(m_name+": The transformation from monomial bases has been called when the base is not monomial.");
 }
 
 template < class T >

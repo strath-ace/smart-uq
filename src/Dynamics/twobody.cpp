@@ -9,7 +9,7 @@ twobody<T>::twobody(const std::vector<T> &param, const double &t_scale, const do
     m_param(param), m_t_scale(t_scale), m_r_scale(r_scale), m_m_scale(m_scale)
 {
     if(m_param.size()!=10)
-        smart_exception(m_name+": the parameters list need to be of size 10");
+        smart_throw(m_name+": the parameters list need to be of size 10");
 
 }
 
@@ -24,9 +24,9 @@ int twobody<T>::evaluate(const double &t, const std::vector<T> &state, std::vect
 {
     //sanity checks
     if(t<0)
-        smart_exception(m_name+": negative time supplied in evaluation of the dynamical system");
+        smart_throw(m_name+": negative time supplied in evaluation of the dynamical system");
     if(state.size()!=7)
-        smart_exception(m_name+": the state dimension needs to be 7");
+        smart_throw(m_name+": the state dimension needs to be 7");
 
     std::vector<T> sstate(state);
     dstate.clear();

@@ -14,7 +14,7 @@ using namespace sampling;
 template <class T>
 sobol<T>::sobol(const unsigned int &dim, const unsigned int &count) : base_sampling<T>(dim,"Sobol sampling"), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
     if (dim >1111 || dim <1)
-        smart_exception(m_name+": Sobol sequence can have dimensions [1,1111]");
+        smart_throw(m_name+": Sobol sequence can have dimensions [1,1111]");
   }
 
 /// SOBOL Deconstructor
@@ -265,7 +265,7 @@ void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] )
       message << "  The spatial dimension DIM_NUM should satisfy:\n";
       message << "    1 <= DIM_NUM <= " << DIM_MAX2 << "\n";
       message << "  But this input value is DIM_NUM = " << dim_num << "\n";
-      smart_exception(m_name+message.str());
+      smart_throw(m_name+message.str());
     }
 
     m_dim_num_save = dim_num;
@@ -423,7 +423,7 @@ void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] )
     message << "  SEED =   " << *seed  << "\n";
     message << "  MAXCOL = " << m_maxcol << "\n";
     message << "  L =      " << l << "\n";
-    smart_exception(m_name+message.str());
+    smart_throw(m_name+message.str());
   }
 //
 //  Calculate the new components of QUASI.

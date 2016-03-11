@@ -21,9 +21,9 @@ int vanderpol<T>::evaluate(const double &t, const std::vector<T> &state, std::ve
 {
     //sanity checks
     if(t<0)
-        smart_exception(m_name+": negative time supplied in evaluation of the dynamical system");
+        smart_throw(m_name+": negative time supplied in evaluation of the dynamical system");
     if(state.size()!=2)
-        smart_exception(m_name+": the state dimension needs to be 2");
+        smart_throw(m_name+": the state dimension needs to be 2");
 
     dstate.clear();
 

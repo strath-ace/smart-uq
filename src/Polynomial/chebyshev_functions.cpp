@@ -174,7 +174,7 @@ log10(const chebyshev_polynomial<long double> &);
 template <class T>
 chebyshev_polynomial<T> pow(const chebyshev_polynomial<T> &other, const int &exponent){
     if(exponent<=1){
-        smart_exception("Pow function with integer exponent, integer must be > 1");
+        smart_throw("Pow function with integer exponent, integer must be > 1");
     }
     int nvar =  other.get_nvar();
     int degree = other.get_degree();

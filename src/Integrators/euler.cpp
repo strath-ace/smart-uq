@@ -19,9 +19,9 @@ int euler<T>::integrate(const double &ti, const double &tend, const int &nsteps,
 
 	// sanity checks
     	if(ti<0 || tend<0)
-        	smart_exception(m_name+": initial time and final time must be greater or equal to 0");
+                smart_throw(m_name+": initial time and final time must be greater or equal to 0");
     	if(tend<ti)
-        	smart_exception(m_name+": final time must be greater than initial time");   
+                smart_throw(m_name+": final time must be greater than initial time");
 
 	xfinal.clear();
 

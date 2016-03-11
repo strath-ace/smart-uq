@@ -11,8 +11,8 @@ int main(){
       **/
 
     int nvar = 7;
-    int nparam  =10;
-    int poly_degree=4;
+    int nparam  = 10;
+    int poly_degree = 4;
 
     //polynomial allocation
     std::vector<chebyshev_polynomial<double> > x0, param;
