@@ -73,15 +73,6 @@ int main(){
     unc_p[8] = 0.0001;
     unc_p[9] = 0.0001;
 
-    // LARGE UNCERTAINTY REGION
-    unc_x[0] = 10000;
-    unc_x[1] = 10000;
-    unc_x[2] = 10000;
-    unc_x[3] = 50;
-    unc_x[4] = 50;
-    unc_x[5] = 50;
-    unc_x[6] = 10;
-
 
     for(int i=0; i<nvar; i++){
         ranges_x.push_back(std::vector<double>(2));

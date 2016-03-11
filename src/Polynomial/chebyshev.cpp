@@ -386,18 +386,19 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::inv(const chebyshev_polynomial<
     int degree = other.get_degree();
     chebyshev_polynomial<T> res(nvar,degree,other.is_monomial_base());
 
-    std::vector<T> range = other.get_range();
-    T a, b;
+//    std::vector<T> range = other.get_range();
+//    T a, b;
 
-    a = range[0];
-    b = range[1];
-    std::vector<T> cheb_inv = approximation(inverse,a,b);
-    //univariate composition
-    std::vector<chebyshev_polynomial<T> > base = evaluate_base1D(other, a,b);
-    for (int i=0; i<=degree; i++){
-        res += base[i]*cheb_inv[i];
-    }
+//    a = range[0];
+//    b = range[1];
+//    std::vector<T> cheb_inv = approximation(inverse,a,b);
+//    //univariate composition
+//    std::vector<chebyshev_polynomial<T> > base = evaluate_base1D(other, a,b);
+//    for (int i=0; i<=degree; i++){
+//        res += base[i]*cheb_inv[i];
+//    }
 
+    res = approximation(inverse,other);
     return res;
 }
 
@@ -887,7 +888,7 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), cons
        approx = monom_approx.get_coeffs();
    }
    else{
-       //approximate sin in [a,b]
+       //approximate in [a,b]
        approx = chebyshev_polynomial<T>::approximation(f,range[0],range[1],degree);
    }
 
