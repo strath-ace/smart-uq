@@ -33,6 +33,8 @@ namespace sampling{
         private:
             using base_sampling<T>::m_dim;
             using base_sampling<T>::m_name;
+            using base_sampling<T>::m_a;
+            using base_sampling<T>::m_b;
 
         public:
 
@@ -41,7 +43,7 @@ namespace sampling{
              * @param dim
              * @param npoints
              */
-            lhs(const unsigned int &dim, const unsigned int &npoints);
+            lhs(const unsigned int &dim, const unsigned int &npoints, const std::vector<T>& a, const std::vector<T>& b);
 
             /**
               * @brief ~lhs

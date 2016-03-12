@@ -33,6 +33,8 @@ namespace polynomial{
 	using base_polynomial<T>::m_nvar;
 	using base_polynomial<T>::m_J;
 	using base_polynomial<T>::m_N;
+    using base_polynomial<T>::m_a;
+    using base_polynomial<T>::m_b;
     using base_polynomial<T>::m_monomial_base;
 
     public:
@@ -42,7 +44,7 @@ namespace polynomial{
          * @param vars
          * @param order
          */
-        chebyshev_polynomial(const int &vars, const int &order, const bool &monomial=false);
+        chebyshev_polynomial(const int &vars, const int &order, const std::vector<T> &a=std::vector<T>(), const std::vector<T> &b=std::vector<T>(), const bool &monomial=false);
         /**
          * @brief chebyshev_polynomial
          * @param vars

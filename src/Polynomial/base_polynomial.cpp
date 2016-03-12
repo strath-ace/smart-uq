@@ -20,14 +20,25 @@ using namespace polynomial;
 /*CONSTRUCTORS*/
 /**************/
 template < class T >
-base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_monomial_base(false), m_J(0), m_N(0){
+base_polynomial<T>::base_polynomial(const int &vars, const int &order, const std::vector<T> &a, const std::vector<T> &b): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
+    m_monomial_base(false), m_J(0), m_N(0), m_a(a), m_b(b){
 
     if(vars<0){
         smart_throw(m_name+": Polynomials need to have a positive number of variables");
     }
     if(order<0){
         smart_throw(m_name+": Polynomials need to have a positive order");
+    }
+
+    if(a.size()!=0 && a.size() != vars)
+        smart_throw("Base polynomial: variables lower bound need to have the same size of the number of variables");
+    if(a.size()!=0 && b.size() != vars)
+        smart_throw("Base polynomial: variables upper bound need to have the same size of the number of variables");
+    if(a.size()>0){
+        for(unsigned int i=0; i<vars; i++){
+            if(a[i]>b[i])
+                smart_throw("Base polynomial: variables bounds need to be a<b");
+        }
     }
 
     int n = combination(vars,order);
@@ -51,6 +62,11 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("
 
     initialize_J();
     initialize_N();
+
+    if(m_a.size()==0)
+        m_a = std::vector<T>(m_nvar,-1.0);
+    if(m_b.size()==0)
+        m_b = std::vector<T>(m_nvar,1.0);
 
 }
 

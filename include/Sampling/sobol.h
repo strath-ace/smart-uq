@@ -38,6 +38,8 @@ namespace sampling{
         private:
             using base_sampling<T>::m_dim;
             using base_sampling<T>::m_name;
+            using base_sampling<T>::m_a;
+            using base_sampling<T>::m_b;
 
         public:
 
@@ -47,7 +49,7 @@ namespace sampling{
             * @param[in] count starting point of the sequence. choosing 0 wil add the point x=0
             * @throws value_error if dim not in [1,1111]
             */
-            sobol(const unsigned int &dim, const unsigned int &count = 1);
+            sobol(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b, const unsigned int &count = 1);
 
             /**
               * @brief ~sobol

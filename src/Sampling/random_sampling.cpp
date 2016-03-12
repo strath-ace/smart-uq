@@ -16,7 +16,7 @@ using namespace sampling;
 
 /// random Constructor
 template <class T>
-random_sampling<T>::random_sampling(const unsigned int &dim) :  base_sampling<T>(dim,"Random Sampling"){
+random_sampling<T>::random_sampling(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b) :  base_sampling<T>(dim,a,b,"Random Sampling"){
   srand(time(NULL));
   }
 
@@ -32,7 +32,7 @@ std::vector<T> random_sampling<T>::operator()() const{
   for (int i=0;i<m_dim;i++){
     retval[i]=((T) rand()) / ((T) RAND_MAX + 1.0);
   }
-  return retval;
+  return this->map(retval);
 }
 
 /// Operator (unsigned int n)

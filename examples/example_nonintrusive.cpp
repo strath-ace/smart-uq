@@ -38,7 +38,7 @@ int main(){
     double tend = period;
 
     std::vector<double> x(nvar), p(nparam), unc_x(nvar), unc_p(nparam);
-    std::vector<std::vector<double> > ranges_x,ranges_p;
+    std::vector<double> ranges_lb(nvar+nparam), ranges_ub(nvar+nparam);
 
     x[0] = 7338*pow(10,3);
     x[1] = 0.0;
@@ -51,7 +51,7 @@ int main(){
     p[0] = 0;
     p[1] = 0.5;
     p[2] = 0;
-    p[3] = 1/30000;
+    p[3] = 1/30000.0;
 
     p[4] = 5.245*pow(10,-15);
     p[5] = 181050;
@@ -86,19 +86,17 @@ int main(){
 
 
     for(int i=0; i<nvar; i++){
-        ranges_x.push_back(std::vector<double>(2));
-        ranges_x[i][0] = x[i]-unc_x[i];
-        ranges_x[i][1] = x[i]+unc_x[i];
+        ranges_lb[i] = x[i]-unc_x[i];
+        ranges_ub[i] = x[i]+unc_x[i];
     }
     for(int i=0; i<nparam; i++){
-        ranges_p.push_back(std::vector<double>(2));
-        ranges_p[i][0] = p[i]-unc_p[i];
-        ranges_p[i][1] = p[i]+unc_p[i];
+        ranges_lb[nvar+i] = p[i]-unc_p[i];
+        ranges_ub[nvar+i] = p[i]+unc_p[i];
     }
 
-    chebyshev_polynomial<double> poly(nvar+nparam,poly_degree);
+    chebyshev_polynomial<double> poly(nvar+nparam,poly_degree, ranges_lb, ranges_ub);
 
-    sampling::lhs<double> lhs_gen(nvar+nparam,nsamples);
+    sampling::lhs<double> lhs_gen(nvar+nparam,nsamples,ranges_lb, ranges_ub);
 
     //initialise dynamics and integrator
     std::vector<std::vector<double> > coeffs_all;

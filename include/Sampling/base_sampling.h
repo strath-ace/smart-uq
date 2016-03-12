@@ -35,7 +35,7 @@ namespace sampling{
              * @param dim
              * @param name
              */
-            base_sampling(const unsigned int &dim, const string &name);
+            base_sampling(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b, const string &name);
 
             /**
              * @brief ~base_sampling
@@ -55,9 +55,12 @@ namespace sampling{
              */
             virtual std::vector<T> operator()(const unsigned int &n) const = 0;
 
+    protected:
+            std::vector<T> map(const std::vector<T> &point) const;
         protected:
             string m_name;
             unsigned int m_dim; 
+            std::vector<T> m_a,m_b;
 
     };
 

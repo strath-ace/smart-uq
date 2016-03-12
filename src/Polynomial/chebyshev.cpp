@@ -18,7 +18,7 @@ using namespace polynomial;
 /*CONSTRUCTORS                */
 /******************************/
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const bool& monomial) : base_polynomial<T>(vars,order){
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const std::vector<T> &a, const std::vector<T> &b, const bool& monomial) : base_polynomial<T>(vars,order,a,b){
     m_name="Chebyshev Polynomial";
     m_monomial_base=monomial;
 }
@@ -608,15 +608,22 @@ std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) 
     if(m_nvar!=x.size()){
         smart_throw(m_name+": (evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
+
+    std::vector<T> xx(x);
+    //map from [a,b] to [-1,1]
+    if(m_a.size()>0){
+        for(int i=0; i<m_nvar; i++)
+              xx[i] = (x[i] - m_a[i])*2.0/(m_b[i]-m_a[i]) - 1.0;
+    }
+
     for (int i=0;i<m_nvar;i++){
-        if (fabs(x[i])>1){
+        if (fabs(xx[i])>1){
             smart_throw(m_name+": (evaluate) All components of point must belong to [-1,1].");
         }
     }
 
-
     if(m_monomial_base){
-        return this->evaluate_basis_monomial(x);
+        return this->evaluate_basis_monomial(xx);
     }
 
     //evaluate the bases
@@ -625,9 +632,9 @@ std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) 
     for (int i=0; i<m_nvar;i++){
         base[i].resize(m_degree+1);
         base[i][0]=1.0;
-        if (m_degree>0) base[i][1]=x[i];
+        if (m_degree>0) base[i][1]=xx[i];
         for (int j=2; j<=m_degree; j++){
-            base[i][j]=2.0*x[i]*base[i][j-1]-base[i][j-2];
+            base[i][j]=2.0*xx[i]*base[i][j-1]-base[i][j-2];
         }
     }
 

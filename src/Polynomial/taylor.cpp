@@ -19,7 +19,7 @@ using namespace polynomial;
 /*CONSTRUCTORS                */
 /******************************/
 template < class T >
-taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order) : base_polynomial<T>(vars,order){
+taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order,const std::vector<T> &a, const std::vector<T> &b) : base_polynomial<T>(vars,order,a,b){
     m_name="Taylor Polynomial";
     m_monomial_base = true;
 }
@@ -456,7 +456,14 @@ void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > 
 
 template <class T>
 std::vector<T> taylor_polynomial<T>::evaluate_basis(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
-    return this->evaluate_basis_monomial(x);
+    std::vector<T> xx(x);
+    //map from [a,b] to [-1,1]
+    if(m_a.size()>0){
+        for(int i=0; i<m_nvar; i++)
+              xx[i] = (x[i] - m_a[i])*2.0/(m_b[i]-m_a[i]) - 1.0;1
+    }
+
+    return this->evaluate_basis_monomial(xx);
 }
 
 //Multivariate Evaluation method

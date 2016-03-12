@@ -43,7 +43,7 @@ namespace polynomial{
          * @param vars
          * @param order
          */
-        base_polynomial(const int &vars, const int &order);
+        base_polynomial(const int &vars, const int &order, const std::vector<T> &a=std::vector<T>(), const std::vector<T> &b=std::vector<T>());
         /**
          * @brief base_polynomial
          * @param vars
@@ -273,6 +273,7 @@ namespace polynomial{
         mutable bool m_monomial_base;
 
         std::vector<std::vector<int> > m_J, m_N;
+        std::vector<T> m_a, m_b;
 
         static std::vector<int> m_M;
         static int m_Mnvar, m_Mdegree;

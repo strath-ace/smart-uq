@@ -32,6 +32,8 @@ namespace sampling{
         private:
             using base_sampling<T>::m_dim;
             using base_sampling<T>::m_name;
+            using base_sampling<T>::m_a;
+            using base_sampling<T>::m_b;
 
         public:
 
@@ -40,7 +42,7 @@ namespace sampling{
              * @param dim
              * @param npoints
              */
-            random_sampling(const unsigned int &dim);
+            random_sampling(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b);
 
             /**
               * @brief ~random
