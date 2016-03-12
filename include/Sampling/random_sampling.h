@@ -22,8 +22,9 @@ namespace smart{
 namespace sampling{
 
     /**
-     * @brief
-     * @author annalisa.riccardi@strath.ac.uk
+     * @brief Random sampling technique
+     *
+     * The class implements the random sampling technique
     */
 
     template <class T>
@@ -37,26 +38,39 @@ namespace sampling{
 
         public:
 
-            /**
-             * @brief random
-             * @param dim
-             * @param npoints
-             */
-            random_sampling(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b);
+        /**
+         * @brief random_sampling constructor
+         *
+         * The constructor initialize the dimension of the hypercube and its ranges
+         * @param dim hypercube dimension
+         * @param a vector containing the lower bound value of each variable
+         * @param b vector containing the upper bound value of each variable
+         */
+         random_sampling(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b);
 
-            /**
-              * @brief ~random
-              */
-            ~random_sampling();
+         /**
+           * @brief ~random deconstructor
+           */
+         ~random_sampling();
 
-            /**
-             * @brief
-             *
-             * Both return the next point in the sequence (random)
-             * @return an std::vector<T> containing the next point
-             */
-            std::vector<T> operator()() const;
-            std::vector<T> operator()(const unsigned int &n) const;
+         /**
+          * @brief operator () next sample points
+          *
+          * The method implements the subsequential generation of sample points within the user defined hypercube.
+          * Being a random sampling a new random point is generated within the hypercube at each call of the method
+          * @return the new sample point
+          */
+         std::vector<T> operator()() const;
+
+         /**
+          * @brief operator () n-th sample point in the sequence
+          *
+          * Returns the n-th point in the sequence. Being a random sampling
+          * a new random point is generated within the hypercube at each call of the method
+          * @param[in] n the point along the sequence to be returned
+          * @return a vector containing the n-th sample point
+          */
+         std::vector<T> operator()(const unsigned int &n) const;
     };
 
 }}

@@ -20,7 +20,9 @@ namespace smart
     namespace integrator {
 
         /**
-         * @brief The euler class
+         * @brief The Euler integration scheme
+         *
+         * The class model the Euler forward integration scheme
          */
         template < class T >
         class euler: public base_integrator<T>
@@ -32,23 +34,28 @@ namespace smart
 
         public:
             /**
-             * @brief euler
+             * @brief euler constructor
+             *
+             * The integrator is initialized with the super class constructor. No additional parameters are set.
              * @param dyn
              */
             euler(const dynamics::base_dynamics<T> *dyn);
 
             /**
-              * @brief ~euler
+              * @brief ~euler deconstructor
               */
             ~euler();
 
             /**
-             * @brief integrate
-             * @param ti
-             * @param tend
-             * @param nsteps
-             * @param x0
-             * @param xfinal
+             * @brief integrate method to integrate bewteen two given time steps, initial condition and step lenght
+             *
+             * The method implements the forward Euler scheme to integrate with given initial time,
+             * final time, initial state condition and number of steps (constant stepsize)
+             * @param[in] ti initial time instant
+             * @param[in] tend final time instant
+             * @param[in] nsteps number of integration steps
+             * @param[in] x0 vector of initial states
+             * @param[out] xfinal vector of final states
              * @return
              */
             int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const;

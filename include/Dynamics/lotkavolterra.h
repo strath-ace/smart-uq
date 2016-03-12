@@ -20,7 +20,15 @@ namespace smart
     namespace dynamics {
 
         /**
-         * @brief The lotka volterra problem class
+         * @brief The Lotka Volterra problem
+         *
+         * The class implements the 2D differential equation system of the Lotka Volterra problem.
+         * Namely
+         * \f{eqnarray*}{
+            \dot{x} &=& a x - b xy\\
+            \dot{y} &=& c y + d xy
+          \f}
+         * parameters can be set in the constructors.
          */
         template < class T >
         class lotkavolterra: public base_dynamics<T>
@@ -31,18 +39,22 @@ namespace smart
 
         public:
             /**
-             * @brief lotkavolterra
-             * @param param
+             * @brief lotkavolterra constructor
+             *
+             * The constructor initializes the parameters of the Lotka-Volterra problem
+             * @param[in] param 4 dimensional vector containing the parameters of the problem.
              */
-            lotkavolterra(const std::vector<T> &param=std::vector<T>(4,1));
+            lotkavolterra(const std::vector<T> &param);
 
             /**
-              * @brief ~lotkavolterra
+              * @brief ~lotkavolterra deconstructor
               */
             ~lotkavolterra();
 
             /**
-             * @brief Function to evaluate the dinamics at a given instant of time and a given state.
+             * @brief evaluate evaluate the dinamics of the Lotka Volterra problem at a given instant of time and a given state.
+             *
+             * Function to evaluate the dinamics of the Lotka Volterra problem at a given instant of time and a given state. It is a virtual function so any class that inherites from base_dynamics need to implement it.
              * @param[in] t time
              * @param[in] state state values at time t
              * @param[out] dstate derivative of the states at time t
@@ -51,6 +63,9 @@ namespace smart
             int evaluate(const double &t, const std::vector<T> &state, std::vector<T> &dstate) const;
 
         private:
+            /**
+             * @brief m_param parameters vector
+             */
             std::vector<T> m_param;
         };
 

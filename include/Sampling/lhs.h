@@ -23,8 +23,12 @@ namespace smart{
 namespace sampling{
 
     /**
-     * @brief
-     * @author annalisa.riccardi@strath.ac.uk
+     * @brief Latin Hypercube Sampling
+     *
+     * The class implements the Latin Hypercube sampling technique
+     * The code wraps original routines from the link below.
+     *
+     * @see http://people.sc.fsu.edu/~jburkardt/
     */
 
     template <class T>
@@ -39,31 +43,37 @@ namespace sampling{
         public:
 
             /**
-             * @brief lhs
-             * @param dim
-             * @param npoints
+             * @brief lhs constructor
+             *
+             * The constructor initialize the dimension of the hypercube, its ranges and the number of points requested for the sampling
+             * @param dim hypercube dimension
+             * @param npoints number of sample points
+             * @param a vector containing the lower bound value of each variable
+             * @param b vector containing the upper bound value of each variable
              */
             lhs(const unsigned int &dim, const unsigned int &npoints, const std::vector<T>& a, const std::vector<T>& b);
 
             /**
-              * @brief ~lhs
+              * @brief ~lhs deconstructor
               */
             ~lhs();
 
+
             /**
-             * @brief
+             * @brief operator () next sample points
              *
-             * Returns the next point in the sequence
-             * @return an std::vector<T> containing the next point
+             * The method implements the subsequential generation of sample points within the user defined hypercube.
+             * It accesses iteratively the points in the pregenerated latin hypercube
+             * @return the new sample point
              */
             std::vector<T> operator()() const;
 
             /**
-             * @brief
+             * @brief operator () n-th sample point in the sequence
              *
              * Returns the n-th point in the sequence
              * @param[in] n the point along the sequence to be returned
-             * @return an std::vector<T> containing the n-th point
+             * @return a vector containing the n-th sample point
              */
             std::vector<T> operator()(const unsigned int &n) const;
 
@@ -72,7 +82,7 @@ namespace sampling{
             unsigned int *perm_uniform (const unsigned int &n) const;
 
         private:
-            unsigned int m_npoints;/// Number of points to generate in set
+            unsigned int m_npoints;
             mutable bool m_initialised;
             mutable std::vector<T> m_set;
             mutable unsigned int m_next;

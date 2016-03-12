@@ -21,16 +21,14 @@ using namespace std;
 namespace smart{
 namespace sampling{
 
-    /// Sobol quasi-random point sequence
     /**
-     * @brief
+     * @brief Sobol quasi-random point sequence
      *
      * Generates a quasi-random sequence of points
-     * in the unit hyper cube [0,1] using the Sobol sequence.
+     * in the predefined hypercube using the Sobol sequence.
      * The code wraps original routines from the link below.
      *
      * @see http://people.sc.fsu.edu/~jburkardt/cpp_src/sobol/sobol.html
-     * @author carlos.ortega@strath.ac.uk
     */
     template <class T>
     class sobol : public base_sampling <T>
@@ -44,32 +42,37 @@ namespace sampling{
         public:
 
             /**
-            * @brief sobol
-            * @param[in] dim dimension of the hypercube
-            * @param[in] count starting point of the sequence. choosing 0 wil add the point x=0
+            * @brief sobol constructor
+            *
+            * The constructor initialize the dimension of the hypercube, its ranges and the starting point for sequence generation
+            * @param dim dimension of the hypercube
+            * @param a vector containing the lower bound value of each variable
+            * @param b vector containing the upper bound value of each variable
+            * @param count starting point of the sequence. choosing 0 will add the point x=0 (initial point need to be given in the unitary hypercube [0,1])
             * @throws value_error if dim not in [1,1111]
             */
             sobol(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b, const unsigned int &count = 1);
 
             /**
-              * @brief ~sobol
+              * @brief ~sobol deconstructor
               */
             ~sobol();
 
             /**
-             * @brief
+             * @brief operator () next sample points
              *
-             * Returns the next point in the sequence
-             * @return an std::vector<T> containing the next point
+             * The method implements the subsequential generation of sample points within the user defined hypercube.
+             * It accesses iteratively the points in the pregenerated latin hypercube
+             * @return the new sample point
              */
             std::vector<T> operator()() const;
 
             /**
-             * @brief
+             * @brief operator () n-th sample point in the sequence
              *
              * Returns the n-th point in the sequence
              * @param[in] n the point along the sequence to be returned
-             * @return an std::vector<T> containing the n-th point
+             * @return a vector containing the n-th sample point
              */
             std::vector<T> operator()(const unsigned int &n) const;
 

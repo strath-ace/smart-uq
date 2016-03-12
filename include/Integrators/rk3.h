@@ -20,7 +20,9 @@ namespace smart
     namespace integrator {
 
         /**
-         * @brief The Runge Kutta 3 integrator class
+         * @brief The Runge Kutta 3 integrator scheme
+         *
+         * The class model the Runge Kutta third order integration scheme
          */
         template < class T >
         class rk3: public base_integrator<T>
@@ -32,23 +34,28 @@ namespace smart
 
         public:
             /**
-             * @brief rk3
+             * @brief rk3 constructor
+             *
+             * The integrator is initialized with the super class constructor. No additional parameters are set.
              * @param dyn
              */
             rk3(const dynamics::base_dynamics<T> *dyn);
 
             /**
-              * @brief ~rk3
+              * @brief ~rk3 deconstructor
               */
             ~rk3();
 
             /**
-             * @brief integrate
-             * @param ti
-             * @param tend
-             * @param nsteps
-             * @param x0
-             * @param xfinal
+             * @brief integrate method to integrate bewteen two given time steps, initial condition and step lenght
+             *
+             * The method implements the RK3 scheme to integrate with given initial time,
+             * final time, initial state condition and number of steps (constant stepsize)
+             * @param[in] ti initial time instant
+             * @param[in] tend final time instant
+             * @param[in] nsteps number of integration steps
+             * @param[in] x0 vector of initial states
+             * @param[out] xfinal vector of final states
              * @return
              */
             int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const;

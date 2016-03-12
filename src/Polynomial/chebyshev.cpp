@@ -24,7 +24,7 @@ chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order,
 }
 
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const bool& monomial) : base_polynomial<T>(vars,order,i){
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b, const bool& monomial) : base_polynomial<T>(vars,order,i,a,b){
     m_name="Chebyshev Polynomial";
     m_monomial_base=monomial;
 }
@@ -35,11 +35,6 @@ chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order,
     m_monomial_base=monomial;
 }
 
-template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b, const bool& monomial) : base_polynomial<T>(vars,order,i,a,b){
-    m_name="Chebyshev Polynomial";
-    m_monomial_base=monomial;
-}
 
 template < class T >
 chebyshev_polynomial<T>::~chebyshev_polynomial(){
@@ -645,13 +640,13 @@ std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) 
     for(int deg=0; deg<=m_degree; deg++){
         for(int i=0; i<m_J[m_nvar][deg]; i++){
             T prod = 1.0;
-            if (fabs(m_coeffs[idx])>ZERO){
+            //if (fabs(m_coeffs[idx])>ZERO){
                 std::vector<int> row = this->get_row(i,deg);
                 for(int j=0;j<m_nvar; j++){
                     prod*=base[j][row[j]];
                 }
                 res[idx] = prod;
-            }
+            //}
             idx++;
         }
     }
@@ -723,10 +718,10 @@ void chebyshev_polynomial<T>::to_monomial_basis(){
     }
 
     for (int v=0;v<m_nvar;v++){
-        chebyshev_polynomial<T> base2(m_nvar,m_degree,(T) 1.0, true);
-        chebyshev_polynomial<T> base1(m_nvar,m_degree,(int) v, true);
-        chebyshev_polynomial<T> x(m_nvar,m_degree,(int) v, true);
-        chebyshev_polynomial<T> term(m_nvar,m_degree, true);
+        chebyshev_polynomial<T> base2(m_nvar,m_degree,(T) 1.0,true);
+        chebyshev_polynomial<T> base1(m_nvar,m_degree,(int) v,-1.0,1.0,true);
+        chebyshev_polynomial<T> x(m_nvar,m_degree,(int) v,-1.0,1.0, true);
+        chebyshev_polynomial<T> term(m_nvar,m_degree,true);
 
         for (int d=1;d<=m_degree;d++){
             if (d==1)  term=base1;
@@ -805,7 +800,7 @@ std::string chebyshev_polynomial<T>::get_basis_name() const{
 }
 
 template < class T >
-void chebyshev_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
+void chebyshev_polynomial<T>::map(const std::vector<T> &a, const std::vector<T> &b){
 
     if(b.size() != a.size())
         smart_throw(m_name+": mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
@@ -816,7 +811,7 @@ void chebyshev_polynomial<T>::map(const int &idx, const std::vector<T> &a, const
     for(int i=0; i<m_nvar; i++){
         if(b[i]<=a[i])
             smart_throw(m_name+": mapping of polynomial variable from [-1,1] to [a,b] with b>=a");
-        mapped_vars.push_back(chebyshev_polynomial<T>(m_nvar, m_degree,i, m_monomial_base));
+        mapped_vars.push_back(chebyshev_polynomial<T>(m_nvar, m_degree,i, -1.0,1.0, m_monomial_base));
         mapped_vars[i] = (b[i]-a[i])/2.0 * mapped_vars[i] + (b[i]+a[i])/2.0;
     }
 
@@ -883,8 +878,8 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), cons
        // Hence rewriting code instead of calling to_monomial(), to avoid the computation of worthless terms of order > degree.
 
        chebyshev_polynomial<T> monom_approx(1,degree,(T) cheb_approx[0], true);
-       chebyshev_polynomial<T> x(1,degree,(int) 0, true);
-       chebyshev_polynomial<T> cheb_base1(1,degree,(int) 0, true);
+       chebyshev_polynomial<T> x(1,degree,(int) 0,-1.0,1.0, true);
+       chebyshev_polynomial<T> cheb_base1(1,degree,(int) 0,-1.0,1.0, true);
        chebyshev_polynomial<T> cheb_base2(1,degree, (T) 1.0, true);
        chebyshev_polynomial<T> cheb_base(1,degree, true);
 
