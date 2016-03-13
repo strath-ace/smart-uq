@@ -25,10 +25,6 @@ int main(){
 
     int nsamples = combination(nvar+nparam,poly_degree);
 
-    //polynomial allocation
-    std::vector<double> x0, param;
-    std::vector<double> xf;
-
     //initialisation ranges and constants terms
     double sma = 7378*pow(10,3); //*********
     double period = 2.0*M_PI/pow(sma,-3.0/2.0)/sqrt(398600.4415*pow(10,9));
@@ -112,8 +108,8 @@ int main(){
     }
 
     deltat = 1000;
-    for(int i=0; i<tend/deltat; i++){
-        std::vector<std::vector<double> > y;
+    std::vector<std::vector<double> > y;
+    for(int t=0; t<tend/deltat; t++){
         std::vector<std::vector<double> > res_coeffs;
         tf += deltat;
 
@@ -122,18 +118,27 @@ int main(){
             std::vector<double> LHS_p, LHS_x;
             // separate states from parameters in the LHS sampling
             for(int j=0;j<nvar+nparam; j++){
-                if(j<7)
-                    LHS_x.push_back(LHS[i][j]);
-                else
+                if(j<7){
+                    if(t==0)
+                       LHS_x.push_back(LHS[i][j]);
+                }
+                else{
                     LHS_p.push_back(LHS[i][j]);
+                }
             }
+            if(t>0)
+                LHS_x = y[i];
 
             dynamics::twobody<double> dyn(LHS_p);
             integrator::rk4<double> integrator(&dyn);
 
             std::vector<double> y_tmp;
             integrator.integrate(tstart,tf,100,LHS_x,y_tmp);
-            y.push_back(y_tmp);
+            if(t==0)
+                y.push_back(y_tmp);
+            else
+                y[i] = y_tmp;
+
         }
 
         // perform interpolation. For efficiency reason the function that interpolate multiple outputs is used
@@ -147,7 +152,6 @@ int main(){
         for(int i=0;i<nvar;i++)
             coeffs_all.push_back(res_coeffs[i]);
 
-        x0 = xf;
         tstart=tf;
     }
 
