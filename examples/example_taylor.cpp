@@ -93,11 +93,11 @@ int main(){
     unc_p[9] = 0.0001 / (r_scale/pow(t_scale,2));
 
     //initialise 7 state variables as Taylor base of order 1 in the variable i mapped to [x-unc_x, x+unc_x]
-    for(int i=0;i<7;i++){
+    for(int i=0;i<nvar;i++){
         x0.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i]));
     }
     //initialise 10 parameter variables as Taylor base of order 1 in the variable 7+i mapped to [p-unc_p, p+unc_p]
-    for(int i=0;i<10;i++){
+    for(int i=0;i<nparam;i++){
         param.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i]));
     }
 

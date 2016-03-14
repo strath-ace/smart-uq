@@ -131,7 +131,7 @@ int main(){
             std::vector<double> LHS_p, LHS_x;
             // separate states from parameters in the LHS sampling
             for(int j=0;j<nvar+nparam; j++){
-                if(j<7){
+                if(j<nvar){
                     if(t==0)
                        LHS_x.push_back(LHS[i][j]);
                 }
@@ -172,7 +172,7 @@ int main(){
     //timing
     end=clock();
     double time = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << "example_nonintrusive, time elapsed : " << time << endl << endl;
+    if(print_time_to_screen) cout << "example_nonintrusive, time elapsed : " << time << endl << endl;
 
     //printing
     if(print_results_to_file){
