@@ -22,7 +22,7 @@ int main(){
       **/
 
     //EXAMPLE INPUT
-    bool scale_problem = true; //true for non-dimensional problem
+    bool scale_problem = false; //true for non-dimensional problem
     bool print_results_to_file = true;
     bool print_time_to_screen = true;
 
@@ -32,17 +32,16 @@ int main(){
     int poly_degree = 4;
 
     //polynomial allocation
-    // std::vector<chebyshev_polynomial<double> > x0, param, xf;
-    std::vector<taylor_polynomial<double> > x0, param, xf;
+    std::vector<chebyshev_polynomial<double> > x0, param, xf;
     
     //scaling of fundamental units
     double m_scale = scale_problem ? 2000 : 1.0; //M0_spacecraft
     double r_scale = scale_problem ? 6378136 : 1.0; //DU_Earth
     double t_scale = scale_problem ? 806.78 : 1.0; //TU_Earth
 
-    //initialisation ranges and constants terms
-    double sma = 1.156764;//7378*pow(10,3) / r_scale;
-    double period = 2.0*M_PI/pow(sma,-3.0/2.0);//2.0*M_PI/pow(sma * r_scale,-3.0/2.0)/sqrt(398600.4415*pow(10,9)) / t_scale;
+    //initialisation problem constants
+    double sma = 7378*pow(10,3) / r_scale;
+    double period = 2.0*M_PI/pow(sma * r_scale,-3.0/2.0)/sqrt(398600.4415*pow(10,9)) / t_scale;
     double tstart = 0;
     double tf = 0;
     double deltat = 0;
@@ -52,11 +51,11 @@ int main(){
     std::vector<double> x(nvar), p(nparam), unc_x(nvar), unc_p(nparam);
 
     //initialisation: nominal initial states
-    x[0] = 1.1505;//7338*pow(10,3) / r_scale; //x
+    x[0] = 7338*pow(10,3) / r_scale; //x
     x[1] = 0; //y
     x[2] = 0; //z
     x[3] = 0; //v_x
-    x[4] = sqrt(1/x[0]);//2*M_PI*sma/period / (r_scale/t_scale); //v_y
+    x[4] = 2*M_PI*sma/period / (r_scale/t_scale); //v_y
     x[5] = 0; //v_z
     x[6] = 2000 / m_scale; //m
 
@@ -73,13 +72,13 @@ int main(){
     p[9] = 0; //epsilon_z
 
     //initialisation: uncertainty in initial states
-    unc_x[0] = 1000.0 / r_scale; 
-    unc_x[1] = 1000.0 / r_scale;
-    unc_x[2] = 1000.0 / r_scale;
-    unc_x[3] = 5.0 / (r_scale/t_scale);
-    unc_x[4] = 5.0 / (r_scale/t_scale);
-    unc_x[5] = 5.0 / (r_scale/t_scale);
-    unc_x[6] = 1.0 / m_scale;
+    unc_x[0] = 1000 / r_scale; 
+    unc_x[1] = 1000 / r_scale;
+    unc_x[2] = 1000 / r_scale;
+    unc_x[3] = 5 / (r_scale/t_scale);
+    unc_x[4] = 5 / (r_scale/t_scale);
+    unc_x[5] = 5 / (r_scale/t_scale);
+    unc_x[6] = 1 / m_scale;
 
     //initialisation: uncertainty in parameters
     unc_p[0] = 0.05*sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
@@ -95,13 +94,11 @@ int main(){
 
     //initialise 7 state variables as Chebycheff/Taylor base of order 1 in the variable i mapped to [x-unc_x, x+unc_x]
     for(int i=0;i<7;i++){
-        // x0.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i], true));
-        x0.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i]));
+        x0.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i], true));
     }
     //initialise 10 parameter variables as Chebycheff/Taylor base of order 1 in the variable 7+i mapped to [p-unc_p, p+unc_p]
     for(int i=0;i<10;i++){
-        // param.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i], true));
-        param.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i]));
+        param.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i], true));
     }
 
     //timing
@@ -112,10 +109,8 @@ int main(){
     x0[0].initialize_M(nvar+nparam,poly_degree);    
 
     //dynamical system
-    // dynamics::twobody < chebyshev_polynomial<double> > dyn(param, t_scale, r_scale);
-    // integrator::rk4 < chebyshev_polynomial<double> > integrator(&dyn);
-    dynamics::twobody < taylor_polynomial<double> > dyn(param, t_scale, r_scale);
-    integrator::rk4 < taylor_polynomial<double> > integrator(&dyn);
+    dynamics::twobody < chebyshev_polynomial<double> > dyn(param, t_scale, r_scale);
+    integrator::rk4 < chebyshev_polynomial<double> > integrator(&dyn);
 
     //propagation (MAIN LOOP)
     std::vector<std::vector<double> > coeffs_all;
@@ -143,7 +138,7 @@ int main(){
     //printing
     if(print_results_to_file){
         std::ofstream file;
-        file.open ("example_intrusive.txt");
+        file.open ("twobody_problem_intrusive.txt");
         for(unsigned int k=0; k<coeffs_all.size(); k++){
             for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
                 file << setprecision(16) << coeffs_all[k][kk] << " ";

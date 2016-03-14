@@ -19,68 +19,80 @@ int main(){
       4 degree polynomial expansion
       **/
 
+    //EXAMPLE INPUT
+    bool monomial_base = false; //true for output coefficients in monomial base, false for chebyshev
+    bool scale_problem = false; //true for non-dimensional problem
+    bool print_results_to_file = true;
+    bool print_time_to_screen = true;
+
+    //algebra
     int nvar = 7;
     int nparam  = 10;
     int poly_degree = 4;
 
+    //number of points in the sample
     int nsamples = combination(nvar+nparam,poly_degree);
 
-    //initialisation ranges and constants terms
-    double sma = 7378*pow(10,3); //*********
-    double period = 2.0*M_PI/pow(sma,-3.0/2.0)/sqrt(398600.4415*pow(10,9));
+    //scaling of fundamental units
+    double m_scale = scale_problem ? 2000 : 1.0; //M0_spacecraft
+    double r_scale = scale_problem ? 6378136 : 1.0; //DU_Earth
+    double t_scale = scale_problem ? 806.78 : 1.0; //TU_Earth
+
+    //initialisation problem constants
+    double sma = 7378*pow(10,3) / r_scale;
+    double period = 2.0*M_PI/pow(sma * r_scale,-3.0/2.0)/sqrt(398600.4415*pow(10,9)) / t_scale;
     double tstart = 0;
     double tf = 0;
     double deltat = 0;
     double tend = period;
 
+    //initialisation: allocations
     std::vector<double> x(nvar), p(nparam), unc_x(nvar), unc_p(nparam);
-    std::vector<double> ranges_lb(nvar+nparam), ranges_ub(nvar+nparam);
 
-    x[0] = 7338*pow(10,3);
-    x[1] = 0.0;
-    x[2] = 0.0;
-    x[3] = 0.0;
-    x[4] = 2*M_PI*sma/period;
-    x[5] = 0.0;
-    x[6] = 2000;
+    //initialisation: nominal initial states
+    x[0] = 7338*pow(10,3) / r_scale; //x
+    x[1] = 0; //y
+    x[2] = 0; //z
+    x[3] = 0; //v_x
+    x[4] = 2*M_PI*sma/period / (r_scale/t_scale); //v_y
+    x[5] = 0; //v_z
+    x[6] = 2000 / m_scale; //m
 
-    p[0] = 0;
-    p[1] = 0.5;
-    p[2] = 0;
-    p[3] = 1/30000.0;
+    //initialisation: nominal parameters
+    p[0] = 0; //T_x
+    p[1] = 0.5 / (m_scale*r_scale / pow(t_scale,2)); //T_y
+    p[2] = 0; //T_z
+    p[3] = 1/30000 / (t_scale / r_scale); //specific fuel consumption
+    p[4] = 5.245*pow(10,-15) / (m_scale/pow(r_scale,3)); //rho_0
+    p[5] = 181050 / r_scale; //H
+    p[6] = 4.4 / pow(r_scale,2); //C_D*A
+    p[7] = 0; //epsilon_x
+    p[8] = 0; //epsilon_y
+    p[9] = 0; //epsilon_z
 
-    p[4] = 5.245*pow(10,-15);
-    p[5] = 181050;
-    p[6] = 4.4;
+    //initialisation: uncertainty in initial states
+    unc_x[0] = 1000 / r_scale; 
+    unc_x[1] = 1000 / r_scale;
+    unc_x[2] = 1000 / r_scale;
+    unc_x[3] = 5 / (r_scale/t_scale);
+    unc_x[4] = 5 / (r_scale/t_scale);
+    unc_x[5] = 5 / (r_scale/t_scale);
+    unc_x[6] = 1 / m_scale;
 
-    p[7] = 0;
-    p[8] = 0;
-    p[9] = 0;
-
-    // for (int i= 0 ; i < 7; i++) unc_x[i] = 0.000001;
-    unc_x[0] = 1000;
-    unc_x[1] = 1000;
-    unc_x[2] = 1000;
-    unc_x[3] = 5;
-    unc_x[4] = 5;
-    unc_x[5] = 5;
-    unc_x[6] = 1.0;
-
-    // for (int i= 0 ; i < 10; i++) unc_p[i] = 0.000001;
+    //initialisation: uncertainty in parameters
     unc_p[0] = 0.05*sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
     unc_p[1] = 0.05*sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
     unc_p[2] = 0.05*sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
     unc_p[3] = 0.05*p[3];
-
     unc_p[4] = 0.01*p[4];
     unc_p[5] = 0.01*p[5];
     unc_p[6] = 0.01*p[6];
+    unc_p[7] = 0.0001 / (r_scale/pow(t_scale,2));
+    unc_p[8] = 0.0001 / (r_scale/pow(t_scale,2));
+    unc_p[9] = 0.0001 / (r_scale/pow(t_scale,2));
 
-    unc_p[7] = 0.0001;
-    unc_p[8] = 0.0001;
-    unc_p[9] = 0.0001;
-
-
+    //ranges for sampling
+    std::vector<double> ranges_lb(nvar+nparam), ranges_ub(nvar+nparam);
     for(int i=0; i<nvar; i++){
         ranges_lb[i] = x[i]-unc_x[i];
         ranges_ub[i] = x[i]+unc_x[i];
@@ -90,26 +102,27 @@ int main(){
         ranges_ub[nvar+i] = p[i]+unc_p[i];
     }
 
-    chebyshev_polynomial<double> poly(nvar+nparam,poly_degree, ranges_lb, ranges_ub);
-
-    sampling::lhs<double> lhs_gen(nvar+nparam,nsamples,ranges_lb, ranges_ub);
-
-    //initialise dynamics and integrator
-    std::vector<std::vector<double> > coeffs_all;
-
+    //timing
     clock_t begin,end;
     begin=clock();
 
-    // construct LHS sampling
+    //construct LHS sampling
+    sampling::lhs<double> lhs_gen(nvar+nparam,nsamples,ranges_lb, ranges_ub);
     std::vector<std::vector<double> > LHS, H;
     for(int i=0;i<nsamples;i++){
         std::vector<double> sample=lhs_gen();
         LHS.push_back(sample);
     }
 
-    deltat = 1000;
+    //initialise polynomial for interpolation. the monomial flag will define the base
+    chebyshev_polynomial<double> poly(nvar+nparam,poly_degree, ranges_lb, ranges_ub, monomial_base);
+
+    //propagation (MAIN LOOP)
+    std::vector<std::vector<double> > coeffs_all;
+    deltat = 1000 / t_scale;
     std::vector<std::vector<double> > y;
-    for(int t=0; t<tend/deltat; t++){
+
+    for(int t=0; t+1<tend/deltat; t++){
         std::vector<std::vector<double> > res_coeffs;
         tf += deltat;
 
@@ -129,9 +142,11 @@ int main(){
             if(t>0)
                 LHS_x = y[i];
 
+            //initialise dynamics and integrator with corresponding set of parameters
             dynamics::twobody<double> dyn(LHS_p);
             integrator::rk4<double> integrator(&dyn);
 
+            //perform integration and save results
             std::vector<double> y_tmp;
             integrator.integrate(tstart,tf,100,LHS_x,y_tmp);
             if(t==0)
@@ -141,8 +156,7 @@ int main(){
 
         }
 
-        // perform interpolation. For efficiency reason the function that interpolate multiple outputs is used
-        // poly will evaluate according to its base
+        // perform interpolation - for efficiency reasons the function that interpolates multiple outputs is used
         if(H.size()==0)
             poly.interpolation(LHS,y,H,res_coeffs);
         else{
@@ -155,20 +169,22 @@ int main(){
         tstart=tf;
     }
 
+    //timing
     end=clock();
     double time = (double (end-begin))/CLOCKS_PER_SEC;
-    cout << "Time elapsed : " << time << endl << endl;
+    cout << "example_nonintrusive, time elapsed : " << time << endl << endl;
 
-    std::ofstream file;
-    file.open ("twobody_problem_nonintrusive.txt");
-
-    for(unsigned int k=0; k<coeffs_all.size(); k++){
-        for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
-            file << setprecision(16) << coeffs_all[k][kk] << " ";
-        file << "\n";
+    //printing
+    if(print_results_to_file){
+        std::ofstream file;
+        file.open ("twobody_problem_taylor.txt");
+        for(unsigned int k=0; k<coeffs_all.size(); k++){
+            for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
+                file << setprecision(16) << coeffs_all[k][kk] << " ";
+            file << "\n";
+        }
+        file << "\n\n\n\n";
+        file.close();
     }
-
-    file << "\n\n\n\n";
-    file.close();
 
 }

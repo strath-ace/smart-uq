@@ -362,12 +362,12 @@ namespace polynomial{
 
 	template < class T>
 	static taylor_polynomial<T> operator/(const T left, const taylor_polynomial<T> right){
-		return taylor_polynomial<T>(right.get_nvar(), right.get_degree(), left)/right;
+		return left*right.inv(right);
 	}
 
 	template < class T>
 	static taylor_polynomial<T> operator/(const int left, const taylor_polynomial<T> right){
-		return taylor_polynomial<T>(right.get_nvar(), right.get_degree(), (T) left)/right;
+		return left*right.inv(right);
 	}
 }}
 
