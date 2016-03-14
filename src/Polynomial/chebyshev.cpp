@@ -35,6 +35,11 @@ chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order,
     m_monomial_base=monomial;
 }
 
+template < class T >
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const bool &monomial) : base_polynomial<T>(vars,order){
+    m_name="Chebyshev Polynomial";
+    m_monomial_base=monomial;
+}
 
 template < class T >
 chebyshev_polynomial<T>::~chebyshev_polynomial(){

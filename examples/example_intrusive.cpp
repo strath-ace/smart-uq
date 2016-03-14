@@ -22,7 +22,6 @@ int main(){
       **/
 
     //EXAMPLE INPUT
-    string approach = "taylor"; //approach "chebyshev"/"taylor"
     bool scale_problem = true; //true for non-dimensional problem
     bool print_results_to_file = true;
     bool print_time_to_screen = true;
@@ -33,10 +32,8 @@ int main(){
     int poly_degree = 4;
 
     //polynomial allocation
-    // if (approach == "chebyshev")    std::vector<chebyshev_polynomial<double> > x0, param, xf;
-    // else if (approach == "taylor")  
+    // std::vector<chebyshev_polynomial<double> > x0, param, xf;
     std::vector<taylor_polynomial<double> > x0, param, xf;
-    // else smart_throw("example_intrusive: choose between chebyshev and taylor approaches");
     
     //scaling of fundamental units
     double m_scale = scale_problem ? 2000 : 1.0; //M0_spacecraft
@@ -76,13 +73,13 @@ int main(){
     p[9] = 0; //epsilon_z
 
     //initialisation: uncertainty in initial states
-    unc_x[0] = 1000 / r_scale; 
-    unc_x[1] = 1000 / r_scale;
-    unc_x[2] = 1000 / r_scale;
-    unc_x[3] = 5 / (r_scale/t_scale);
-    unc_x[4] = 5 / (r_scale/t_scale);
-    unc_x[5] = 5 / (r_scale/t_scale);
-    unc_x[6] = 1 / m_scale;
+    unc_x[0] = 1000.0 / r_scale; 
+    unc_x[1] = 1000.0 / r_scale;
+    unc_x[2] = 1000.0 / r_scale;
+    unc_x[3] = 5.0 / (r_scale/t_scale);
+    unc_x[4] = 5.0 / (r_scale/t_scale);
+    unc_x[5] = 5.0 / (r_scale/t_scale);
+    unc_x[6] = 1.0 / m_scale;
 
     //initialisation: uncertainty in parameters
     unc_p[0] = 0.05*sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
@@ -98,14 +95,12 @@ int main(){
 
     //initialise 7 state variables as Chebycheff/Taylor base of order 1 in the variable i mapped to [x-unc_x, x+unc_x]
     for(int i=0;i<7;i++){
-        // if (approach == "chebyshev")    x0.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i], true));
-        // else if (approach == "taylor")  
+        // x0.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i], true));
         x0.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i]));
     }
     //initialise 10 parameter variables as Chebycheff/Taylor base of order 1 in the variable 7+i mapped to [p-unc_p, p+unc_p]
     for(int i=0;i<10;i++){
-        // if (approach == "chebyshev")    param.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i], true));
-        // else if (approach == "taylor")  
+        // param.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i], true));
         param.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i]));
     }
 
@@ -117,14 +112,10 @@ int main(){
     x0[0].initialize_M(nvar+nparam,poly_degree);    
 
     //dynamical system
-    // if (approach=="chebyshev"){
-        // dynamics::twobody < chebyshev_polynomial<double> > dyn(param, t_scale, r_scale);
-        // integrator::rk4 < chebyshev_polynomial<double> > integrator(&dyn);
-    // }
-    // else if (approach == taylor){
-        dynamics::twobody < taylor_polynomial<double> > dyn(param, t_scale, r_scale);
-        integrator::rk4 < taylor_polynomial<double> > integrator(&dyn);
-    // }
+    // dynamics::twobody < chebyshev_polynomial<double> > dyn(param, t_scale, r_scale);
+    // integrator::rk4 < chebyshev_polynomial<double> > integrator(&dyn);
+    dynamics::twobody < taylor_polynomial<double> > dyn(param, t_scale, r_scale);
+    integrator::rk4 < taylor_polynomial<double> > integrator(&dyn);
 
     //propagation (MAIN LOOP)
     std::vector<std::vector<double> > coeffs_all;

@@ -86,6 +86,16 @@ namespace polynomial{
          * @param monomial flag to detect the change of base (default false)
          */
         chebyshev_polynomial(const int &vars, const int &order, const T &value, const bool &monomial=false);
+        /**
+         * @brief chebyshev_polynomial
+         *
+         * The constructor initializes a null polynomial for a given number of variables and degree.
+         *
+         * @param vars number of variables
+         * @param order polynomialmaximum degree
+         * @param monomial flag to detect the change of base
+         */
+        chebyshev_polynomial(const int &vars, const int &order, const bool &monomial);
 
         ~chebyshev_polynomial();
         /******************************/
