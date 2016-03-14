@@ -129,80 +129,80 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const chebyshev_polyn
     else
     {
     #ifdef CHEBYSHEV_DCT_MULTIPLICATION
-    int ncoeffs = combination(m_nvar,m_degree);
-    std::vector<T> other_coeffs = other.get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
+        int ncoeffs = combination(m_nvar,m_degree);
+        std::vector<T> other_coeffs = other.get_coeffs();
+        chebyshev_polynomial<T> res(m_nvar,m_degree);
 
-    //initialise stuff needed by fftw
-    int dct_degree_aux = int (m_degree*1.5+1);
-    int dct_degree[m_nvar];
-    for (int i=0;i<m_nvar;i++){
-        dct_degree[i]=dct_degree_aux+1;
-    }
-    int pointers_length=pow(dct_degree_aux+1,m_nvar);
-    T *dct0, *dct1, *dct01;
-
-    // allocate pointers for all DCTs
-    dct_malloc(dct0,pointers_length);
-    dct_malloc(dct1,pointers_length);
-    dct_malloc(dct01,pointers_length);
-
-    // build a vector idx[ncoeffs] with the pointer indexes in row-major format
-    // build a vector scale[ncoeffs] with the scale factor for each of the coefficients
-    std::vector <int> idx;
-    std::vector <T> scale;
-    int ii=0;
-    for (int deg=0;deg<=m_degree;deg++){
-        int max_i=m_J[m_nvar][deg];
-        for (int i=0;i<max_i;i++){
-            std::vector<int> row = res.get_row(i,deg);
-            int term_idx=0;
-            T term_scale=1.0;
-            for (int var=0;var<m_nvar;var++){
-                if (row[var]==0) term_scale*=2.0;
-                term_idx+=row[var]*pow((dct_degree_aux+1),var);
-            }
-            idx.push_back(term_idx);
-            scale.push_back(term_scale);
-            // initialise non-zero terms of dct0 and dct1 here too (to avoid an additional for loop)
-            dct0[term_idx]=m_coeffs[ii]*term_scale;
-            dct1[term_idx]=other_coeffs[ii]*term_scale;
-            ii++;
+        //initialise stuff needed by fftw
+        int dct_degree_aux = int (m_degree*1.5+1);
+        int dct_degree[m_nvar];
+        for (int i=0;i<m_nvar;i++){
+            dct_degree[i]=dct_degree_aux+1;
         }
-    }
+        int pointers_length=pow(dct_degree_aux+1,m_nvar);
+        T *dct0, *dct1, *dct01;
 
-    //DCT(x0) and DCT(x1)
-    dct_do(m_nvar,dct_degree,dct0);
-    dct_do(m_nvar,dct_degree,dct1);
+        // allocate pointers for all DCTs
+        dct_malloc(dct0,pointers_length);
+        dct_malloc(dct1,pointers_length);
+        dct_malloc(dct01,pointers_length);
 
-    // component-wise multiplication DCT(x0):DCT(x1)
-    // scale already to avoid coefficients growing too much in large algebras
-    T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
-    for(int i=0;i<pointers_length;i++){
-        dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
-    }
+        // build a vector idx[ncoeffs] with the pointer indexes in row-major format
+        // build a vector scale[ncoeffs] with the scale factor for each of the coefficients
+        std::vector <int> idx;
+        std::vector <T> scale;
+        int ii=0;
+        for (int deg=0;deg<=m_degree;deg++){
+            int max_i=m_J[m_nvar][deg];
+            for (int i=0;i<max_i;i++){
+                std::vector<int> row = res.get_row(i,deg);
+                int term_idx=0;
+                T term_scale=1.0;
+                for (int var=0;var<m_nvar;var++){
+                    if (row[var]==0) term_scale*=2.0;
+                    term_idx+=row[var]*pow((dct_degree_aux+1),var);
+                }
+                idx.push_back(term_idx);
+                scale.push_back(term_scale);
+                // initialise non-zero terms of dct0 and dct1 here too (to avoid an additional for loop)
+                dct0[term_idx]=m_coeffs[ii]*term_scale;
+                dct1[term_idx]=other_coeffs[ii]*term_scale;
+                ii++;
+            }
+        }
 
-    // deallocate more stuff
-    dct_free(dct0);
-    dct_free(dct1);
+        //DCT(x0) and DCT(x1)
+        dct_do(m_nvar,dct_degree,dct0);
+        dct_do(m_nvar,dct_degree,dct1);
 
-    // Obtain DCT(DCT(x0):DCT(x1))
-    dct_do(m_nvar,dct_degree,dct01);
+        // component-wise multiplication DCT(x0):DCT(x1)
+        // scale already to avoid coefficients growing too much in large algebras
+        T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
+        for(int i=0;i<pointers_length;i++){
+            dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
+        }
 
-    // rescale and save results
-    for (int i=0;i<ncoeffs;i++){
-        T term_result=dct01[idx[i]]/scale[i];
-        if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
-        else res.set_coeffs(i,0.0);
-    }
+        // deallocate more stuff
+        dct_free(dct0);
+        dct_free(dct1);
 
-    // deallocate and return
-    dct_free(dct01);
-    return res;
+        // Obtain DCT(DCT(x0):DCT(x1))
+        dct_do(m_nvar,dct_degree,dct01);
+
+        // rescale and save results
+        for (int i=0;i<ncoeffs;i++){
+            T term_result=dct01[idx[i]]/scale[i];
+            if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
+            else res.set_coeffs(i,0.0);
+        }
+
+        // deallocate and return
+        dct_free(dct01);
+        return res;
 
     #else
 
-    return direct_multiplication(*this,other);
+        return direct_multiplication(*this,other);
 
     #endif
     }
