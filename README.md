@@ -6,9 +6,9 @@
 [![Build Status](https://travis-ci.org/space-art/smart-uq.svg?branch=master)](https://travis-ci.org/space-art/smart-uq)
 
 
-`SMART` is a collection of toolboxes developed and maintained since 2015 by the department of Mechanical and Aerospace Engineer of Strathclyde University. `SMART-UQ` in particular, is a collection of uncertainity quantification techniques.
+`SMART` is a collection of toolboxes developed and maintained since 2015 by the Department of Mechanical & Aerospace Engineering at the University of Strathclyde in Scotland. `SMART-UQ` in particular is a collection of uncertainity quantification techniques.
 
-`SMART` is aimed at making code development inside the team more efficient, reusable and easy maintainabile.
+`SMART` is aimed at making code development inside the Centre more efficient, reusable and easy maintainabile.
 
 `SMART` is CMake-based C++ project. It can be used as the basis for new projects. 
 
@@ -28,7 +28,7 @@ Features
 Requirements
 ------
 
-To install this project, please ensure that you have installed the following (install guides are provided on the respective websites):
+To install this project, please ensure that you have installed the following (installation guides are provided on the respective websites):
 
   - [Git](http://git-scm.com)
   - A C++ compiler, e.g., [GCC](https://gcc.gnu.org/), [clang](http://clang.llvm.org/), [MinGW](http://www.mingw.org/)
@@ -50,7 +50,7 @@ Installation
 Run the following commands to download, build, and install this project.
 
     git clone https://github.com/space-art/smart-uq.git
-    (Introcude your username and password)
+    (Enter your username and password)
     cd smart-uq
     mkdir build && cd build
     cmake .. && make
@@ -96,9 +96,5 @@ Disclaimer
 
 The copyright holders are not liable for any damage(s) incurred due to improper use of `smart-uq`.
 
-TODO
-------
 
-  - TODO 1
-  - TODO 2
 
