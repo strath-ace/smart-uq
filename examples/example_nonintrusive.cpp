@@ -177,7 +177,7 @@ int main(){
     //printing
     if(print_results_to_file){
         std::ofstream file;
-        file.open ("twobody_problem_taylor.txt");
+        file.open ("twobody_problem_nonintrusive.txt");
         for(unsigned int k=0; k<coeffs_all.size(); k++){
             for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
                 file << setprecision(16) << coeffs_all[k][kk] << " ";
