@@ -20,7 +20,7 @@ int main(){
       **/
 
     //EXAMPLE INPUT
-    bool monomial_base = false; //true for output coefficients in monomial base, false for chebyshev
+    bool monomial_base = true; //true for output coefficients in monomial base, false for chebyshev
     bool scale_problem = true; //true for non-dimensional problem
     bool print_results_to_file = true;
     bool print_time_to_screen = true;
@@ -143,7 +143,7 @@ int main(){
                 LHS_x = y[i];
 
             //initialise dynamics and integrator with corresponding set of parameters
-            dynamics::twobody<double> dyn(LHS_p);
+            dynamics::twobody<double> dyn(LHS_p, t_scale, r_scale);
             integrator::rk4<double> integrator(&dyn);
 
             //perform integration and save results
@@ -177,7 +177,7 @@ int main(){
     //printing
     if(print_results_to_file){
         std::ofstream file;
-        file.open ("twobody_problem_nonintrusive.txt");
+        file.open ("twobody_problem_nonintrusive_monomial.txt");
         for(unsigned int k=0; k<coeffs_all.size(); k++){
             for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
                 file << setprecision(16) << coeffs_all[k][kk] << " ";
