@@ -116,7 +116,6 @@ int main(){
     std::vector<std::vector<double> > coeffs_all;
     deltat = 1000.0 / t_scale; //snapshot frequency
     for(int i=0; i+1<tend/deltat; i++){
-        std::cout<<"i"<<std::endl;
         tf += deltat;
         integrator.integrate(tstart,tf,100,x0,xf);
         x0 = xf;
