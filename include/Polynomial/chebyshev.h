@@ -69,7 +69,7 @@ namespace polynomial{
          * The variable is mapped from [a,b] to [-1,1]
          * @param vars number of variables
          * @param order polynomial maximum degree
-         * @param i index of first degree variable
+         * @param i index of first degree variable (starting from 0)
          * @param a variable lower bound (default value -1)
          * @param b variable upper bound (default vale 1)
          * @param monomial flag to detect the change of base (default false)

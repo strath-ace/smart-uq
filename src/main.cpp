@@ -31,7 +31,7 @@ int main(){
     taylor_polynomial<double> res2 = exp(log(f)) - f;
     taylor_polynomial<double> res3 = log(exp(f)) - f;
     taylor_polynomial<double> res4 = sin(f)*sin(f) + cos(f)*cos(f) - 1.0;
-
+    taylor_polynomial<double> res5 = f/f -1.0;
 
     return 0;
 }
