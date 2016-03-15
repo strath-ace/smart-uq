@@ -89,7 +89,7 @@ namespace polynomial{
         /**
          * @brief chebyshev_polynomial
          *
-         * The constructor initializes a null polynomial for a given number of variables and degree.
+         * The constructor initializes a null polynomial on the domain [-1,1], for a given number of variables and degree.
          *
          * @param vars number of variables
          * @param order polynomialmaximum degree

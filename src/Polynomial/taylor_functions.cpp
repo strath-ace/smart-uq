@@ -224,12 +224,12 @@ taylor_polynomial<T> log(const taylor_polynomial<T> &other){
     n.set_coeffs(coeffs);
 
     taylor_polynomial<T> res(nvar,degree, (T) log(c));
-    res += n;
+    taylor_polynomial<T> tmp(nvar,degree);
+    tmp = n;
+    res += tmp/c;
     for (int i=2; i<=degree; i++){
-        taylor_polynomial<T> tmp(nvar,degree);
-        n *= n;
-        tmp = n/(i*pow(c,i));
-        res += pow(-1,i+1)*tmp;
+        tmp *= n;
+        res += pow(-1,i+1)*tmp/((T) i*pow(c,i));
     }
 
     return res;
