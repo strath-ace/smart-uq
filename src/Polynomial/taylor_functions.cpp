@@ -39,18 +39,18 @@ taylor_polynomial<T> sin(const taylor_polynomial<T> &other){
     res += term*cos(c);
 
     for (int i=2; i<=degree; i++){
-        n*=n;
-        f*=i;
-        powers.push_back(n);
+        term *= n;
+        f *= i;
+        powers.push_back(term);
         factorial.push_back(f);
     }
 
     for (int i=1; i<=degree/2.0;i++){
-        res += sin(c)*(pow(-1,i)/factorial[2*i-2])*powers[2*i-2];
+        res += sin(c)*(pow(-1,i)/(T)factorial[2*i-2])*powers[2*i-2];
     }
 
     for (int i=1; i<=degree/2.0-1;i++){
-        res += cos(c)*(pow(-1,i)/factorial[2*i+1-2])*powers[2*i+1-2];
+        res += cos(c)*(pow(-1,i)/(T)factorial[2*i+1-2])*powers[2*i+1-2];
     }
 
     return res;
@@ -79,27 +79,27 @@ taylor_polynomial<T> cos(const taylor_polynomial<T> &other){
     coeffs[0] = 0.0;
     n.set_coeffs(coeffs);
 
-    taylor_polynomial<T> res(nvar,degree, (T) sin(c));
+    taylor_polynomial<T> res(nvar,degree, (T) cos(c));
     taylor_polynomial<T> term=n;
 
     std::vector<taylor_polynomial<T> > powers;
     std::vector<T> factorial;
 
-    res += term*cos(c);
+    res -= term*sin(c);
 
     for (int i=2; i<=degree; i++){
-        n*=n;
-        f*=i;
-        powers.push_back(n);
+        term *=n;
+        f *= i;
+        powers.push_back(term);
         factorial.push_back(f);
     }
 
     for (int i=1; i<=degree/2.0;i++){
-        res += cos(c)*(pow(-1,i)/factorial[2*i-2])*powers[2*i-2];
+        res += cos(c)*(pow(-1,i)/(T)factorial[2*i-2])*powers[2*i-2];
     }
 
     for (int i=1; i<=degree/2.0-1;i++){
-        res += sin(c)*(pow(-1,i+1)/factorial[2*i+1-2])*powers[2*i+1-2];
+        res -= sin(c)*(pow(-1,i)/(T)factorial[2*i+1-2])*powers[2*i+1-2];
     }
 
     return res;
@@ -219,6 +219,7 @@ taylor_polynomial<T> log(const taylor_polynomial<T> &other){
     std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
     T c = coeffs[0];
 
+
     taylor_polynomial<T> n(nvar,degree);
     coeffs[0] = 0.0;
     n.set_coeffs(coeffs);
@@ -226,6 +227,12 @@ taylor_polynomial<T> log(const taylor_polynomial<T> &other){
     taylor_polynomial<T> res(nvar,degree, (T) log(c));
     taylor_polynomial<T> tmp(nvar,degree);
     tmp = n;
+
+    if (c==0) {
+        std::cout<<"Error: division by zero in log"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     res += tmp/c;
     for (int i=2; i<=degree; i++){
         tmp *= n;
