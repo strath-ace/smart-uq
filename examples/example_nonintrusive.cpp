@@ -21,7 +21,7 @@ int main(){
 
     //EXAMPLE INPUT
     bool monomial_base = false; //true for output coefficients in monomial base, false for chebyshev
-    bool scale_problem = false; //true for non-dimensional problem
+    bool scale_problem = true; //true for non-dimensional problem
     bool print_results_to_file = true;
     bool print_time_to_screen = true;
 
@@ -119,7 +119,7 @@ int main(){
 
     //propagation (MAIN LOOP)
     std::vector<std::vector<double> > coeffs_all;
-    deltat = 1000 / t_scale;
+    deltat = 1000.0 / t_scale;
     std::vector<std::vector<double> > y;
 
     for(int t=0; t+1<tend/deltat; t++){
