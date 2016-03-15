@@ -1,8 +1,13 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /*
----------------- Copyright (C) 2015 University of Strathclyde----------------
------------------ e-mail:  carlos.ortega@strath.ac.uk -----------------------
------------------------ Author:  Carlos Ortega Absil ------------------------
+------------Copyright (C) 2016 University of Strathclyde--------------
+------------ e-mail: annalisa.riccardi@strath.ac.uk ------------------
+------------ e-mail: carlos.ortega@strath.ac.uk ----------------------
+--------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
+
 
 #include "Sampling/sobol.h"
 
@@ -12,9 +17,9 @@ using namespace sampling;
 
 /// SOBOL Constructor
 template <class T>
-sobol<T>::sobol(const unsigned int &dim, const unsigned int &count) : base_sampling<T>(dim,"Sobol sampling"), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
+sobol<T>::sobol(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b, const unsigned int &count) : base_sampling<T>(dim,a,b,"Sobol sampling"), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
     if (dim >1111 || dim <1)
-        smart_exception(m_name+": Sobol sequence can have dimensions [1,1111]");
+        smart_throw(m_name+": Sobol sequence can have dimensions [1,1111]");
   }
 
 /// SOBOL Deconstructor
@@ -31,7 +36,7 @@ std::vector<T> sobol<T>::operator()() const{
   signed long long int seed= (signed long long int) m_count;
   i8_sobol(m_dim, &seed, &retval[0]);
   m_count= (unsigned short int) seed;
-  return retval;
+  return this->map(retval);
 }
 
 /// Operator (unsigned int n)
@@ -43,7 +48,7 @@ std::vector<T> sobol<T>::operator()(const unsigned int &n) const{
   std::vector<T> retval(m_dim,0.0);
   i8_sobol(m_dim, &seed, &retval[0]);
   m_count= (unsigned short int) seed;
-  return retval;
+  return this->map(retval);
 }
 
 
@@ -265,7 +270,7 @@ void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] )
       message << "  The spatial dimension DIM_NUM should satisfy:\n";
       message << "    1 <= DIM_NUM <= " << DIM_MAX2 << "\n";
       message << "  But this input value is DIM_NUM = " << dim_num << "\n";
-      smart_exception(m_name+message.str());
+      smart_throw(m_name+message.str());
     }
 
     m_dim_num_save = dim_num;
@@ -423,7 +428,7 @@ void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] )
     message << "  SEED =   " << *seed  << "\n";
     message << "  MAXCOL = " << m_maxcol << "\n";
     message << "  L =      " << l << "\n";
-    smart_exception(m_name+message.str());
+    smart_throw(m_name+message.str());
   }
 //
 //  Calculate the new components of QUASI.

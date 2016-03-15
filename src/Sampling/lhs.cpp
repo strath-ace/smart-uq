@@ -1,8 +1,13 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /*
----------------- Copyright (C) 2015 University of Strathclyde----------------
------------------ e-mail:  carlos.ortega@strath.ac.uk -----------------------
------------------------ Author:  Carlos Ortega Absil ------------------------
+------------Copyright (C) 2016 University of Strathclyde--------------
+------------ e-mail: annalisa.riccardi@strath.ac.uk ------------------
+------------ e-mail: carlos.ortega@strath.ac.uk ----------------------
+--------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
+
 
 #include "Sampling/lhs.h"
 
@@ -11,7 +16,7 @@ using namespace sampling;
 
 /// LHS Constructor
 template <class T>
-lhs<T>::lhs(const unsigned int &dim, const unsigned int &npoints) :  base_sampling<T>(dim,"Latin Hypercube Sampling"), m_npoints(npoints), m_initialised(false), m_set(), m_next(0) {
+lhs<T>::lhs(const unsigned int &dim, const unsigned int &npoints, const std::vector<T>& a, const std::vector<T>& b) :  base_sampling<T>(dim,a,b,"Latin Hypercube Sampling"), m_npoints(npoints), m_initialised(false), m_set(), m_next(0) {
   srand(time(NULL));
   }
 
@@ -34,7 +39,7 @@ std::vector<T> lhs<T>::operator()() const{
     retval[i]=m_set[m_next+i*m_npoints];
   }
   m_next++;
-  return retval;
+  return this->map(retval);
 }
 
 
@@ -51,7 +56,7 @@ std::vector<T> lhs<T>::operator()(const unsigned int &n) const{
     retval[i]=m_set[m_next+i*m_npoints];
   }
   m_next++;
-  return retval;
+  return this->map(retval);
 }
 
 
