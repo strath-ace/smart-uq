@@ -35,50 +35,50 @@ int main(){
     std::vector<taylor_polynomial<double> > x0, param, xf;
     
     //scaling of fundamental units
-    double m_scale = scale_problem ? 2000 : 1.0; //M0_spacecraft
-    double r_scale = scale_problem ? 6378136 : 1.0; //DU_Earth
+    double m_scale = scale_problem ? 2000.0 : 1.0; //M0_spacecraft
+    double r_scale = scale_problem ? 6378136.0 : 1.0; //DU_Earth
     double t_scale = scale_problem ? 806.78 : 1.0; //TU_Earth
 
     //initialisation problem constants
-    double sma = 7378*pow(10,3) / r_scale;
+    double sma = 7378.0*pow(10,3) / r_scale;
     double period = 2.0*M_PI/pow(sma * r_scale,-3.0/2.0)/sqrt(398600.4415*pow(10,9)) / t_scale;
-    double tstart = 0;
-    double tf = 0;
-    double deltat = 0;
+    double tstart = 0.0;
+    double tf = 0.0;
+    double deltat = 0.0;
     double tend = period;
 
     //initialisation: allocations
     std::vector<double> x(nvar), p(nparam), unc_x(nvar), unc_p(nparam);
 
     //initialisation: nominal initial states
-    x[0] = 7338*pow(10,3) / r_scale; //x
-    x[1] = 0; //y
-    x[2] = 0; //z
-    x[3] = 0; //v_x
-    x[4] = 2*M_PI*sma/period / (r_scale/t_scale); //v_y
-    x[5] = 0; //v_z
-    x[6] = 2000 / m_scale; //m
+    x[0] = 7338.0*pow(10,3) / r_scale; //x
+    x[1] = 0.0; //y
+    x[2] = 0.0; //z
+    x[3] = 0.0; //v_x
+    x[4] = 2.0*M_PI*sma/period; //v_y
+    x[5] = 0.0; //v_z
+    x[6] = 2000.0 / m_scale; //m
 
     //initialisation: nominal parameters
-    p[0] = 0; //T_x
+    p[0] = 0.0; //T_x
     p[1] = 0.5 / (m_scale*r_scale / pow(t_scale,2)); //T_y
-    p[2] = 0; //T_z
-    p[3] = 1/30000 / (t_scale / r_scale); //specific fuel consumption
+    p[2] = 0.0; //T_z
+    p[3] = 1.0/30000.0 / (t_scale / r_scale); //specific fuel consumption
     p[4] = 5.245*pow(10,-15) / (m_scale/pow(r_scale,3)); //rho_0
-    p[5] = 181050 / r_scale; //H
+    p[5] = 181050.0 / r_scale; //H
     p[6] = 4.4 / pow(r_scale,2); //C_D*A
-    p[7] = 0; //epsilon_x
-    p[8] = 0; //epsilon_y
-    p[9] = 0; //epsilon_z
+    p[7] = 0.0; //epsilon_x
+    p[8] = 0.0; //epsilon_y
+    p[9] = 0.0; //epsilon_z
 
     //initialisation: uncertainty in initial states
-    unc_x[0] = 1000 / r_scale; 
-    unc_x[1] = 1000 / r_scale;
-    unc_x[2] = 1000 / r_scale;
-    unc_x[3] = 5 / (r_scale/t_scale);
-    unc_x[4] = 5 / (r_scale/t_scale);
-    unc_x[5] = 5 / (r_scale/t_scale);
-    unc_x[6] = 1 / m_scale;
+    unc_x[0] = 1000.0 / r_scale; 
+    unc_x[1] = 1000.0 / r_scale;
+    unc_x[2] = 1000.0 / r_scale;
+    unc_x[3] = 5.0 / (r_scale/t_scale);
+    unc_x[4] = 5.0 / (r_scale/t_scale);
+    unc_x[5] = 5.0 / (r_scale/t_scale);
+    unc_x[6] = 1.0 / m_scale;
 
     //initialisation: uncertainty in parameters
     unc_p[0] = 0.05*sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);

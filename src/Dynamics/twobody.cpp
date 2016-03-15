@@ -42,14 +42,16 @@ int twobody<T>::evaluate(const double &t, const std::vector<T> &state, std::vect
     dstate.clear();
 
     //constant parameters
-    double radius_earth = 6378*pow(10,3) / m_r_scale;
+    double radius_earth = 6378.0*pow(10,3) / m_r_scale;
     double mu_earth = 398600.4415*pow(10,9) / (pow(m_r_scale,3)/pow(m_t_scale,2));
     double omega_earth = 7.2921150*pow(10,-5) * m_t_scale;
-    double H0_atmosphere = 900000 / m_r_scale;
+    double H0_atmosphere = 900000.0 / m_r_scale;
 
     //precomputations
-    T r = sqrt(state[0]*state[0]+state[1]*state[1]+state[2]*state[2]);
-    T tmp_3D =  mu_earth/pow(r, 3);
+    T r2 = state[0]*state[0]+state[1]*state[1]+state[2]*state[2];
+    T r = sqrt(r2);
+    T r3 = pow(r,3);
+    T tmp_3D =  mu_earth/r3;
 
     //atmospheric model
     T rho = m_param[4]*exp(-(r-radius_earth-H0_atmosphere)/m_param[5]);
