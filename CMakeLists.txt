@@ -37,7 +37,7 @@ set(EXAMPLES_NAME                              "examples")
 
 option(BUILD_MAIN                              "Build main function"            ON)
 option(BUILD_DOCS                              "Build docs"                     OFF)
-option(BUILD_TESTS                             "Build tests"                    OFF)
+#option(BUILD_TESTS                             "Build tests"                    OFF)
 option(BUILD_EXAMPLES                          "Build examples"                 OFF)
 
 find_library(FFTW_LIBRARY fftw3)

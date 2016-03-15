@@ -116,6 +116,7 @@ int main(){
     std::vector<std::vector<double> > coeffs_all;
     deltat = 1000.0 / t_scale; //snapshot frequency
     for(int i=0; i+1<tend/deltat; i++){
+        std::cout<<"i"<<std::endl;
         tf += deltat;
         integrator.integrate(tstart,tf,100,x0,xf);
         x0 = xf;
@@ -136,6 +137,8 @@ int main(){
     if (print_time_to_screen) cout << "example_intrusive, time elapsed : " << time_elapsed << endl;
 
     //printing
+    // ATTENTION: CHEBYSHEV HAVE BEEN MANIPULATED TO MONOMIAL BASIS!
+    // If not converted back output results are in monomial base
     if(print_results_to_file){
         std::ofstream file;
         file.open ("twobody_problem_intrusive.txt");

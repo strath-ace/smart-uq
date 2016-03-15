@@ -8,5 +8,4 @@
 --------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
 
-
 #define CHEBYSHEV_DCT_MULTIPLICATION

@@ -22,7 +22,7 @@ int main(){
       **/
 
     //EXAMPLE INPUT
-    bool scale_problem = false; //true for non-dimensional problem
+    bool scale_problem = true; //true for non-dimensional problem
     bool print_results_to_file = true;
     bool print_time_to_screen = true;
 
