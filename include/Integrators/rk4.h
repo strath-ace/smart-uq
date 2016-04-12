@@ -20,7 +20,9 @@ namespace smartuq
     namespace integrator {
 
         /**
-         * @brief The Runge Kutta 4 integrator class
+         * @brief The Runge Kutta 4 integrator scheme
+         *
+         * The class model the Runge Kutta fourth order integration scheme
          */
         template < class T >
         class rk4: public base_integrator<T>
@@ -32,23 +34,28 @@ namespace smartuq
 
         public:
             /**
-             * @brief rk4
+             * @brief rk4 constructor
+             *
+             * The integrator is initialized with the super class constructor. No additional parameters are set.
              * @param dyn
              */
             rk4(const dynamics::base_dynamics<T> *dyn);
 
             /**
-              * @brief ~rk4
+              * @brief ~rk4 deconstructor
               */
             ~rk4();
 
             /**
-             * @brief integrate
-             * @param ti
-             * @param tend
-             * @param nsteps
-             * @param x0
-             * @param xfinal
+             * @brief integrate method to integrate bewteen two given time steps, initial condition and step lenght
+             *
+             * The method implements the RK4 scheme to integrate with given initial time,
+             * final time, initial state condition and number of steps (constant stepsize)
+             * @param[in] ti initial time instant
+             * @param[in] tend final time instant
+             * @param[in] nsteps number of integration steps
+             * @param[in] x0 vector of initial states
+             * @param[out] xfinal vector of final states
              * @return
              */
             int integrate(const double &ti, const double &tend, const int &nsteps, const std::vector<T> &x0, std::vector<T> &xfinal) const;

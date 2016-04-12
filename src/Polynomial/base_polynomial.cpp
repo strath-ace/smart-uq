@@ -20,14 +20,25 @@ using namespace polynomial;
 /*CONSTRUCTORS*/
 /**************/
 template < class T >
-base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_monomial_base(false), m_J(0), m_N(0){
+base_polynomial<T>::base_polynomial(const int &vars, const int &order, const std::vector<T> &a, const std::vector<T> &b): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
+    m_monomial_base(false), m_J(0), m_N(0), m_a(a), m_b(b){
 
     if(vars<0){
         smart_throw(m_name+": Polynomials need to have a positive number of variables");
     }
     if(order<0){
         smart_throw(m_name+": Polynomials need to have a positive order");
+    }
+
+    if(a.size()!=0 && a.size() != vars)
+        smart_throw("Base polynomial: variables lower bound need to have the same size of the number of variables");
+    if(a.size()!=0 && b.size() != vars)
+        smart_throw("Base polynomial: variables upper bound need to have the same size of the number of variables");
+    if(a.size()>0){
+        for(unsigned int i=0; i<vars; i++){
+            if(a[i]>b[i])
+                smart_throw("Base polynomial: variables bounds need to be a<b");
+        }
     }
 
     int n = combination(vars,order);
@@ -52,10 +63,15 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("
     initialize_J();
     initialize_N();
 
+    if(m_a.size()==0)
+        m_a = std::vector<T>(m_nvar,-1.0);
+    if(m_b.size()==0)
+        m_b = std::vector<T>(m_nvar,1.0);
+
 }
 
 template < class T >
-base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int &i): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
+base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
     m_monomial_base(false), m_J(0), m_N(0){
 
     if(vars<0){
@@ -77,7 +93,8 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
     }
 
     m_coeffs.resize(n);
-    m_coeffs[i+1] = 1.0;
+    m_coeffs[i+1] = (b-a)/2.0;
+    m_coeffs[0] = (b+a)/2.0;
 
     //save some info
     m_degree = order;
@@ -132,48 +149,6 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
     initialize_J();
     initialize_N();
 
-
-}
-
-template < class T >
-base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b): m_name("Polynomial"), m_coeffs(0), m_degree(0), m_nvar(0),
-    m_monomial_base(false), m_J(0), m_N(0){
-
-    if(vars<0){
-        smart_throw(m_name+": Polynomials need to have a positive number of variables");
-    }
-    if(order<=0){
-        smart_throw(m_name+": Polynomials need to have a positive order");
-    }
-    if(i<0 || i>=vars){
-        smart_throw(m_name+": First order Polynomial constructor need a variable index between [0,nvars-1]");
-    }
-
-    //allocate memory for coefficients vector
-
-    int n = combination(vars,order);
-
-    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
-        smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
-    }
-
-    m_coeffs.resize(n);
-    m_coeffs[i+1] = (b-a)/2.0;
-    m_coeffs[0] = (b+a)/2.0;
-
-    //save some info
-    m_degree = order;
-    m_nvar = vars;
-
-    m_J.resize(vars+1);
-    m_N.resize(vars+1);
-    for(int i=0; i<=vars; i++){
-        m_J[i].resize(order+1);
-        m_N[i].resize(order+1);
-    }
-
-    initialize_J();
-    initialize_N();
 
 }
 
@@ -279,7 +254,14 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
     if(npoints==ncoeffs){
         Eigen::MatrixXd base_inv (npoints,ncoeffs);
         base_inv=base_matrix.inverse();
-        for(int i=0;i<m_nvar; i++){
+        for(int i=0;i<npoints;i++){
+            std::vector<T> row(npoints);
+            for(int j=0;j<npoints;j++)
+                row[j]=base_inv(i,j);
+            H.push_back(row);
+        }
+
+        for(int i=0;i<y[0].size(); i++){
             for(int j=0; j<npoints; j++){
                 Y[j] = y[j][i];
             }
@@ -326,13 +308,14 @@ void base_polynomial<T>::solve(const std::vector<std::vector<T> > &H, const std:
     int nvars = y[0].size();
 
     res_coeffs.clear();
-    for(int i=0;i<nrows_H;i++)
-        res_coeffs.push_back(std::vector<T>(nvars,0.0));
+
+    for(int i=0;i<nvars;i++)
+        res_coeffs.push_back(std::vector<T>(nrows_H,0.0));
 
     for(int i=0;i<nvars;i++){
         for(int j=0; j<nrows_H; j++){
             for(int k=0;k<ncolumns_H; k++){
-                res_coeffs[j][i]+= H[j][k]*y[k][i];
+                res_coeffs[i][j]+= H[j][k]*y[k][i];
             }
         }
     }
@@ -585,13 +568,13 @@ std::vector<T> base_polynomial<T>::evaluate_basis_monomial(const std::vector<T> 
     for(int deg=0; deg<=m_degree; deg++){
         for(int i=0; i<m_J[m_nvar][deg]; i++){
             T prod = 1.0;
-            if (fabs(m_coeffs[idx])>ZERO){
+            //if (fabs(m_coeffs[idx])>ZERO){
                 std::vector<int> row = this->get_row(i,deg);
                 for(int j=0;j<m_nvar; j++){
                     prod*=base[j][row[j]];
                 }
                 res[idx] = prod;
-            }
+            //}
             idx++;
         }
     }

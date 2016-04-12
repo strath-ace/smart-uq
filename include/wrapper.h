@@ -10,6 +10,7 @@
 
 #ifndef WRAPPER_H
 #define WRAPPER_H
+#include "config.h"
 
 #ifdef CHEBYSHEV_DCT_MULTIPLICATION
 #include <fftw3.h>

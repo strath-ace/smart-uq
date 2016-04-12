@@ -3,10 +3,7 @@
 
 ======================================================================
 
-[![Build Status](https://travis-ci.org/space-art/smart-uq.svg?branch=master)](https://travis-ci.org/space-art/smart-uq)
-
-
-`SMART` is a collection of toolboxes developed and maintained since 2015 by the department of Mechanical and Aerospace Engineer of Strathclyde University. `SMART-UQ` in particular, is a collection of uncertainity quantification techniques.
+`SMART` is a collection of toolboxes developed and maintained since 2015 by the department of Mechanical and Aerospace Engineering of Strathclyde University. `SMART-UQ` in particular, is a collection of uncertainity quantification techniques.
 
 `SMART` is aimed at making code development inside the team more efficient, reusable and easy maintainabile.
 

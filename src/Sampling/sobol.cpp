@@ -17,7 +17,7 @@ using namespace sampling;
 
 /// SOBOL Constructor
 template <class T>
-sobol<T>::sobol(const unsigned int &dim, const unsigned int &count) : base_sampling<T>(dim,"Sobol sampling"), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
+sobol<T>::sobol(const unsigned int &dim, const std::vector<T>& a, const std::vector<T>& b, const unsigned int &count) : base_sampling<T>(dim,a,b,"Sobol sampling"), m_count(count), m_dim_num_save(0), m_initialized(false), m_maxcol(62), m_seed_save(-1), recipd(0), lastq(), poly(), v(){
     if (dim >1111 || dim <1)
         smart_throw(m_name+": Sobol sequence can have dimensions [1,1111]");
   }
@@ -36,7 +36,7 @@ std::vector<T> sobol<T>::operator()() const{
   signed long long int seed= (signed long long int) m_count;
   i8_sobol(m_dim, &seed, &retval[0]);
   m_count= (unsigned short int) seed;
-  return retval;
+  return this->map(retval);
 }
 
 /// Operator (unsigned int n)
@@ -48,7 +48,7 @@ std::vector<T> sobol<T>::operator()(const unsigned int &n) const{
   std::vector<T> retval(m_dim,0.0);
   i8_sobol(m_dim, &seed, &retval[0]);
   m_count= (unsigned short int) seed;
-  return retval;
+  return this->map(retval);
 }
 
 

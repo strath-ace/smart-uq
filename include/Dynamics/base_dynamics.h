@@ -34,7 +34,9 @@ namespace smartuq
             /**
              * @brief base_dynamics constructor.
              *
-             * In the constructor the name of the dynamics
+             * The base dynamics classed is constructed with just the name of the dynamical system. Being an abstract class it is not possible to instantiate an object of this class.
+             * The constructor will be called by the sublcasses.
+             * The dynamics are implemented as template classes because they can operate in the space pf real number or in the algebra of polynomials.
              * @param name dynamical system name
              */
             base_dynamics(const std::string &name);
@@ -42,7 +44,9 @@ namespace smartuq
             virtual ~base_dynamics();
 
             /**
-             * @brief Function to evaluate the dinamics at a given instant of time and a given state. It is a virtual function so any class that inherites from base_dynamics need to implement it
+             * @brief evaluate evaluate the dinamics at a given instant of time and a given state.
+             *
+             * Function to evaluate the dinamics at a given instant of time and a given state. It is a virtual function so any class that inherites from base_dynamics need to implement it.
              * @param[in] t time
              * @param[in] state state values at time t
              * @param[out] dstate derivative of the states at time t
@@ -51,12 +55,17 @@ namespace smartuq
             virtual int evaluate(const double &t, const std::vector<T> &state, std::vector<T> &dstate) const = 0;
 
             /**
-             * @brief get_name
+             * @brief get_name return dynamical system name
+             *
+             * Function to get the name of the dynamical system
              * @return
              */
             std::string get_name() const;
 
         protected:
+            /**
+             * @brief m_name dynamical system name (used in error messages)
+             */
             std::string m_name;
 
         };

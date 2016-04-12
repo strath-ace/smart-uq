@@ -19,13 +19,13 @@ using namespace polynomial;
 /*CONSTRUCTORS                */
 /******************************/
 template < class T >
-taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order) : base_polynomial<T>(vars,order){
+taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order,const std::vector<T> &a, const std::vector<T> &b) : base_polynomial<T>(vars,order,a,b){
     m_name="Taylor Polynomial";
     m_monomial_base = true;
 }
 
 template < class T >
-taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const int &i) : base_polynomial<T>(vars,order,i){
+taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b) : base_polynomial<T>(vars,order,i,a,b){
     m_name="Taylor Polynomial";
     m_monomial_base = true;
 }
@@ -36,11 +36,6 @@ taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const
     m_monomial_base = true;
 }
 
-template < class T >
-taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b) : base_polynomial<T>(vars,order,i,a,b){
-    m_name="Taylor Polynomial";
-    m_monomial_base = true;
-}
 
 
 template < class T >
@@ -302,7 +297,7 @@ taylor_polynomial<T>& taylor_polynomial<T>::operator/=(const T& other){
 template < class T >
 taylor_polynomial<T> taylor_polynomial<T>::inv(const taylor_polynomial<T> &other) const{
 
-         std::vector <T> coeffs = this -> get_coeffs(); // p = c + n(x)
+         std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
          T c = coeffs[0];
 
          if (fabs(c)<ZERO){
@@ -456,7 +451,14 @@ void taylor_polynomial<T>::composition(const std::vector<taylor_polynomial<T> > 
 
 template <class T>
 std::vector<T> taylor_polynomial<T>::evaluate_basis(const std::vector<T> &x) const { //most direct implementation, faster ones might be available
-    return this->evaluate_basis_monomial(x);
+    std::vector<T> xx(x);
+    //map from [a,b] to [-1,1]
+    if(m_a.size()>0){
+        for(int i=0; i<m_nvar; i++)
+              xx[i] = (x[i] - m_a[i])*2.0/(m_b[i]-m_a[i]) - 1.0;
+    }
+
+    return this->evaluate_basis_monomial(xx);
 }
 
 //Multivariate Evaluation method
@@ -487,7 +489,7 @@ T taylor_polynomial<T>::evaluate(const T &x) const {
 
 
 template < class T >
-void taylor_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
+void taylor_polynomial<T>::map(const std::vector<T> &a, const std::vector<T> &b){
 
     if(b.size() != a.size())
         smart_throw(m_name+": mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
@@ -527,15 +529,6 @@ void taylor_polynomial<T>::from_monomial_basis(){
 template < class T >
 std::string taylor_polynomial<T>::get_basis_name() const{
     return "T";
-}
-
-/******************************/
-/*APPROXIMATION               */
-/******************************/
-template < class T >
-std::vector<T> taylor_polynomial<T>::approximation(T (*f)(T x), const T &x0){
-
-    return std::vector<T>();
 }
 
 

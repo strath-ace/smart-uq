@@ -18,13 +18,13 @@ using namespace polynomial;
 /*CONSTRUCTORS                */
 /******************************/
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const bool& monomial) : base_polynomial<T>(vars,order){
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const std::vector<T> &a, const std::vector<T> &b, const bool& monomial) : base_polynomial<T>(vars,order,a,b){
     m_name="Chebyshev Polynomial";
     m_monomial_base=monomial;
 }
 
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const bool& monomial) : base_polynomial<T>(vars,order,i){
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b, const bool& monomial) : base_polynomial<T>(vars,order,i,a,b){
     m_name="Chebyshev Polynomial";
     m_monomial_base=monomial;
 }
@@ -36,7 +36,7 @@ chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order,
 }
 
 template < class T >
-chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const int &i, const T &a, const T &b, const bool& monomial) : base_polynomial<T>(vars,order,i,a,b){
+chebyshev_polynomial<T>::chebyshev_polynomial(const int &vars, const int &order, const bool &monomial) : base_polynomial<T>(vars,order){
     m_name="Chebyshev Polynomial";
     m_monomial_base=monomial;
 }
@@ -129,80 +129,80 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::operator*(const chebyshev_polyn
     else
     {
     #ifdef CHEBYSHEV_DCT_MULTIPLICATION
-    int ncoeffs = combination(m_nvar,m_degree);
-    std::vector<T> other_coeffs = other.get_coeffs();
-    chebyshev_polynomial<T> res(m_nvar,m_degree);
+        int ncoeffs = combination(m_nvar,m_degree);
+        std::vector<T> other_coeffs = other.get_coeffs();
+        chebyshev_polynomial<T> res(m_nvar,m_degree);
 
-    //initialise stuff needed by fftw
-    int dct_degree_aux = int (m_degree*1.5+1);
-    int dct_degree[m_nvar];
-    for (int i=0;i<m_nvar;i++){
-        dct_degree[i]=dct_degree_aux+1;
-    }
-    int pointers_length=pow(dct_degree_aux+1,m_nvar);
-    T *dct0, *dct1, *dct01;
-
-    // allocate pointers for all DCTs
-    dct_malloc(dct0,pointers_length);
-    dct_malloc(dct1,pointers_length);
-    dct_malloc(dct01,pointers_length);
-
-    // build a vector idx[ncoeffs] with the pointer indexes in row-major format
-    // build a vector scale[ncoeffs] with the scale factor for each of the coefficients
-    std::vector <int> idx;
-    std::vector <T> scale;
-    int ii=0;
-    for (int deg=0;deg<=m_degree;deg++){
-        int max_i=m_J[m_nvar][deg];
-        for (int i=0;i<max_i;i++){
-            std::vector<int> row = res.get_row(i,deg);
-            int term_idx=0;
-            T term_scale=1.0;
-            for (int var=0;var<m_nvar;var++){
-                if (row[var]==0) term_scale*=2.0;
-                term_idx+=row[var]*pow((dct_degree_aux+1),var);
-            }
-            idx.push_back(term_idx);
-            scale.push_back(term_scale);
-            // initialise non-zero terms of dct0 and dct1 here too (to avoid an additional for loop)
-            dct0[term_idx]=m_coeffs[ii]*term_scale;
-            dct1[term_idx]=other_coeffs[ii]*term_scale;
-            ii++;
+        //initialise stuff needed by fftw
+        int dct_degree_aux = int (m_degree*1.5+1);
+        int dct_degree[m_nvar];
+        for (int i=0;i<m_nvar;i++){
+            dct_degree[i]=dct_degree_aux+1;
         }
-    }
+        int pointers_length=pow(dct_degree_aux+1,m_nvar);
+        T *dct0, *dct1, *dct01;
 
-    //DCT(x0) and DCT(x1)
-    dct_do(m_nvar,dct_degree,dct0);
-    dct_do(m_nvar,dct_degree,dct1);
+        // allocate pointers for all DCTs
+        dct_malloc(dct0,pointers_length);
+        dct_malloc(dct1,pointers_length);
+        dct_malloc(dct01,pointers_length);
 
-    // component-wise multiplication DCT(x0):DCT(x1)
-    // scale already to avoid coefficients growing too much in large algebras
-    T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
-    for(int i=0;i<pointers_length;i++){
-        dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
-    }
+        // build a vector idx[ncoeffs] with the pointer indexes in row-major format
+        // build a vector scale[ncoeffs] with the scale factor for each of the coefficients
+        std::vector <int> idx;
+        std::vector <T> scale;
+        int ii=0;
+        for (int deg=0;deg<=m_degree;deg++){
+            int max_i=m_J[m_nvar][deg];
+            for (int i=0;i<max_i;i++){
+                std::vector<int> row = res.get_row(i,deg);
+                int term_idx=0;
+                T term_scale=1.0;
+                for (int var=0;var<m_nvar;var++){
+                    if (row[var]==0) term_scale*=2.0;
+                    term_idx+=row[var]*pow((dct_degree_aux+1),var);
+                }
+                idx.push_back(term_idx);
+                scale.push_back(term_scale);
+                // initialise non-zero terms of dct0 and dct1 here too (to avoid an additional for loop)
+                dct0[term_idx]=m_coeffs[ii]*term_scale;
+                dct1[term_idx]=other_coeffs[ii]*term_scale;
+                ii++;
+            }
+        }
 
-    // deallocate more stuff
-    dct_free(dct0);
-    dct_free(dct1);
+        //DCT(x0) and DCT(x1)
+        dct_do(m_nvar,dct_degree,dct0);
+        dct_do(m_nvar,dct_degree,dct1);
 
-    // Obtain DCT(DCT(x0):DCT(x1))
-    dct_do(m_nvar,dct_degree,dct01);
+        // component-wise multiplication DCT(x0):DCT(x1)
+        // scale already to avoid coefficients growing too much in large algebras
+        T scale_intermediate = pow(4*dct_degree_aux,m_nvar);
+        for(int i=0;i<pointers_length;i++){
+            dct01[i]=dct0[i]*dct1[i]/scale_intermediate;
+        }
 
-    // rescale and save results
-    for (int i=0;i<ncoeffs;i++){
-        T term_result=dct01[idx[i]]/scale[i];
-        if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
-        else res.set_coeffs(i,0.0);
-    }
+        // deallocate more stuff
+        dct_free(dct0);
+        dct_free(dct1);
 
-    // deallocate and return
-    dct_free(dct01);
-    return res;
+        // Obtain DCT(DCT(x0):DCT(x1))
+        dct_do(m_nvar,dct_degree,dct01);
+
+        // rescale and save results
+        for (int i=0;i<ncoeffs;i++){
+            T term_result=dct01[idx[i]]/scale[i];
+            if (fabs(term_result)>ZERO) res.set_coeffs(i,term_result);
+            else res.set_coeffs(i,0.0);
+        }
+
+        // deallocate and return
+        dct_free(dct01);
+        return res;
 
     #else
 
-    return direct_multiplication(*this,other);
+        return direct_multiplication(*this,other);
 
     #endif
     }
@@ -608,15 +608,22 @@ std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) 
     if(m_nvar!=x.size()){
         smart_throw(m_name+": (evaluate) Dimension of point must correspond to number of variables of polynomial.");
     }
+
+    std::vector<T> xx(x);
+    //map from [a,b] to [-1,1]
+    if(m_a.size()>0){
+        for(int i=0; i<m_nvar; i++)
+              xx[i] = (x[i] - m_a[i])*2.0/(m_b[i]-m_a[i]) - 1.0;
+    }
+
     for (int i=0;i<m_nvar;i++){
-        if (fabs(x[i])>1){
+        if (fabs(xx[i])>1){
             smart_throw(m_name+": (evaluate) All components of point must belong to [-1,1].");
         }
     }
 
-
     if(m_monomial_base){
-        return this->evaluate_basis_monomial(x);
+        return this->evaluate_basis_monomial(xx);
     }
 
     //evaluate the bases
@@ -625,9 +632,9 @@ std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) 
     for (int i=0; i<m_nvar;i++){
         base[i].resize(m_degree+1);
         base[i][0]=1.0;
-        if (m_degree>0) base[i][1]=x[i];
+        if (m_degree>0) base[i][1]=xx[i];
         for (int j=2; j<=m_degree; j++){
-            base[i][j]=2.0*x[i]*base[i][j-1]-base[i][j-2];
+            base[i][j]=2.0*xx[i]*base[i][j-1]-base[i][j-2];
         }
     }
 
@@ -638,13 +645,13 @@ std::vector<T> chebyshev_polynomial<T>::evaluate_basis(const std::vector<T> &x) 
     for(int deg=0; deg<=m_degree; deg++){
         for(int i=0; i<m_J[m_nvar][deg]; i++){
             T prod = 1.0;
-            if (fabs(m_coeffs[idx])>ZERO){
+            //if (fabs(m_coeffs[idx])>ZERO){
                 std::vector<int> row = this->get_row(i,deg);
                 for(int j=0;j<m_nvar; j++){
                     prod*=base[j][row[j]];
                 }
                 res[idx] = prod;
-            }
+            //}
             idx++;
         }
     }
@@ -716,10 +723,10 @@ void chebyshev_polynomial<T>::to_monomial_basis(){
     }
 
     for (int v=0;v<m_nvar;v++){
-        chebyshev_polynomial<T> base2(m_nvar,m_degree,(T) 1.0, true);
-        chebyshev_polynomial<T> base1(m_nvar,m_degree,(int) v, true);
-        chebyshev_polynomial<T> x(m_nvar,m_degree,(int) v, true);
-        chebyshev_polynomial<T> term(m_nvar,m_degree, true);
+        chebyshev_polynomial<T> base2(m_nvar,m_degree,(T) 1.0,true);
+        chebyshev_polynomial<T> base1(m_nvar,m_degree,(int) v,-1.0,1.0,true);
+        chebyshev_polynomial<T> x(m_nvar,m_degree,(int) v,-1.0,1.0, true);
+        chebyshev_polynomial<T> term(m_nvar,m_degree,true);
 
         for (int d=1;d<=m_degree;d++){
             if (d==1)  term=base1;
@@ -798,7 +805,7 @@ std::string chebyshev_polynomial<T>::get_basis_name() const{
 }
 
 template < class T >
-void chebyshev_polynomial<T>::map(const int &idx, const std::vector<T> &a, const std::vector<T> &b){
+void chebyshev_polynomial<T>::map(const std::vector<T> &a, const std::vector<T> &b){
 
     if(b.size() != a.size())
         smart_throw(m_name+": mapping of polynomial variable from [-1,1]^d to [a,b]^d a and b need to be vector of the same size");
@@ -809,7 +816,7 @@ void chebyshev_polynomial<T>::map(const int &idx, const std::vector<T> &a, const
     for(int i=0; i<m_nvar; i++){
         if(b[i]<=a[i])
             smart_throw(m_name+": mapping of polynomial variable from [-1,1] to [a,b] with b>=a");
-        mapped_vars.push_back(chebyshev_polynomial<T>(m_nvar, m_degree,i, m_monomial_base));
+        mapped_vars.push_back(chebyshev_polynomial<T>(m_nvar, m_degree,i, -1.0,1.0, m_monomial_base));
         mapped_vars[i] = (b[i]-a[i])/2.0 * mapped_vars[i] + (b[i]+a[i])/2.0;
     }
 
@@ -876,8 +883,8 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::approximation(T (*f)(T x), cons
        // Hence rewriting code instead of calling to_monomial(), to avoid the computation of worthless terms of order > degree.
 
        chebyshev_polynomial<T> monom_approx(1,degree,(T) cheb_approx[0], true);
-       chebyshev_polynomial<T> x(1,degree,(int) 0, true);
-       chebyshev_polynomial<T> cheb_base1(1,degree,(int) 0, true);
+       chebyshev_polynomial<T> x(1,degree,(int) 0,-1.0,1.0, true);
+       chebyshev_polynomial<T> cheb_base1(1,degree,(int) 0,-1.0,1.0, true);
        chebyshev_polynomial<T> cheb_base2(1,degree, (T) 1.0, true);
        chebyshev_polynomial<T> cheb_base(1,degree, true);
 

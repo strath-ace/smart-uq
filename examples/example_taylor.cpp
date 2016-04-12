@@ -12,7 +12,7 @@
 #include "../include/smartuq.h"
 #include <fstream>
 
-using namespace smartuq;
+using namespace smart;
 
 int main(){
 
@@ -32,7 +32,7 @@ int main(){
     int poly_degree = 4;
 
     //polynomial allocation
-    std::vector<chebyshev_polynomial<double> > x0, param, xf;
+    std::vector<taylor_polynomial<double> > x0, param, xf;
     
     //scaling of fundamental units
     double m_scale = scale_problem ? 2000.0 : 1.0; //M0_spacecraft
@@ -92,13 +92,13 @@ int main(){
     unc_p[8] = 0.0001 / (r_scale/pow(t_scale,2));
     unc_p[9] = 0.0001 / (r_scale/pow(t_scale,2));
 
-    //initialise 7 state variables as Chebycheff/Taylor base of order 1 in the variable i mapped to [x-unc_x, x+unc_x]
+    //initialise 7 state variables as Taylor base of order 1 in the variable i mapped to [x-unc_x, x+unc_x]
     for(int i=0;i<nvar;i++){
-        x0.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i], true));
+        x0.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, i, x[i]-unc_x[i], x[i]+unc_x[i]));
     }
-    //initialise 10 parameter variables as Chebycheff/Taylor base of order 1 in the variable 7+i mapped to [p-unc_p, p+unc_p]
+    //initialise 10 parameter variables as Taylor base of order 1 in the variable 7+i mapped to [p-unc_p, p+unc_p]
     for(int i=0;i<nparam;i++){
-        param.push_back(chebyshev_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i], true));
+        param.push_back(taylor_polynomial<double>(nvar+nparam, poly_degree, 7+i, p[i]-unc_p[i], p[i]+unc_p[i]));
     }
 
     //timing
@@ -109,14 +109,13 @@ int main(){
     x0[0].initialize_M(nvar+nparam,poly_degree);    
 
     //dynamical system
-    dynamics::twobody < chebyshev_polynomial<double> > dyn(param, t_scale, r_scale);
-    integrator::rk4 < chebyshev_polynomial<double> > integrator(&dyn);
+    dynamics::twobody < taylor_polynomial<double> > dyn(param, t_scale, r_scale);
+    integrator::rk4 < taylor_polynomial<double> > integrator(&dyn);
 
     //propagation (MAIN LOOP)
     std::vector<std::vector<double> > coeffs_all;
-    deltat = 1000.0 / t_scale; //snapshot frequency
+    deltat = 1000 / t_scale; //snapshot frequency
     for(int i=0; i+1<tend/deltat; i++){
-        std::cout<<"i"<<std::endl;
         tf += deltat;
         integrator.integrate(tstart,tf,100,x0,xf);
         x0 = xf;
@@ -134,14 +133,12 @@ int main(){
     //timing
     end=clock();
     double time_elapsed = (double (end-begin))/CLOCKS_PER_SEC;
-    if (print_time_to_screen) cout << "example_intrusive, time elapsed : " << time_elapsed << endl;
+    if (print_time_to_screen) cout << "example_taylor, time elapsed : " << time_elapsed << endl;
 
     //printing
-    // ATTENTION: CHEBYSHEV HAVE BEEN MANIPULATED TO MONOMIAL BASIS!
-    // If not converted back output results are in monomial base
     if(print_results_to_file){
         std::ofstream file;
-        file.open ("twobody_problem_intrusive.txt");
+        file.open ("twobody_problem_taylor.txt");
         for(unsigned int k=0; k<coeffs_all.size(); k++){
             for(unsigned int kk=0; kk<coeffs_all[k].size(); kk++)
                 file << setprecision(16) << coeffs_all[k][kk] << " ";

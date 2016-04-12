@@ -19,8 +19,41 @@ using namespace polynomial;
 /************************************************/
 template <class T>
 taylor_polynomial<T> sin(const taylor_polynomial<T> &other){
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
 
-    return taylor_polynomial<T>(1,1);
+    std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
+    T c = coeffs[0];
+    T f = 1;
+
+    taylor_polynomial<T> n(nvar,degree);
+    coeffs[0] = 0.0;
+    n.set_coeffs(coeffs);
+
+    taylor_polynomial<T> res(nvar,degree, (T) sin(c));
+    taylor_polynomial<T> term=n;
+
+    std::vector<taylor_polynomial<T> > powers;
+    std::vector<T> factorial;
+
+    res += term*cos(c);
+
+    for (int i=2; i<=degree; i++){
+        term *= n;
+        f *= i;
+        powers.push_back(term);
+        factorial.push_back(f);
+    }
+
+    for (int i=1; i<=degree/2.0;i++){
+        res += sin(c)*(pow(-1,i)/(T)factorial[2*i-2])*powers[2*i-2];
+    }
+
+    for (int i=1; i<=degree/2.0-1;i++){
+        res += cos(c)*(pow(-1,i)/(T)factorial[2*i+1-2])*powers[2*i+1-2];
+    }
+
+    return res;
 }
 template class taylor_polynomial<double>
 sin(const taylor_polynomial<double> &);
@@ -35,8 +68,41 @@ sin(const taylor_polynomial<long double> &);
 /************************************************/
 template <class T>
 taylor_polynomial<T> cos(const taylor_polynomial<T> &other){
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
 
-    return taylor_polynomial<T>(1,1);
+    std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
+    T c = coeffs[0];
+    T f = 1;
+
+    taylor_polynomial<T> n(nvar,degree);
+    coeffs[0] = 0.0;
+    n.set_coeffs(coeffs);
+
+    taylor_polynomial<T> res(nvar,degree, (T) cos(c));
+    taylor_polynomial<T> term=n;
+
+    std::vector<taylor_polynomial<T> > powers;
+    std::vector<T> factorial;
+
+    res -= term*sin(c);
+
+    for (int i=2; i<=degree; i++){
+        term *=n;
+        f *= i;
+        powers.push_back(term);
+        factorial.push_back(f);
+    }
+
+    for (int i=1; i<=degree/2.0;i++){
+        res += cos(c)*(pow(-1,i)/(T)factorial[2*i-2])*powers[2*i-2];
+    }
+
+    for (int i=1; i<=degree/2.0-1;i++){
+        res -= sin(c)*(pow(-1,i)/(T)factorial[2*i+1-2])*powers[2*i+1-2];
+    }
+
+    return res;
 
 }
 template class taylor_polynomial<double>
@@ -52,7 +118,7 @@ cos(const taylor_polynomial<long double> &);
 template <class T>
 taylor_polynomial<T> tan(const taylor_polynomial<T> &other){
 
-    return taylor_polynomial<T>(1,1);
+    return sin(other)/cos(other);
 
 }
 template class taylor_polynomial<double>
@@ -62,54 +128,6 @@ tan(const taylor_polynomial<float> &);
 template class taylor_polynomial<long double>
 tan(const taylor_polynomial<long double> &);
 
-
-/************************************************/
-/*                  ASIN                        */
-/************************************************/
-template <class T>
-taylor_polynomial<T> asin(const taylor_polynomial<T> &other){
-
-    return taylor_polynomial<T>(1,1);
-
-}
-template class taylor_polynomial<double>
-asin(const taylor_polynomial<double> &);
-template class taylor_polynomial<float>
-asin(const taylor_polynomial<float> &);
-template class taylor_polynomial<long double>
-asin(const taylor_polynomial<long double> &);
-
-/************************************************/
-/*                  ACOS                        */
-/************************************************/
-template <class T>
-taylor_polynomial<T> acos(const taylor_polynomial<T> &other){
-
-    return taylor_polynomial<T>(1,1);
-
-}
-template class taylor_polynomial<double>
-acos(const taylor_polynomial<double> &);
-template class taylor_polynomial<float>
-acos(const taylor_polynomial<float> &);
-template class taylor_polynomial<long double>
-acos(const taylor_polynomial<long double> &);
-
-/************************************************/
-/*                  ATAN                        */
-/************************************************/
-template <class T>
-taylor_polynomial<T> atan(const taylor_polynomial<T> &other){
-
-    return taylor_polynomial<T>(1,1);
-
-}
-template class taylor_polynomial<double>
-atan(const taylor_polynomial<double> &);
-template class taylor_polynomial<float>
-atan(const taylor_polynomial<float> &);
-template class taylor_polynomial<long double>
-atan(const taylor_polynomial<long double> &);
 
 // OTHERS
 //EXPONENTIAL FUNCTION
@@ -195,7 +213,33 @@ sqrt(const taylor_polynomial<long double> &);
 template <class T>
 taylor_polynomial<T> log(const taylor_polynomial<T> &other){
 
-    return taylor_polynomial<T>(1,1);
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+
+    std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
+    T c = coeffs[0];
+
+
+    taylor_polynomial<T> n(nvar,degree);
+    coeffs[0] = 0.0;
+    n.set_coeffs(coeffs);
+
+    taylor_polynomial<T> res(nvar,degree, (T) log(c));
+    taylor_polynomial<T> tmp(nvar,degree);
+    tmp = n;
+
+    if (c==0) {
+        std::cout<<"Error: division by zero in log"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    res += tmp/c;
+    for (int i=2; i<=degree; i++){
+        tmp *= n;
+        res += pow(-1,i+1)*tmp/((T) i*pow(c,i));
+    }
+
+    return res;
 
 }
 template class taylor_polynomial<double>
@@ -205,21 +249,6 @@ log(const taylor_polynomial<float> &);
 template class taylor_polynomial<long double>
 log(const taylor_polynomial<long double> &);
 
-/************************************************/
-/*                  LOG10                       */
-/************************************************/
-template <class T>
-taylor_polynomial<T> log10(const taylor_polynomial<T> &other){
-
-    return taylor_polynomial<T>(1,1);
-
-}
-template class taylor_polynomial<double>
-log10(const taylor_polynomial<double> &);
-template class taylor_polynomial<float>
-log10(const taylor_polynomial<float> &);
-template class taylor_polynomial<long double>
-log10(const taylor_polynomial<long double> &);
 
 /************************************************/
 /*                  POW                         */
