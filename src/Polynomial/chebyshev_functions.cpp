@@ -9,9 +9,9 @@
 */
 
 
-#include "Polynomial/chebyshev_functions.h"
+#include "../../include/Polynomial/chebyshev_functions.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace polynomial;
 
 /************************************************/

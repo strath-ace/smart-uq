@@ -35,6 +35,7 @@ set(TEST_NAME                                  "test")
 set(EXAMPLES_PATH                              "${PROJECT_BINARY_DIR}/examples")
 set(EXAMPLES_NAME                              "examples")
 
+option(BUILD_STATIC			       "Build static library"		ON)
 option(BUILD_MAIN                              "Build main function"            ON)
 option(BUILD_DOCS                              "Build docs"                     OFF)
 option(BUILD_TESTS                             "Build tests"                    OFF)
@@ -113,11 +114,15 @@ configure_file (
   "${INCLUDE_PATH}/config.h"
   )
 
-include_directories(${INCLUDE_PATH} ${EIGEN_INCLUDE_PATH})
+include_directories(${EIGEN_INCLUDE_PATH})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_PATH})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${LIB_PATH})
-add_library(${LIB_NAME} ${SRC})
+if(BUILD_STATIC) 
+   add_library(${LIB_NAME} STATIC ${SRC})
+else(BUILD_STATIC)
+   add_library(${LIB_NAME} SHARED ${SRC})
+endif(BUILD_STATIC)
 
 if(BUILD_MAIN)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_PATH})
@@ -162,11 +167,11 @@ endif(BUILD_EXAMPLES)
 # Install header files and library.
 # Destination is set by CMAKE_INSTALL_PREFIX and defaults to usual locations, unless overridden by
 # user.
-install(DIRECTORY ${INCLUDE_PATH}/${CMAKE_PROJECT_NAME}
-        DESTINATION include
-        FILES_MATCHING PATTERN "*.h")
-install(TARGETS ${LIB_NAME} DESTINATION lib)
-install(TARGETS ${BIN_NAME} DESTINATION bin)
+install(DIRECTORY ${INCLUDE_PATH}/
+        DESTINATION ${CMAKE_PROJECT_NAME}/include
+	FILES_MATCHING PATTERN "*.h")
+install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_PROJECT_NAME}/lib)
+install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_PROJECT_NAME}/bin)
 
 
 # Set up packager.

@@ -9,9 +9,9 @@
 */
 
 
-#include "Sampling/lhs.h"
+#include "../../include/Sampling/lhs.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace sampling;
 
 /// LHS Constructor

@@ -12,13 +12,14 @@
 #ifndef SOBOL_H
 #define SOBOL_H
 
-#include "constants.h"
-#include "base_sampling.h"
 #include <sstream>
+
+#include "../constants.h"
+#include "base_sampling.h"
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace sampling{
 
     /// Sobol quasi-random point sequence

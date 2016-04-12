@@ -12,7 +12,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-namespace smart{
+namespace smartuq{
     namespace constants{
 
         static const int MAX_POLYNOMIAL_ALGEBRA_SIZE = 1000000;

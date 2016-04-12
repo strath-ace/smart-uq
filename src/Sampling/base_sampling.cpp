@@ -9,9 +9,9 @@
 */
 
 
-#include "Sampling/base_sampling.h"
+#include "../../include/Sampling/base_sampling.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace sampling;
 
 template <class T>

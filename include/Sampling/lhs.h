@@ -19,7 +19,7 @@
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace sampling{
 
     /**

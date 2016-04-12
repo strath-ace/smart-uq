@@ -9,10 +9,10 @@
 */
 
 
-#include "Dynamics/vanderpol.h"
+#include "../../include/Dynamics/vanderpol.h"
 
 
-using namespace smart;
+using namespace smartuq;
 using namespace dynamics;
 
 template < class T >

@@ -9,10 +9,10 @@
 */
 
 
-#include "Integrators/heun.h"
+#include "../../include/Integrators/heun.h"
 
 
-using namespace smart;
+using namespace smartuq;
 using namespace integrator;
 
 template < class T >

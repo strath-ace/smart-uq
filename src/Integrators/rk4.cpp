@@ -9,10 +9,10 @@
 */
 
 
-#include "Integrators/rk4.h"
+#include "../../include/Integrators/rk4.h"
 
 
-using namespace smart;
+using namespace smartuq;
 using namespace integrator;
 
 template < class T >

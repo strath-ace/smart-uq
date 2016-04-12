@@ -17,7 +17,7 @@
 #include "taylor.h"
 
 using namespace std;
-using namespace smart;
+using namespace smartuq;
 using namespace polynomial;
 
 //TRIGONOMETRIC FUNCTIONS

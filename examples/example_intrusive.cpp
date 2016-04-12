@@ -12,7 +12,7 @@
 #include "../include/smartuq.h"
 #include <fstream>
 
-using namespace smart;
+using namespace smartuq;
 
 int main(){
 

@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "smartuq.h"
+#include "../include/smartuq.h"
 
 using namespace std;
 

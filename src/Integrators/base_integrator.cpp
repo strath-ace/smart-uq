@@ -9,9 +9,9 @@
 */
 
 
-#include "Integrators/base_integrator.h"
+#include "../../include/Integrators/base_integrator.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace integrator;
 
 template < class T >

@@ -22,14 +22,14 @@
 #include <Eigen/Core>
 #include <Eigen/LU>
 #include <Eigen/SVD>
-#include "exception.h"
-#include "constants.h"
-#include "wrapper.h"
+#include "../exception.h"
+#include "../constants.h"
+#include "../wrapper.h"
 #include "../Math/smart_math.h"
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace polynomial{
 	template < class T >
     class base_polynomial{

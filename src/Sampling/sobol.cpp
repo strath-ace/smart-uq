@@ -9,10 +9,10 @@
 */
 
 
-#include "Sampling/sobol.h"
+#include "../../include/Sampling/sobol.h"
 
 using namespace std;
-using namespace smart;
+using namespace smartuq;
 using namespace sampling;
 
 /// SOBOL Constructor
@@ -253,10 +253,10 @@ void sobol<T>::i8_sobol (unsigned int dim_num, long long int *seed, T quasi[ ] )
 
     for (i = 0; i < DIM_MAX2; i++ )
     {
-      poly[i]=smart::constants::smart_polyb[i];
+      poly[i]=constants::smart_polyb[i];
       for (j = 1; j < LOG_MAX; j++ )
       {
-        v[i][j] = smart::constants::smart_v[i][j];
+        v[i][j] = constants::smart_v[i][j];
       }
     }
 

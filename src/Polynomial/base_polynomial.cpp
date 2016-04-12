@@ -9,9 +9,9 @@
 */
 
 
-#include "Polynomial/base_polynomial.h"
+#include "../../include/Polynomial/base_polynomial.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace polynomial;
 
 
@@ -32,7 +32,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order): m_name("
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
@@ -72,7 +72,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
@@ -111,7 +111,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
@@ -153,7 +153,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
