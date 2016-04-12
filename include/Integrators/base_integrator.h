@@ -12,10 +12,10 @@
 #ifndef BASE_INTEGRATOR_H
 #define BASE_INTEGRATOR_H
 
-#include "Dynamics/base_dynamics.h"
-#include "exception.h"
+#include "../Dynamics/base_dynamics.h"
+#include "../exception.h"
 
-namespace smart
+namespace smartuq
 {
     namespace integrator {
 

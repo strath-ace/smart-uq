@@ -13,10 +13,10 @@
 #define BASE_DYNAMICS_H
 
 #include <vector>
-#include "exception.h"
-#include "Polynomial/smart_polynomial.h"
+#include "../exception.h"
+#include "../Polynomial/smart_polynomial.h"
 
-namespace smart
+namespace smartuq
 {
     namespace dynamics {
 

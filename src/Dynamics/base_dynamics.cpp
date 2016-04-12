@@ -9,9 +9,9 @@
 */
 
 
-#include "Dynamics/base_dynamics.h"
+#include "../../include/Dynamics/base_dynamics.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace dynamics;
 
 template < class T >

@@ -9,10 +9,10 @@
 */
 
 
-#include "Dynamics/twobody.h"
+#include "../../include/Dynamics/twobody.h"
 
 
-using namespace smart;
+using namespace smartuq;
 using namespace dynamics;
 
 template < class T >

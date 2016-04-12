@@ -14,11 +14,11 @@
 
 
 #include <vector>
-#include "exception.h"
+#include "../exception.h"
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace sampling{
 
 

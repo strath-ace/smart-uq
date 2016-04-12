@@ -9,9 +9,9 @@
 */
 
 
-#include "Dynamics/lotkavolterra.h"
+#include "../../include/Dynamics/lotkavolterra.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace dynamics;
 
 template < class T >

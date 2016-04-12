@@ -9,9 +9,9 @@
 */
 
 
-#include "Sampling/random_sampling.h"
+#include "../../include/Sampling/random_sampling.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace sampling;
 
 /// random Constructor

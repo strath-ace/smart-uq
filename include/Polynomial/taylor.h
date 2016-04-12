@@ -13,11 +13,11 @@
 #define TAYLOR_H
 
 #include "base_polynomial.h"
-#include "config.h"
+#include "../config.h"
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace polynomial{
         template < class T >
     /**

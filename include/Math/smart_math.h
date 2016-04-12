@@ -13,7 +13,7 @@
 
 #include <vector>
 #include <cmath>
-#include "config.h"
+#include "../config.h"
 
 
 const double ZERO = 1e-15;

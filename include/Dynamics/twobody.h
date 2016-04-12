@@ -13,9 +13,9 @@
 #define AKP_H
 
 #include "base_dynamics.h"
-#include "exception.h"
+#include "../exception.h"
 
-namespace smart
+namespace smartuq
 {
     namespace dynamics {
 

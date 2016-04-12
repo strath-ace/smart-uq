@@ -12,7 +12,7 @@
 #define CHEBYSHEV_POLYNOMIAL_H_
 
 #include "base_polynomial.h"
-#include "config.h"
+#include "../config.h"
 
 #ifdef CHEBYSHEV_DCT_MULTIPLICATION
 #include <fftw3.h>
@@ -20,7 +20,7 @@
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace polynomial{
 	template < class T >
     /**

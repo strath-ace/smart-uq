@@ -9,9 +9,9 @@
 */
 
 
-#include "Polynomial/taylor_functions.h"
+#include "../../include/Polynomial/taylor_functions.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace polynomial;
 
 /************************************************/

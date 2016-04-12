@@ -22,14 +22,14 @@
 #include <Eigen/Core>
 #include <Eigen/LU>
 #include <Eigen/SVD>
-#include "exception.h"
-#include "constants.h"
-#include "wrapper.h"
+#include "../exception.h"
+#include "../constants.h"
+#include "../wrapper.h"
 #include "../Math/smart_math.h"
 
 using namespace std;
 
-namespace smart{
+namespace smartuq{
 namespace polynomial{
 
     /**
@@ -184,6 +184,7 @@ namespace polynomial{
          * @param[in] y responses
          * @param[out] Hinv matrix inverse
          */
+
         void interpolation(const std::vector<std::vector<T> > &x, const std::vector<T>  &y, std::vector<std::vector<T> > &Hinv);
 
         /**
@@ -200,6 +201,7 @@ namespace polynomial{
          * @param[out] Hinv inverse of matrix H
          * @param[out] res_coeffs coeffients of the polynomials correpsonding to the N responses
          */
+
         void interpolation(const std::vector<std::vector<T> > &x, const std::vector<std::vector<T> >  &y, std::vector<std::vector<T> > &Hinv, std::vector<std::vector<T> > &res_coeffs) const;
 
         /**

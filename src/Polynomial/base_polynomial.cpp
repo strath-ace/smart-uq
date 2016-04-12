@@ -9,9 +9,9 @@
 */
 
 
-#include "Polynomial/base_polynomial.h"
+#include "../../include/Polynomial/base_polynomial.h"
 
-using namespace smart;
+using namespace smartuq;
 using namespace polynomial;
 
 
@@ -43,7 +43,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const std
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
@@ -88,7 +88,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const int
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
@@ -128,7 +128,7 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
     int n = combination(vars,order);
 
-    if(n>smart::constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
+    if(n>constants::MAX_POLYNOMIAL_ALGEBRA_SIZE){
         smart_throw(m_name+": The size of the algebra is too big. Reduce polynomial order rnumber of variables. You can incur in memory issues");
     }
 
@@ -151,7 +151,6 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
 
 }
-
 
 
 template <class T>
@@ -270,6 +269,13 @@ void base_polynomial<T>::interpolation(const std::vector<std::vector<T> > &x, co
             for(int j=0;j<ncoeffs;j++)
                 coeffs[j] = coe[j];
             res_coeffs.push_back(coeffs);
+
+            for(int i=0;i<npoints;i++){
+                std::vector<T> row(npoints);
+                for(int j=0;j<npoints;j++)
+                    row[j]=base_inv(i,j);
+                H.push_back(row);
+            }
         }
     }
     else{ //solve by Least Square
@@ -302,6 +308,7 @@ void base_polynomial<T>::solve(const std::vector<std::vector<T> > &H, const std:
     int nvars = y[0].size();
 
     res_coeffs.clear();
+
     for(int i=0;i<nvars;i++)
         res_coeffs.push_back(std::vector<T>(nrows_H,0.0));
 

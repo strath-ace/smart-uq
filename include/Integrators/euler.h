@@ -13,9 +13,9 @@
 #define EULER_H
 
 #include "base_integrator.h"
-#include "exception.h"
+#include "../exception.h"
 
-namespace smart
+namespace smartuq
 {
     namespace integrator {
 

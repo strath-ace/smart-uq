@@ -9,10 +9,10 @@
 */
 
 
-#include "Integrators/euler.h"
+#include "../../include/Integrators/euler.h"
 
 
-using namespace smart;
+using namespace smartuq;
 using namespace integrator;
 
 template < class T >
