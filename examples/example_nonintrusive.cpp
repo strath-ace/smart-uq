@@ -106,12 +106,8 @@ int main(){
     clock_t begin,end;
     begin=clock();
 
-<<<<<<< HEAD
-    // construct LHS sampling
-=======
     //construct LHS sampling
     sampling::lhs<double> lhs_gen(nvar+nparam,nsamples,ranges_lb, ranges_ub);
->>>>>>> 501f0d09328c38917d4bc5dc4ec106e0e52f77a1
     std::vector<std::vector<double> > LHS, H;
     for(int i=0;i<nsamples;i++){
         std::vector<double> sample=lhs_gen();
