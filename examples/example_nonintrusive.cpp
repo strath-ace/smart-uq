@@ -156,12 +156,8 @@ int main(){
 
         }
 
-<<<<<<< HEAD
         // perform interpolation. For efficiency reason the function that interpolate multiple outputs is used
         // poly will evaluate according to its base
-=======
-        // perform interpolation - for efficiency reasons the function that interpolates multiple outputs is used
->>>>>>> 501f0d09328c38917d4bc5dc4ec106e0e52f77a1
         if(H.size()==0)
             poly.interpolation(LHS,y,H,res_coeffs);
         else{
