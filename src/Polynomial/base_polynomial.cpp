@@ -152,7 +152,6 @@ base_polynomial<T>::base_polynomial(const int &vars, const int &order, const T &
 
 }
 
-
 template <class T>
 base_polynomial<T>::~base_polynomial(){
 

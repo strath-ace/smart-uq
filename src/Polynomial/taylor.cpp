@@ -36,8 +36,6 @@ taylor_polynomial<T>::taylor_polynomial(const int &vars, const int &order, const
     m_monomial_base = true;
 }
 
-
-
 template < class T >
 taylor_polynomial<T>::~taylor_polynomial(){
 }

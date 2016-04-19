@@ -15,6 +15,7 @@
 #include <cmath>
 #include "../config.h"
 
+namespace smartuq{
 
 const double ZERO = 1e-15;
 
@@ -68,6 +69,8 @@ inline void variations(const std::vector<int> values, const int k, std::vector<s
 
     std::vector<int> item(k);
     rep(res, values, item, 0);
+}
+
 }
 
 #endif // SMART_MATH_H

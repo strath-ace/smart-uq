@@ -13,8 +13,8 @@
 
 #include "Polynomial/smart_polynomial.h"
 #include "Sampling/smart_sampling.h"
-#include "Dynamics/smart_dynamics.h"
-#include "Integrators/smart_integrators.h"
+//#include "Dynamics/smart_dynamics.h"
+//#include "Integrators/smart_integrators.h"
 #include "Math/smart_math.h"
 
 #endif /* SMART_SMARTUQ_H */
