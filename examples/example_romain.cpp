@@ -9,9 +9,8 @@
 */
 
 
-#include <fstream>
-
 #include "../include/smartuq.h"
+#include <fstream>
 
 using namespace smartuq;
 

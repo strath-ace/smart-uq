@@ -106,7 +106,6 @@ int main(){
     clock_t begin,end;
     begin=clock();
 
-
     //construct LHS sampling
     sampling::lhs<double> lhs_gen(nvar+nparam,nsamples,ranges_lb, ranges_ub);
     std::vector<std::vector<double> > LHS, H;
@@ -157,8 +156,8 @@ int main(){
 
         }
 
-
-        // perform interpolation - for efficiency reasons the function that interpolates multiple outputs is used
+        // perform interpolation. For efficiency reason the function that interpolate multiple outputs is used
+        // poly will evaluate according to its base
         if(H.size()==0)
             poly.interpolation(LHS,y,H,res_coeffs);
         else{

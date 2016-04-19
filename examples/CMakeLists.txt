@@ -8,3 +8,6 @@ target_link_libraries(example_taylor ${LIB_NAME} ${FFTW_LIBRARIES})
 add_executable(example_nonintrusive example_nonintrusive.cpp)
 target_link_libraries(example_nonintrusive ${LIB_NAME} ${FFTW_LIBRARIES})
 
+add_executable(example_romain example_romain.cpp)
+target_link_libraries(example_romain ${LIB_NAME} ${FFTW_LIBRARIES})
+
