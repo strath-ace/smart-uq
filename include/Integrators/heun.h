@@ -9,8 +9,8 @@
 */
 
 
-#ifndef HEUN_H
-#define HEUN_H
+#ifndef SMARTUQ_HEUN_H
+#define SMARTUQ_HEUN_H
 
 #include "base_integrator.h"
 #include "../exception.h"
@@ -19,6 +19,7 @@ namespace smartuq
 {
     namespace integrator {
 
+        template <class T> class base_integrator;
         /**
          * @brief The Heun integration scheme
          *
@@ -65,4 +66,4 @@ namespace smartuq
     }
 }
 
-#endif // HEUN_H
+#endif // SMARTUQ_HEUN_H

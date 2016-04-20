@@ -9,8 +9,8 @@
 */
 
 
-#ifndef LOTKAVOLTERRA_H
-#define LOTKAVOLTERRA_H
+#ifndef SMARTUQ_LOTKAVOLTERRA_H
+#define SMARTUQ_LOTKAVOLTERRA_H
 
 #include "base_dynamics.h"
 #include "../exception.h"
@@ -72,4 +72,4 @@ namespace smartuq
     }
 }
 
-#endif // LOTKAVOLTERRA_H
+#endif // SMARTUQ_LOTKAVOLTERRA_H

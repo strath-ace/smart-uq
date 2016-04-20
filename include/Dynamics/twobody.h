@@ -9,8 +9,8 @@
 */
 
 
-#ifndef AKP_H
-#define AKP_H
+#ifndef SMARTUQ_TWOBODY_H
+#define SMARTUQ_TWOBODY_H
 
 #include "base_dynamics.h"
 #include "../exception.h"
@@ -83,4 +83,4 @@ namespace smartuq
 }
 
 
-#endif // AKP_H
+#endif // SMARTUQ_TWOBODY_H

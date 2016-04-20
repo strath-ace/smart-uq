@@ -9,8 +9,8 @@
 */
 
 
-#ifndef SOBOL_H
-#define SOBOL_H
+#ifndef SMARTUQ_SOBOL_H
+#define SMARTUQ_SOBOL_H
 
 #include <sstream>
 
@@ -96,4 +96,4 @@ namespace sampling{
 }}
 
 
-#endif // SOBOL_H
+#endif // SMARTUQ_SOBOL_H

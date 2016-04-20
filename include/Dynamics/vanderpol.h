@@ -9,8 +9,8 @@
 */
 
 
-#ifndef VANDERPOL_H
-#define VANDERPOL_H
+#ifndef SMARTUQ_VANDERPOL_H
+#define SMARTUQ_VANDERPOL_H
 
 #include "base_dynamics.h"
 #include "../exception.h"
@@ -66,4 +66,4 @@ namespace smartuq
 }
 
 
-#endif // VANDERPOL_H
+#endif // SMARTUQ_VANDERPOL_H

@@ -8,8 +8,8 @@
 --------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
 
-#ifndef LHS_H
-#define LHS_H
+#ifndef SMARTUQ_LHS_H
+#define SMARTUQ_LHS_H
 
 
 #include <stdio.h>      /* printf, NULL */
@@ -91,4 +91,4 @@ namespace sampling{
 }}
 
 
-#endif // LHS_H
+#endif // SMARTUQ_LHS_H

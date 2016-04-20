@@ -8,8 +8,8 @@
 --------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
 
-#ifndef CHEBYSHEV_POLYNOMIAL_H_
-#define CHEBYSHEV_POLYNOMIAL_H_
+#ifndef SMARTUQ_CHEBYSHEV_POLYNOMIAL_H_
+#define SMARTUQ_CHEBYSHEV_POLYNOMIAL_H_
 
 #include "base_polynomial.h"
 #include "../config.h"
@@ -431,4 +431,4 @@ namespace polynomial{
 
 
 
-#endif /* CHEBYSHEV_POLYNOMIAL_H_ */
+#endif /* SMARTUQ_CHEBYSHEV_POLYNOMIAL_H_ */

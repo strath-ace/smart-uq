@@ -9,12 +9,12 @@
 */
 
 
-#ifndef BASE_DYNAMICS_H
-#define BASE_DYNAMICS_H
+#ifndef SMARTUQ_BASE_DYNAMICS_H
+#define SMARTUQ_BASE_DYNAMICS_H
 
 #include <vector>
 #include "../exception.h"
-#include "../Polynomial/smart_polynomial.h"
+#include "../Polynomial/smartuq_polynomial.h"
 
 namespace smartuq
 {
@@ -73,4 +73,4 @@ namespace smartuq
     }
 }
 
-#endif // BASE_DYNAMICS_H
+#endif // SMARTUQ_BASE_DYNAMICS_H

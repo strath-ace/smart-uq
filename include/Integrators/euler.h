@@ -9,8 +9,8 @@
 */
 
 
-#ifndef EULER_H
-#define EULER_H
+#ifndef SMARTUQ_EULER_H
+#define SMARTUQ_EULER_H
 
 #include "base_integrator.h"
 #include "../exception.h"
@@ -19,6 +19,7 @@ namespace smartuq
 {
     namespace integrator {
 
+        template <class T> class base_integrator;
         /**
          * @brief The Euler integration scheme
          *
@@ -65,4 +66,4 @@ namespace smartuq
     }
 }
 
-#endif // EULER_H
+#endif // SMARTUQ_EULER_H

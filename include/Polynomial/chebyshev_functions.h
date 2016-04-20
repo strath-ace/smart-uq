@@ -9,8 +9,8 @@
 */
 
 
-#ifndef CHEBYSHEV_FUNCTIONS_H
-#define CHEBYSHEV_FUNCTIONS_H
+#ifndef SMARTUQ_CHEBYSHEV_FUNCTIONS_H
+#define SMARTUQ_CHEBYSHEV_FUNCTIONS_H
 
 
 #include <iostream>
@@ -114,4 +114,4 @@ template <class T>
 chebyshev_polynomial<T> pow(const chebyshev_polynomial<T> &other, const int &exponent);
 
 
-#endif // CHEBYSHEV_FUNCTIONS_H
+#endif // SMARTUQ_CHEBYSHEV_FUNCTIONS_H

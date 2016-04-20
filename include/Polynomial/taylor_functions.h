@@ -9,8 +9,8 @@
 */
 
 
-#ifndef TAYLOR_FUNCTIONS_H
-#define TAYLOR_FUNCTIONS_H
+#ifndef SMARTUQ_TAYLOR_FUNCTIONS_H
+#define SMARTUQ_TAYLOR_FUNCTIONS_H
 
 #include <iostream>
 #include <limits>
@@ -82,4 +82,4 @@ taylor_polynomial<T> pow(const taylor_polynomial<T> &other, const int &exponent)
 
 
 
-#endif // TAYLOR_FUNCTIONS_H
+#endif // SMARTUQ_TAYLOR_FUNCTIONS_H

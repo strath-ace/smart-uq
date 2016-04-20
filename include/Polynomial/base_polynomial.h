@@ -9,8 +9,8 @@
 */
 
 
-#ifndef BASE_POLYNOMIAL_H_
-#define BASE_POLYNOMIAL_H_
+#ifndef SMARTUQ_BASE_POLYNOMIAL_H_
+#define SMARTUQ_BASE_POLYNOMIAL_H_
 
 #include <iostream>
 #include <vector>
@@ -25,7 +25,7 @@
 #include "../exception.h"
 #include "../constants.h"
 #include "../wrapper.h"
-#include "../Math/smart_math.h"
+#include "../Math/smartuq_math.h"
 
 using namespace std;
 
@@ -424,4 +424,4 @@ namespace polynomial{
 
 
 
-#endif /* base_polynomial_H_ */
+#endif /* SMARTUQ_base_polynomial_H_ */

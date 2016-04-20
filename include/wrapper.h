@@ -8,8 +8,8 @@
 --------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
 
-#ifndef WRAPPER_H
-#define WRAPPER_H
+#ifndef SMARTUQ_WRAPPER_H
+#define SMARTUQ_WRAPPER_H
 #include "config.h"
 
 #ifdef CHEBYSHEV_DCT_MULTIPLICATION
@@ -115,4 +115,4 @@ void dct_do(int nvar, int* dct_degree, T*& dct) {
 #endif //CHEBYSHEV_DCT_MULTIPLICATION
 
 
-#endif // WRAPPERS_H
+#endif // SMARTUQ_WRAPPERS_H

@@ -9,8 +9,8 @@
 */
 
 
-#ifndef RK4_H
-#define RK4_H
+#ifndef SMARTUQ_RK4_H
+#define SMARTUQ_RK4_H
 
 #include "base_integrator.h"
 #include "../exception.h"
@@ -19,6 +19,7 @@ namespace smartuq
 {
     namespace integrator {
 
+        template <class T> class base_integrator;
         /**
          * @brief The Runge Kutta 4 integrator scheme
          *
@@ -65,4 +66,4 @@ namespace smartuq
     }
 }
 
-#endif // RK4_H
+#endif // SMARTUQ_RK4_H

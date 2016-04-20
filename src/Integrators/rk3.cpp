@@ -13,7 +13,7 @@
 
 
 using namespace smartuq;
-using namespace integrator;
+using namespace smartuq::integrator;
 
 template < class T >
 rk3<T>::rk3(const dynamics::base_dynamics<T> *dyn) : base_integrator<T>("Runge Kutta 3 fixed step time", dyn)

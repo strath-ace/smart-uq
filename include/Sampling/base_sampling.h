@@ -9,8 +9,8 @@
 */
 
 
-#ifndef BASE_SAMPLING_H
-#define BASE_SAMPLING_H
+#ifndef SMARTUQ_BASE_SAMPLING_H
+#define SMARTUQ_BASE_SAMPLING_H
 
 
 #include <vector>
@@ -100,4 +100,4 @@ namespace sampling{
 }}
 
 
-#endif // BASE_SAMPLING_H
+#endif // SMARTUQ_BASE_SAMPLING_H

@@ -13,7 +13,7 @@
 
 
 using namespace smartuq;
-using namespace integrator;
+using namespace smartuq::integrator;
 
 template < class T >
 euler<T>::euler(const dynamics::base_dynamics<T> *dyn) : base_integrator<T>("Forward Euler integration scheme", dyn)

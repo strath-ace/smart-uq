@@ -9,8 +9,8 @@
 */
 
 
-#ifndef BASE_INTEGRATOR_H
-#define BASE_INTEGRATOR_H
+#ifndef SMARTUQ_BASE_INTEGRATOR_H
+#define SMARTUQ_BASE_INTEGRATOR_H
 
 #include "../Dynamics/base_dynamics.h"
 #include "../exception.h"
@@ -82,4 +82,4 @@ namespace smartuq
     }
 }
 
-#endif // BASE_INTEGRATOR_H
+#endif // SMARTUQ_BASE_INTEGRATOR_H

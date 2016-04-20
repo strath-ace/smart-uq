@@ -8,8 +8,8 @@
 --------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
 
-#ifndef SMART_EXCEPTIONS_H
-#define SMART_EXCEPTIONS_H
+#ifndef SMARTUQ_EXCEPTIONS_H
+#define SMARTUQ_EXCEPTIONS_H
 
 #include <exception>
 #include <cassert>
@@ -40,7 +40,7 @@
         } while(0)
 #endif
 
-
+namespace smartuq{
 class smart_exception: public std::exception {
 	public:
 		smart_exception(const std::string &s):m_what(s) {}
@@ -51,5 +51,5 @@ class smart_exception: public std::exception {
 	protected:
 		std::string m_what;
 };
-
+}
 #endif

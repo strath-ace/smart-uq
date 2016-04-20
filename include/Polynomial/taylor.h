@@ -9,8 +9,8 @@
 */
 
 
-#ifndef TAYLOR_H
-#define TAYLOR_H
+#ifndef SMARTUQ_TAYLOR_H
+#define SMARTUQ_TAYLOR_H
 
 #include "base_polynomial.h"
 #include "../config.h"
@@ -372,4 +372,4 @@ namespace polynomial{
 }}
 
 
-#endif // TAYLOR_H
+#endif // SMARTUQ_TAYLOR_H

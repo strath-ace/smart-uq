@@ -9,8 +9,8 @@
 */
 
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef SMARTUQ_CONSTANTS_H
+#define SMARTUQ_CONSTANTS_H
 
 namespace smartuq{
     namespace constants{
@@ -136,4 +136,4 @@ namespace smartuq{
     }
 }
 
-#endif // CONSTANTS_H
+#endif // SMARTUQ_CONSTANTS_H

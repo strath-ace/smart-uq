@@ -13,7 +13,7 @@
 
 
 using namespace smartuq;
-using namespace integrator;
+using namespace smartuq::integrator;
 
 template < class T >
 heun<T>::heun(const dynamics::base_dynamics<T> *dyn) : base_integrator<T>("Heun's method of order 2", dyn)

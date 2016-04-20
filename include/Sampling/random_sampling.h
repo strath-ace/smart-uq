@@ -8,8 +8,8 @@
 --------- Author: Annalisa Riccardi and Carlos Ortega Absil ----------
 */
 
-#ifndef RANDOM_SAMPLING_H
-#define RANDOM_SAMPLING_H
+#ifndef SMARTUQ_RANDOM_SAMPLING_H
+#define SMARTUQ_RANDOM_SAMPLING_H
 
 
 #include <stdio.h>      /* printf, NULL */
@@ -76,4 +76,4 @@ namespace sampling{
 }}
 
 
-#endif // RANDOM_SAMPLING_H
+#endif // SMARTUQ_RANDOM_SAMPLING_H

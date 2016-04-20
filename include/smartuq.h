@@ -11,10 +11,10 @@
 #ifndef SMART_SMARTUQ_H
 #define SMART_SMARTUQ_H
 
-#include "Polynomial/smart_polynomial.h"
-#include "Sampling/smart_sampling.h"
-#include "Dynamics/smart_dynamics.h"
-#include "Integrators/smart_integrators.h"
-#include "Math/smart_math.h"
+#include "Polynomial/smartuq_polynomial.h"
+#include "Sampling/smartuq_sampling.h"
+#include "Dynamics/smartuq_dynamics.h"
+#include "Integrators/smartuq_integrators.h"
+#include "Math/smartuq_math.h"
 
 #endif /* SMART_SMARTUQ_H */
