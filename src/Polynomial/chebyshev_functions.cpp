@@ -130,6 +130,23 @@ exp(const chebyshev_polynomial<float> &);
 template class chebyshev_polynomial<long double>
 exp(const chebyshev_polynomial<long double> &);
 
+//TANGENT HYPERBOLIC FUNCTION
+template <class T>
+/************************************************/
+/*                  TANH                         */
+/************************************************/
+chebyshev_polynomial<T> tanh(const chebyshev_polynomial<T> &other){
+
+    return chebyshev_polynomial<T>::approximation(tanh,other);
+
+}
+template class chebyshev_polynomial<double>
+tanh(const chebyshev_polynomial<double> &);
+template class chebyshev_polynomial<float>
+tanh(const chebyshev_polynomial<float> &);
+template class chebyshev_polynomial<long double>
+tanh(const chebyshev_polynomial<long double> &);
+
 
 /************************************************/
 /*                  SQRT                        */

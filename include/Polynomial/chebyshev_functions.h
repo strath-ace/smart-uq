@@ -82,6 +82,14 @@ chebyshev_polynomial<T> exp(const chebyshev_polynomial<T> &other);
 
 template <class T>
 /**
+ * @brief tanh overloaded tanh function (evaluated in a polynomial value)
+ * @param other polynomial for evaluation
+ * @return the evaluation of the function exp in a polynomial
+ */
+chebyshev_polynomial<T> tanh(const chebyshev_polynomial<T> &other);
+
+template <class T>
+/**
  * @brief sqrt overloaded sqrt function (evaluated in a polynomial value)
  * @param other polynomial for evaluation
  * @return the evaluation of the function sqrt in a polynomial
