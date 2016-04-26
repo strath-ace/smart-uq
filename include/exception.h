@@ -23,23 +23,6 @@
 
 #define smart_throw(s) EX_THROW(s)
 
-#ifdef NDEBUG
-        #define smart_assert(condition){ \
-            if(!(condition)) { \
-                std::cerr << "Assertion failed at " << __FILE__ << ":" << __LINE__;
-                std::cerr << " inside " << __FUNCTION__ << std::endl;
-                std::cerr << "Condition: " << #condition;
-                abort();
-            } \
-        }
-#else
-        #define smart_assert(condition) do { \
-            if(!(condition)) { \
-                smart_exception("assertion error"); \
-            } \
-        } while(0)
-#endif
-
 namespace smartuq{
 class smart_exception: public std::exception {
 	public:
