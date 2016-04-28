@@ -45,6 +45,14 @@ template <class T>
  */
 taylor_polynomial<T> tan(const taylor_polynomial<T> &other);
 
+template <class T>
+/**
+ * @brief atan overloaded sin function (evaluated in a polynomial value)
+ * @param other polynomial for evaluation
+ * @return the evaluation of the function atan in a polynomial
+ */
+taylor_polynomial<T> atan(const taylor_polynomial<T> &other);
+
 
 // OTHERS
 template <class T>
@@ -54,6 +62,14 @@ template <class T>
  * @return the evaluation of the function exp in a polynomial
  */
 taylor_polynomial<T> exp(const taylor_polynomial<T> &other);
+
+template <class T>
+/**
+ * @brief tan overloaded tanh function (evaluated in a polynomial value)
+ * @param other polynomial for evaluation
+ * @return the evaluation of the function tanh in a polynomial
+ */
+taylor_polynomial<T> tanh(const taylor_polynomial<T> &other);
 
 template <class T>
 /**
