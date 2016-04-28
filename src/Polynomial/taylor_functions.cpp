@@ -161,7 +161,7 @@ taylor_polynomial<T> atan(const taylor_polynomial<T> &other){
     for (int i=4; i<=degree; i++){
         term *= n;
         powers.push_back(term);
-        sequence.push_back(-(i-2)*sequence[i-2]/(i*(1+c*c))-2*c*(i-1)*sequence[i-1]/i);    
+        sequence.push_back(-((i-2)*sequence[i-2]+2*c*(i-1)*sequence[i-1])/(i*(1+c*c)));    
     }
 
     for (int i=1; i<=degree;i++){
