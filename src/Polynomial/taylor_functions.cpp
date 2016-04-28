@@ -165,7 +165,7 @@ taylor_polynomial<T> atan(const taylor_polynomial<T> &other){
     }
 
     for (int i=1; i<=degree;i++){
-        res += sequence[i]*powers[i];
+        res += sequence[i]*powers[i-1];
     }
 
 
