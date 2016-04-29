@@ -128,6 +128,72 @@ template class taylor_polynomial<long double>
 tan(const taylor_polynomial<long double> &);
 
 /************************************************/
+/*                  ASIN                         */
+/************************************************/
+template <class T>
+taylor_polynomial<T> asin(const taylor_polynomial<T> &other){
+    int nvar =  other.get_nvar();
+    int degree = other.get_degree();
+
+    std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
+    T c = coeffs[0];
+
+    taylor_polynomial<T> n(nvar,degree);
+    coeffs[0] = 0.0;
+    n.set_coeffs(coeffs);
+
+    taylor_polynomial<T> res(nvar,degree, (T) asin(c));
+    taylor_polynomial<T> term=n;
+
+    std::vector<taylor_polynomial<T> > powers;
+    std::vector<T> sequence;
+
+    sequence.push_back(asin(c));
+    sequence.push_back(1.0/sqrt(1.0-c*c));
+    sequence.push_back(sequence[1]*c/(2.0*(1-c*c)));
+    sequence.push_back(sequence[1]*(2.0*c*c+1.0)/(6.0*(1.0-c*c)*(1.0-c*c)));
+    powers.push_back(term);
+    term *= n;    
+    powers.push_back(term);
+    term *= n;    
+    powers.push_back(term);
+
+    for (int i=4; i<=degree; i++){
+        term *= n;
+        powers.push_back(term);
+        sequence.push_back(((i-2)*(i-2)*sequence[i-2]/(i-1)+c*(2*i-3)*sequence[i-1])/(i*(1.0-c*c)));    
+    }
+
+    for (int i=1; i<=degree;i++){
+        res += sequence[i]*powers[i-1];
+    }
+
+
+    return res;
+}
+template class taylor_polynomial<double>
+asin(const taylor_polynomial<double> &);
+template class taylor_polynomial<float>
+asin(const taylor_polynomial<float> &);
+template class taylor_polynomial<long double>
+asin(const taylor_polynomial<long double> &);
+
+/************************************************/
+/*                  ACOS                         */
+/************************************************/
+template <class T>
+taylor_polynomial<T> acos(const taylor_polynomial<T> &other){
+
+    return M_PI/2.0-asin(other);
+}
+template class taylor_polynomial<double>
+acos(const taylor_polynomial<double> &);
+template class taylor_polynomial<float>
+acos(const taylor_polynomial<float> &);
+template class taylor_polynomial<long double>
+acos(const taylor_polynomial<long double> &);
+
+/************************************************/
 /*                  ATAN                         */
 /************************************************/
 template <class T>
@@ -149,9 +215,9 @@ taylor_polynomial<T> atan(const taylor_polynomial<T> &other){
     std::vector<T> sequence;
 
     sequence.push_back(atan(c));
-    sequence.push_back(1/(1+c*c));
-    sequence.push_back(-sequence[1]*c/(1+c*c));
-    sequence.push_back(sequence[1]*(3*c*c-1)/(3*(1+c*c)*(1+c*c)));
+    sequence.push_back(1.0/(1.0+c*c));
+    sequence.push_back(-sequence[1]*c/(1.0+c*c));
+    sequence.push_back(sequence[1]*(3.0*c*c-1.0)/(3.0*(1.0+c*c)*(1.0+c*c)));
     powers.push_back(term);
     term *= n;    
     powers.push_back(term);
@@ -161,7 +227,7 @@ taylor_polynomial<T> atan(const taylor_polynomial<T> &other){
     for (int i=4; i<=degree; i++){
         term *= n;
         powers.push_back(term);
-        sequence.push_back(-((i-2)*sequence[i-2]+2*c*(i-1)*sequence[i-1])/(i*(1+c*c)));    
+        sequence.push_back(-((i-2)*sequence[i-2]+2.0*c*(i-1)*sequence[i-1])/(i*(1.0+c*c)));    
     }
 
     for (int i=1; i<=degree;i++){

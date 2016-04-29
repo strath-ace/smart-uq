@@ -47,7 +47,23 @@ taylor_polynomial<T> tan(const taylor_polynomial<T> &other);
 
 template <class T>
 /**
- * @brief atan overloaded sin function (evaluated in a polynomial value)
+ * @brief asin overloaded asin function (evaluated in a polynomial value)
+ * @param other polynomial for evaluation
+ * @return the evaluation of the function atan in a polynomial
+ */
+taylor_polynomial<T> asin(const taylor_polynomial<T> &other);
+
+template <class T>
+/**
+ * @brief acos overloaded acos function (evaluated in a polynomial value)
+ * @param other polynomial for evaluation
+ * @return the evaluation of the function atan in a polynomial
+ */
+taylor_polynomial<T> acos(const taylor_polynomial<T> &other);
+
+template <class T>
+/**
+ * @brief atan overloaded atan function (evaluated in a polynomial value)
  * @param other polynomial for evaluation
  * @return the evaluation of the function atan in a polynomial
  */
