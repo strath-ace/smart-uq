@@ -325,7 +325,9 @@ void base_polynomial<T>::solve(const std::vector<std::vector<T> > &H, const std:
 /******************************/
 /*Monomial multiplication     */
 /******************************/
-//initialisation of static terms for multiplication
+//initialisation of static terms for multiplication and so
+template <class T>
+std::vector<bool> base_polynomial<T>::m_Q(1,true);
 template <class T>
 std::vector<int> base_polynomial<T>::m_M(1,0);
 template <class T>
@@ -483,23 +485,37 @@ int base_polynomial<T>::get_idx(const std::vector<int> &k) const{
 
 }
 
-//initialisation of M
+//initialisation of M for faster multiplication 
+//and Q for more accurate range estimation
 template <class T>
 void base_polynomial<T>::initialize_M(const int &nvar, const int &degree){
 
     std::vector<int> J=get_J()[nvar];
     std::vector<int> N=get_N()[nvar];
     std::vector<int> M;
+    std::vector<bool> Q;
     for (int deg0=0; deg0<=degree; deg0++){ //loop over order of terms of poly0
         int max_i=J[deg0];
         for (int deg1=0; deg1<=degree-deg0; deg1++){ //loop over other of terms of poly1
             int max_j=J[deg1];
             //int deg = deg0+deg1; //order of terms of result
             for (int i=0;i<max_i;i++){
+                std::vector<int> row0=get_row(i,deg0);
+
+                if(deg1==0){
+                    bool quadratic = 1;
+                    for (int v=0;v<nvar;v++){
+                        if (row0[v]%2!=0){
+                            quadratic = 0;
+                            break;
+                        }
+                    }
+                    Q.push_back(quadratic);
+                }
+
                 for (int j=0;j<max_j;j++){
-                    //find what term is the result contributing to
-                    std::vector<int> row0=get_row(i,deg0);
                     std::vector<int> row1=get_row(j,deg1);
+                    //find what term is the result contributing to
                     std::vector<int> row(nvar);
                     for (int k=0;k<nvar;k++) row[k]=row0[k]+row1[k];
                     //store it to avoid computing it in every multiplication
@@ -509,6 +525,7 @@ void base_polynomial<T>::initialize_M(const int &nvar, const int &degree){
         }
     }
     //modify static stuff
+    m_Q=Q;
     m_M=M;
     m_Mdegree = degree;
     m_Mnvar = nvar;

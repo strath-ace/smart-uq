@@ -279,10 +279,21 @@ namespace polynomial{
         std::vector<T> get_range() const{
                 std::vector<T> range(2,0);
                 T constant = m_coeffs[0];
-                for(int i=1; i<m_coeffs.size(); i++)
-                range[1] += fabs(m_coeffs[i]);
-                range[0] = -range[1]+constant;
+
+                bool use_Q = false;
+                if(m_nvar == m_Mnvar && m_degree == m_Mdegree) use_Q = true;
+
+                for(int i=1; i<m_coeffs.size(); i++){
+                    T term = fabs(m_coeffs[i]);
+                    range[1] += term;
+                    if (use_Q && m_Q[i]==true){
+                        range[0]+=term;
+                    }
+                }
+
+                range[0] += -range[1]+constant;
                 range[1] += constant;
+
                 return range;
         }
         /**
@@ -406,6 +417,10 @@ namespace polynomial{
          */
         std::vector<T> m_b;
 
+        /**
+         * @brief m_Q indexing matrix for recognition of quadratic terms in range computation
+         */
+        static std::vector<bool> m_Q;
         /**
          * @brief m_M indexing matrix for fast multiplication
          */
