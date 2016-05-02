@@ -28,6 +28,14 @@ template <class T>
  * @param other polynomial for evaluation
  * @return the evaluation of the function sin in a polynomial
  */
+chebyshev_polynomial<T> atan2(const chebyshev_polynomial<T> &y, const chebyshev_polynomial<T> &x);
+
+template <class T>
+/**
+ * @brief sin overloaded sin function (evaluated in a polynomial value)
+ * @param other polynomial for evaluation
+ * @return the evaluation of the function sin in a polynomial
+ */
 chebyshev_polynomial<T> sin(const chebyshev_polynomial<T> &other);
 
 template <class T>

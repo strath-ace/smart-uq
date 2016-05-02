@@ -99,8 +99,8 @@ namespace polynomial{
          */
         friend ostream &operator<<(ostream &os, const base_polynomial<T> &poly) {
 
-            if(poly.is_monomial_base())
-                poly.from_monomial_basis();
+            //if(poly.is_monomial_base())
+                //poly.from_monomial_basis();
 
             std::vector<T> coeffs = poly.get_coeffs();
             int nvar = poly.get_nvar();
@@ -277,17 +277,23 @@ namespace polynomial{
          * @return 2D vector containing the polynomial bounds
          */
         std::vector<T> get_range() const{
-                std::vector<T> range(2,0);
+                std::vector<T> range(2,0.0);
                 T constant = m_coeffs[0];
 
                 bool use_Q = false;
-                if(m_nvar == m_Mnvar && m_degree == m_Mdegree) use_Q = true;
+                if(m_monomial_base && m_nvar == m_Mnvar && m_degree == m_Mdegree) use_Q = true;
 
                 for(int i=1; i<m_coeffs.size(); i++){
                     T term = fabs(m_coeffs[i]);
                     range[1] += term;
                     if (use_Q && m_Q[i]==true){
-                        range[0]+=term;
+                        if (m_coeffs[i]>0){
+                            range[0]+=term;
+                        }
+                        else{
+                            range[1]-=term;
+                            range[0]-=term;
+                        }
                     }
                 }
 

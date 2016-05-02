@@ -18,6 +18,71 @@ using namespace polynomial;
 /*                  SIN                         */
 /************************************************/
 template <class T>
+chebyshev_polynomial<T> atan2(const chebyshev_polynomial<T> &y, const chebyshev_polynomial<T> &x){
+    std::vector<T> x_range=x.get_range();
+    std::vector<T> y_range=y.get_range();
+    // T pi = 3.141592653589793;
+
+    // if (x_range[0]>=0){ //1st, 4th or (1st and 4th) quadrants
+    //     chebyshev_polynomial<T> rxy2 = x*x+y*y;
+    //     return asin(y/sqrt(rxy2));
+    // }
+    // else if (y_range[0]>=0){ //2nd or (1st and 2nd) quadrants
+    //     chebyshev_polynomial<T> rxy2 = x*x+y*y;
+    //     return acos(x/sqrt(rxy2));
+    // }
+    // else if (y_range[1]<=0){ //3rd or (3rd and 4th) quadrants
+    //     chebyshev_polynomial<T> rxy2 = x*x+y*y;
+    //     return -acos(x/sqrt(rxy2));
+    // }
+    // else if (x_range[1]<=0){ //(2nd and 3rd) quadrants
+    //     chebyshev_polynomial<T> rxy2 = x*x+y*y;
+    //     return -asin(y/sqrt(rxy2))+pi;
+    // }
+    // else{ //all quadrants
+    //     //should do it by bivariate interpolation and minimizing probability of discontinuity
+        T tix = x.get_coeffs()[0];
+        T tiy = y.get_coeffs()[0];
+
+        T titheta= atan2(tiy,tix);
+
+        T tixy = sqrt(tix*tix+tiy*tiy);
+        T sinti = tiy/tixy;
+        T costi = tix/tixy;
+
+        chebyshev_polynomial<T> xx = costi*x-sinti*y;
+        chebyshev_polynomial<T> yy = sinti*x+costi*y;
+
+        // cout << titheta << endl;
+
+        // chebyshev_polynomial<T> rxy2 = xx*xx+yy*yy;
+        return titheta+atan(yy/xx);
+
+        // cout << "Y, range = [" << y_range[0] <<"    ,    " << y_range[1] << " ]"<< endl;
+        // //cout << y << endl;
+        // cout << "X, range = [" << x_range[0] <<"    ,    " << x_range[1] << " ]"<< endl;
+        // //cout << x << endl;
+        // cout << "YY, range = [" << yy.get_range()[0] <<"    ,    " << yy.get_range()[1] << " ]"<< endl;
+        // //cout << y << endl;
+        // cout << "Xx, range = [" << xx.get_range()[0] <<"    ,    " << xx.get_range()[1] << " ]"<< endl;
+        // //cout << x << endl;
+        // cout << "Rxy2, range = [" << rxy2.get_range()[0] <<"    ,    " << rxy2.get_range()[1] << " ]"<< endl;
+        // //smart_throw("atan2: current implementation does not allow angle in more than 2 quadrants");
+
+    // }
+
+}
+template class chebyshev_polynomial<double>
+atan2(const chebyshev_polynomial<double> &, const chebyshev_polynomial<double> &);
+template class chebyshev_polynomial<float>
+atan2(const chebyshev_polynomial<float> &, const chebyshev_polynomial<float> &);
+template class chebyshev_polynomial<long double>
+atan2(const chebyshev_polynomial<long double> &, const chebyshev_polynomial<long double> &);
+
+/************************************************/
+/*                  SIN                         */
+/************************************************/
+template <class T>
 chebyshev_polynomial<T> sin(const chebyshev_polynomial<T> &other){
 
     return chebyshev_polynomial<T>::approximation(sin,other);
@@ -154,7 +219,7 @@ tanh(const chebyshev_polynomial<long double> &);
 template <class T>
 chebyshev_polynomial<T> sqrt(const chebyshev_polynomial<T> &other){
 
-    return chebyshev_polynomial<T>::approximation(sqrt,other);
+    return chebyshev_polynomial<T>::approximation(sqrt0,other);
 
 }
 template class chebyshev_polynomial<double>

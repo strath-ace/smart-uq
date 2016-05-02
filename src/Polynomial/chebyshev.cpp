@@ -401,8 +401,15 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::inv(const chebyshev_polynomial<
 //    for (int i=0; i<=degree; i++){
 //        res += base[i]*cheb_inv[i];
 //    }
+    // try{
+    
+        res = approximation(inverse,other);
+    // }
+        
 
-    res = approximation(inverse,other);
+    // catch(...){
+    //     cout << "Range of dividend = [" << other.get_range()[0] << " , " << other.get_range()[1] << " ] " << endl;
+    // }
     return res;
 }
 
