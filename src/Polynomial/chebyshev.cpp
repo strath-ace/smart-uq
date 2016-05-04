@@ -390,26 +390,13 @@ chebyshev_polynomial<T> chebyshev_polynomial<T>::inv(const chebyshev_polynomial<
     int degree = other.get_degree();
     chebyshev_polynomial<T> res(nvar,degree,other.is_monomial_base());
 
-//    std::vector<T> range = other.get_range();
-//    T a, b;
-
-//    a = range[0];
-//    b = range[1];
-//    std::vector<T> cheb_inv = approximation(inverse,a,b);
-//    //univariate composition
-//    std::vector<chebyshev_polynomial<T> > base = evaluate_base1D(other, a,b);
-//    for (int i=0; i<=degree; i++){
-//        res += base[i]*cheb_inv[i];
-//    }
     // try{
-    
         res = approximation(inverse,other);
     // }
-        
-
     // catch(...){
     //     cout << "Range of dividend = [" << other.get_range()[0] << " , " << other.get_range()[1] << " ] " << endl;
     // }
+
     return res;
 }
 

@@ -24,9 +24,14 @@ using namespace polynomial;
 //TRIGONOMETRIC FUNCTIONS
 template <class T>
 /**
- * @brief sin overloaded sin function (evaluated in a polynomial value)
+ * @brief atan2 overloaded atan2 function (evaluated in a polynomial value)
+ *
+ * Note this overload of atan2(y,x) performs a 2D rotation of the polynomials y and x so that the independent
+ * term is in (x'=1, y'=0) then applies atan(y',x') with an offset, hence minimising the probability of
+ * singularity, which occurs when 0 is in the range of x.
+
  * @param other polynomial for evaluation
- * @return the evaluation of the function sin in a polynomial
+ * @return the evaluation of the function atan2 in a polynomial
  */
 chebyshev_polynomial<T> atan2(const chebyshev_polynomial<T> &y, const chebyshev_polynomial<T> &x);
 
@@ -125,9 +130,9 @@ template <class T>
  * @brief pow overloaded pow function (evaluated in a polynomial value)
  * @param other polynomial for evaluation
  * @param exponent exponent value
- * @return the evaluation of the function pow in a polynomial
+ * @return: the evaluation of the function pow in a polynomial
  */
-chebyshev_polynomial<T> pow(const chebyshev_polynomial<T> &other, const int &exponent);
+chebyshev_polynomial<T> pow(const chebyshev_polynomial<T> &other, const double &exponent);
 
 
 #endif // SMARTUQ_CHEBYSHEV_FUNCTIONS_H

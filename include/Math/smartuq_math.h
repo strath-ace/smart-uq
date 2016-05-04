@@ -29,20 +29,6 @@ T inverse(T x){
     return 1.0/x;
 }
 
-template <class T>
-T sqrt0(T x){
-    if(x<0.0){
-        //std::cout<<"Warning: taking sqrt(x<0) = 0."<<std::endl;
-        //throw std::exception();
-        //exit(EXIT_FAILURE);
-        //return (T) 0.0;
-        return -sqrt(x);
-    }
-    else{
-        return sqrt(x);
-    }
-}
-
 //MATH STUFFS
 inline int factorial(int n)
 {

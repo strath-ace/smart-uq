@@ -14,6 +14,35 @@
 using namespace smartuq;
 using namespace polynomial;
 
+
+/************************************************/
+/*                 ATAN2                        */
+/************************************************/
+template <class T>
+taylor_polynomial<T> atan2(const taylor_polynomial<T> &y, const taylor_polynomial<T> &x){
+
+    T tix = x.get_coeffs()[0];
+    T tiy = y.get_coeffs()[0];
+
+    T titheta= atan2(tiy,tix);
+
+    T tixy = sqrt(tix*tix+tiy*tiy);
+    T sinti = tiy/tixy;
+    T costi = tix/tixy;
+
+    taylor_polynomial<T> xx = costi*x+sinti*y;
+    taylor_polynomial<T> yy = -sinti*x+costi*y;
+
+    return titheta+atan(yy/xx);
+
+}
+template class taylor_polynomial<double>
+atan2(const taylor_polynomial<double> &, const taylor_polynomial<double> &);
+template class taylor_polynomial<float>
+atan2(const taylor_polynomial<float> &, const taylor_polynomial<float> &);
+template class taylor_polynomial<long double>
+atan2(const taylor_polynomial<long double> &, const taylor_polynomial<long double> &);
+
 /************************************************/
 /*                  SIN                         */
 /************************************************/
@@ -117,7 +146,7 @@ cos(const taylor_polynomial<long double> &);
 template <class T>
 taylor_polynomial<T> tan(const taylor_polynomial<T> &other){
 
-    return sin(other)/cos(other);
+    return sin(other)/cos(other); //is this proper?
 
 }
 template class taylor_polynomial<double>
@@ -387,25 +416,54 @@ log(const taylor_polynomial<long double> &);
 /*                  POW                         */
 /************************************************/
 template <class T>
-taylor_polynomial<T> pow(const taylor_polynomial<T> &other, const int &exponent){
-    if(exponent<=1){
-        smart_throw("Pow function with integer exponent, integer must be > 1");
-    }
+taylor_polynomial<T> pow(const taylor_polynomial<T> &other, const double &exponent){
+
+    // NOTE: right now when doing pow(p(x),-k) it approximates x^(-k) and composes with p. Maybe it should approximate x^k and compose with 1/p?
+
     int nvar =  other.get_nvar();
     int degree = other.get_degree();
     taylor_polynomial<T> res(nvar,degree);
 
-    res = other;
-    for(int i=1; i<exponent; i++)
-        res *= other;
+    // trivial case
+    if (exponent == 0) res = 1.0;
+
+    // natural exponent
+    else if ( exponent == floor(fabs(exponent)) ){//fancier way of checking if integer without doing exact comparison of two doubles?
+        res = other;
+        for(int i=1; i<exponent; i++)
+            res *= other;
+    }
+    
+    //general case
+    else{
+
+        std::vector <T> coeffs = other.get_coeffs(); // p = c + n(x)
+        T c = coeffs[0];
+        taylor_polynomial<T> n(nvar,degree);
+        coeffs[0] = 0.0;
+        n.set_coeffs(coeffs);
+
+        res = pow(c,exponent); //for now, it is not my problem if C<0 and exponent is not integer and your polynomial turns into nan
+        T k = exponent;
+        taylor_polynomial<T> term = res;
+
+        for (int i=1; i<=degree; i++){
+        term /= (T) i;
+        term /= c;
+        term *= k;
+        term *= n;
+        res  += term;
+        k--;
+        }
+    }
 
     return res;
 }
 template class taylor_polynomial<double>
-pow(const taylor_polynomial<double> &, const int &);
+pow(const taylor_polynomial<double> &, const double &);
 template class taylor_polynomial<float>
-pow(const taylor_polynomial<float> &, const int &);
+pow(const taylor_polynomial<float> &, const double &);
 template class taylor_polynomial<long double>
-pow(const taylor_polynomial<long double> &, const int &);
+pow(const taylor_polynomial<long double> &, const double &);
 
 
