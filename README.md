@@ -1,6 +1,6 @@
 # SMART-UQ
 (Strathclyde Mechanical and Aerospace Research Toolbox for Uncertainty Quantification)
-
+  
 ======================================================================
 
 `SMART` is a collection of toolboxes developed and maintained since 2015 by the Department of Mechanical & Aerospace Engineering at the University of Strathclyde in Scotland. `SMART-UQ` in particular is a collection of uncertainity quantification techniques.
