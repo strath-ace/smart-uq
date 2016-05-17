@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8) 
-
+   
 # Change this section to correspond with your project info.
 project(smart-uq)
 
